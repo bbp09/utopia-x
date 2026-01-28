@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTOPIA X - AI 기반 댄서 캐스팅 에이전시</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <a href="#hero" class="logo">
+                    <img src="https://www.genspark.ai/api/files/s/qeJgU55W" alt="UTOPIA X">
+                </a>
+                <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="nav-links">
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#dancers">Dancers</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                
+                <!-- User Menu Dropdown -->
+                <div class="user-menu">
+                    <button class="user-menu-btn" id="userMenuBtn">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="user-email" id="userEmailDisplay">Guest</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="user-menu-dropdown" id="userMenuDropdown">
+                        <div class="user-menu-header">
+                            <div class="credit-display">
+                                <i class="fas fa-coins"></i>
+                                <span id="creditDisplay">0</span> C
+                            </div>
+                            <button class="btn-credit-charge" id="btnCreditCharge">
+                                <i class="fas fa-plus"></i> 크레딧 충전
+                            </button>
+                        </div>
+                        <div class="user-menu-divider"></div>
+                        <ul class="user-menu-list">
+                            <li><a href="#" id="btnDashboard"><i class="fas fa-th-large"></i> 대시보드</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#" id="btnMyProfile"><i class="fas fa-user"></i> 내 정보</a></li>
+                            <li><a href="#" id="btnPurchaseHistory"><i class="fas fa-history"></i> 구매 내역</a></li>
+                            <li><a href="#" id="btnUnlockedDancers"><i class="fas fa-unlock"></i> 잠금 해제 댄서</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#" id="btnLogout"><i class="fas fa-sign-out-alt"></i> 로그아웃</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="hero-background">
+            <div class="gradient-overlay"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-logo">
+                    <img src="https://www.genspark.ai/api/files/s/2ElHBEFL" alt="UTOPIA X Logo">
+                </div>
+                
+                <!-- Infinite Photocard Slider -->
+                <div class="photocard-slider-container">
+                    <div class="photocard-slider">
+                        <div class="photocard-item">
+                            <img src="https://www.genspark.ai/api/files/s/8LNPGU60" alt="Photocard 1">
+                        </div>
+                        <div class="photocard-item">
+                            <img src="https://www.genspark.ai/api/files/s/zE1wPOIy" alt="Photocard 2">
+                        </div>
+                        <div class="photocard-item">
+                            <img src="https://www.genspark.ai/api/files/s/EdOO0ym8" alt="Photocard 3">
+                        </div>
+                        <div class="photocard-item">
+                            <img src="https://www.genspark.ai/api/files/s/wJMVm74j" alt="Photocard 4">
+                        </div>
+                        <div class="photocard-item">
+                            <img src="https://www.genspark.ai/api/files/s/TcjODILb" alt="Photocard 5">
+                        </div>
+                        <div class="photocard-item">
+                            <img src="https://www.genspark.ai/api/files/s/KzN1PprP" alt="Photocard 6">
+                        </div>
+                        <div class="photocard-item">
+                            <img src="https://www.genspark.ai/api/files/s/2acvojv6" alt="Photocard 7">
+                        </div>
+                        <!-- Duplicate for seamless loop -->
+                        <div class="photocard-item">
+                            <img src="https://www.genspark.ai/api/files/s/8LNPGU60" alt="Photocard 1">
+                        </div>
+                        <div class="photocard-item">
+                            <img src="https://www.genspark.ai/api/files/s/zE1wPOIy" alt="Photocard 2">
+                        </div>
+                        <div class="photocard-item">
+                            <img src="https://www.genspark.ai/api/files/s/EdOO0ym8" alt="Photocard 3">
+                        </div>
+                        <div class="photocard-item">
+                            <img src="https://www.genspark.ai/api/files/s/wJMVm74j" alt="Photocard 4">
+                        </div>
+                        <div class="photocard-item">
+                            <img src="https://www.genspark.ai/api/files/s/TcjODILb" alt="Photocard 5">
+                        </div>
+                        <div class="photocard-item">
+                            <img src="https://www.genspark.ai/api/files/s/KzN1PprP" alt="Photocard 6">
+                        </div>
+                        <div class="photocard-item">
+                            <img src="https://www.genspark.ai/api/files/s/2acvojv6" alt="Photocard 7">
+                        </div>
+                    </div>
+                </div>
+                
+                <h1 class="hero-title">
+                    AI 기반 댄서 캐스팅
+                    <span class="gradient-text">UTOPIA X</span>
+                </h1>
+                <p class="hero-subtitle">
+                    AI 기반 댄서 매칭 시스템으로<br>
+                    당신의 프로젝트에 완벽한 아티스트를 찾아드립니다
+                </p>
+                
+                <!-- CTA Popup Cards -->
+                <div class="hero-cta-cards">
+                    <div class="cta-card" data-modal="casting">
+                        <div class="cta-badge">클라이언트 전용</div>
+                        <h3>댄서 섭외가 필요하시다면?</h3>
+                        <p>프로젝트에 맞는 최적의 댄서를 AI가 추천해드립니다</p>
+                        <button class="btn btn-large btn-gradient">
+                            <i class="fas fa-search"></i>
+                            댄서 섭외하기
+                        </button>
+                    </div>
+                    <div class="cta-card" data-modal="artist">
+                        <div class="cta-badge">아티스트 전용</div>
+                        <h3>빠른 매칭과 어울리는 비즈니스 제공</h3>
+                        <p>당신의 재능을 필요로 하는 프로젝트를 찾아드립니다</p>
+                        <button class="btn btn-large btn-outline">
+                            <i class="fas fa-user-plus"></i>
+                            아티스트 등록하기
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">1,200+</div>
+                        <div class="stat-label">등록 댄서</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">350+</div>
+                        <div class="stat-label">성공 프로젝트</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">98%</div>
+                        <div class="stat-label">만족도</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="gradient-text">UTOPIA X</span> 소개
+                </h2>
+                <p class="section-subtitle">
+                    AI 기반 댄서 캐스팅 플랫폼의 혁신
+                </p>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Google Gemini AI 기반 정밀 매칭</h3>
+                    <p>
+                        UTOPIA X는 Google Gemini AI를 활용하여 프로젝트 요구사항과 댄서의 특성을 
+                        정밀하게 분석합니다. 모든 아티스트는 UTOPIAX 전문팀이 직접 검토하고 검증한 
+                        신뢰할 수 있는 프로페셔널입니다.
+                    </p>
+                    <div class="about-features">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>🤖 Google Gemini AI</h4>
+                                <p>최첨단 AI 기술로 정확한 매칭 제공</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-shield-check"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>✅ UTOPIAX 직접 검증</h4>
+                                <p>전문팀의 철저한 포트폴리오 검수</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>⚡ 빠른 캐스팅</h4>
+                                <p>평균 1분 이내 최적 후보 제안</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="https://sspark.genspark.ai/cfimages?u1=UzhXNL3%2BYdSIyB7GNM83Hq4D57D7TJG0%2F%2Bu%2FjyTxskCo7%2B2o6R5jYpzlu1JbP5QVRUA%2Fdgu0Udid7CAAe8eEEGVUAXwRyqSdk%2Fd7KXzEwHtlrIyTaiTjhLp11Q%3D%3D&u2=gZXoVrNXB23cbw2k&width=2560" alt="AI Matching System">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dancers Section (Featured Grid) -->
+    <section id="dancers" class="dancers section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="gradient-text">빠른섭외</span> 프리미엄 댄서
+                </h2>
+                <p class="section-subtitle">
+                    협찬 댄서 - 크레딧 사용 없이 무료로 빠르게 컨택하세요
+                </p>
+            </div>
+            <div class="featured-dancers-grid" id="featuredDancersGrid">
+                <!-- Cards will be dynamically loaded -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="portfolio section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    프로젝트 <span class="gradient-text">포트폴리오</span>
+                </h2>
+                <p class="section-subtitle">
+                    글로벌 브랜드와 함께한 성공 사례
+                </p>
+            </div>
+            <div class="portfolio-grid">
+                <div class="portfolio-item">
+                    <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800" alt="K-pop Concert">
+                    <div class="portfolio-overlay">
+                        <h3>K-POP 콘서트 투어</h3>
+                        <p>글로벌 아티스트 백댄서 50명 캐스팅</p>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800" alt="Fashion Show">
+                    <div class="portfolio-overlay">
+                        <h3>패션 런웨이 쇼</h3>
+                        <p>럭셔리 브랜드 시즌 컬렉션</p>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <img src="https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=800" alt="TV Commercial">
+                    <div class="portfolio-overlay">
+                        <h3>TV 광고 캠페인</h3>
+                        <p>글로벌 스포츠 브랜드 CF</p>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <img src="https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800" alt="Music Festival">
+                    <div class="portfolio-overlay">
+                        <h3>뮤직 페스티벌</h3>
+                        <p>대규모 개막식 퍼포먼스</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Client Logos -->
+            <div class="clients-section">
+                <h3 class="clients-title">협력 브랜드</h3>
+                <div class="clients-grid">
+                    <div class="client-logo">
+                        <img src="https://via.placeholder.com/150x60/333333/9D4EDD?text=HYBE" alt="HYBE">
+                    </div>
+                    <div class="client-logo">
+                        <img src="https://via.placeholder.com/150x60/333333/9D4EDD?text=SM+ENT" alt="SM Entertainment">
+                    </div>
+                    <div class="client-logo">
+                        <img src="https://via.placeholder.com/150x60/333333/9D4EDD?text=YG+ENT" alt="YG Entertainment">
+                    </div>
+                    <div class="client-logo">
+                        <img src="https://via.placeholder.com/150x60/333333/9D4EDD?text=NIKE" alt="Nike">
+                    </div>
+                    <div class="client-logo">
+                        <img src="https://via.placeholder.com/150x60/333333/9D4EDD?text=ADIDAS" alt="Adidas">
+                    </div>
+                    <div class="client-logo">
+                        <img src="https://via.placeholder.com/150x60/333333/9D4EDD?text=SAMSUNG" alt="Samsung">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    클라이언트 <span class="gradient-text">후기</span>
+                </h2>
+                <p class="section-subtitle">
+                    AI 캐스팅 시스템을 경험한 고객들의 목소리
+                </p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100" alt="Client" class="testimonial-avatar">
+                        <div class="testimonial-info">
+                            <h4>김태현</h4>
+                            <p>광고 프로듀서 | 제일기획</p>
+                        </div>
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="testimonial-text">
+                        "AI 매칭 시스템이 정말 놀라웠습니다. 우리가 원하는 스타일의 댄서를 24시간 만에 찾아주었고, 
+                        첫 미팅에서 바로 계약을 진행했습니다. 시간과 비용을 크게 절약할 수 있었어요."
+                    </p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100" alt="Client" class="testimonial-avatar">
+                        <div class="testimonial-info">
+                            <h4>Sarah Johnson</h4>
+                            <p>Music Video Director | USA</p>
+                        </div>
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="testimonial-text">
+                        "유토피아X와 함께 작업하는 것은 정말 매끄러웠습니다. AI 시스템이 우리 뮤직비디오에 필요한 것을 정확히 이해했고, 
+                        추천해준 댄서들은 완벽했습니다. 매우 전문적이었어요!"
+                    </p>
+                </div>
+                <div class="testimonial-card dancer-testimonial">
+                    <div class="testimonial-header">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" alt="Dancer" class="testimonial-avatar">
+                        <div class="testimonial-info">
+                            <h4>박민재</h4>
+                            <p>프리랜스 댄서</p>
+                        </div>
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="testimonial-text">
+                        "등록 후 일주일 만에 첫 프로젝트 제안을 받았습니다. 플랫폼이 내 스타일에 맞는 
+                        프로젝트만 추천해줘서 오디션 성공률이 훨씬 높아졌어요. 댄서로서 커리어 관리가 정말 편해졌습니다."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partners Section (Infinite Slider) -->
+    <section id="partners" class="partners section section-alt">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    협력 <span class="gradient-text">브랜드</span>
+                </h2>
+                <p class="section-subtitle">
+                    다양한 파트너사와 함께합니다
+                </p>
+            </div>
+            <div class="partners-slider-container">
+                <div class="partners-slider">
+                    <img src="https://www.genspark.ai/api/files/s/sDYlvH68" alt="Partners Logos">
+                    <img src="https://www.genspark.ai/api/files/s/sDYlvH68" alt="Partners Logos">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    문의하기 <span class="gradient-text">Contact</span>
+                </h2>
+                <p class="section-subtitle">
+                    언제든지 문의해주세요. 전문 팀이 도와드립니다.
+                </p>
+            </div>
+            <div class="contact-simple">
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h4>주소</h4>
+                    <p>서울시 마포구</p>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h4>이메일</h4>
+                    <p>official@utopiax.kr</p>
+                </div>
+                <a href="https://www.instagram.com/utopiax.official/" target="_blank" rel="noopener noreferrer" class="contact-card" style="text-decoration: none; color: inherit; cursor: pointer; transition: all 0.3s ease;">
+                    <div class="contact-icon">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                    <h4>Instagram</h4>
+                    <p style="color: var(--primary-pink); font-weight: 600;">@utopiax.official</p>
+                </a>
+            </div>
+        </div>
+    </section>
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="TikTok">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 15px; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">UTOPIA X</h3>
+                    <p style="margin-bottom: 10px;">AI 기반 댄서 캐스팅 플랫폼</p>
+                    <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">
+                        <strong>사업자 등록번호:</strong> 778-62-00829
+                    </p>
+                    <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">
+                        <strong>대표:</strong> 김성광
+                    </p>
+                    <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">
+                        <strong>이메일:</strong> <a href="mailto:official@utopiax.kr" style="color: var(--primary-blue); text-decoration: none;">official@utopiax.kr</a>
+                    </p>
+                    <p style="font-size: 14px; color: var(--text-secondary);">
+                        <strong>주소:</strong> 서울시 마포구
+                    </p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>회사</h4>
+                        <ul>
+                            <li><a href="#about">회사 소개</a></li>
+                            <li><a href="#portfolio">포트폴리오</a></li>
+                            <li><a href="#testimonials">후기</a></li>
+                            <li><a href="#contact">문의하기</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>서비스</h4>
+                        <ul>
+                            <li><a href="#" class="open-modal" data-modal="casting">댄서 섭외</a></li>
+                            <li><a href="#" class="open-modal" data-modal="artist">아티스트 등록</a></li>
+                            <li><a href="#dancers">추천 댄서</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>법적 고지</h4>
+                        <ul>
+                            <li><a href="#">개인정보처리방침</a></li>
+                            <li><a href="#">이용약관</a></li>
+                            <li><a href="#">쿠키 정책</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 UTOPIA X. All rights reserved.</p>
+                <p>Made with <i class="fas fa-heart"></i> in Seoul, Korea</p>
+                <p style="margin-top: 10px; font-size: 12px; opacity: 0.6;">
+                    <a href="admin.html" style="color: var(--text-secondary); text-decoration: none; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
+                        🔐 관리자 페이지
+                    </a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal: Login/Signup -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content modal-sm">
+            <button class="modal-close" aria-label="Close">&times;</button>
+            <div class="modal-header">
+                <h2 id="authModalTitle">UTOPIA X 로그인</h2>
+                <p id="authModalSubtitle">이메일로 간편하게 시작하세요</p>
+            </div>
+            
+            <!-- Tab Switcher -->
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="signin" onclick="switchAuthTab('signin')">
+                    로그인
+                </button>
+                <button class="auth-tab" data-tab="signup" onclick="switchAuthTab('signup')">
+                    회원가입
+                </button>
+            </div>
+            
+            <!-- Sign In Form -->
+            <form id="signInForm" class="modal-form auth-form active">
+                <div class="form-group">
+                    <label for="signInEmail">이메일 주소 *</label>
+                    <input 
+                        type="email" 
+                        id="signInEmail" 
+                        name="email" 
+                        placeholder="your@email.com"
+                        required
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="signInPassword">비밀번호 *</label>
+                    <input 
+                        type="password" 
+                        id="signInPassword" 
+                        name="password" 
+                        placeholder="••••••••"
+                        required
+                        minlength="6"
+                    >
+                </div>
+                <button type="submit" class="btn btn-large btn-gradient" style="width: 100%;">
+                    <i class="fas fa-sign-in-alt"></i>
+                    로그인
+                </button>
+            </form>
+            
+            <!-- Sign Up Form -->
+            <form id="signUpForm" class="modal-form auth-form">
+                <!-- User Type Selection (맨 위로 이동) -->
+                <div class="form-group">
+                    <label>회원 유형 선택 *</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="userRole" value="client" checked>
+                            <span class="radio-custom"></span>
+                            <span class="radio-text">
+                                <strong>클라이언트</strong>
+                                <small>댄서를 섭외하고 싶어요</small>
+                            </span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="userRole" value="artist">
+                            <span class="radio-custom"></span>
+                            <span class="radio-text">
+                                <strong>아티스트</strong>
+                                <small>댄서로 활동하고 싶어요</small>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signUpEmail">이메일 주소 *</label>
+                    <input 
+                        type="email" 
+                        id="signUpEmail" 
+                        name="email" 
+                        placeholder="your@email.com"
+                        required
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="signUpPassword">비밀번호 * (6자 이상)</label>
+                    <input 
+                        type="password" 
+                        id="signUpPassword" 
+                        name="password" 
+                        placeholder="••••••••"
+                        required
+                        minlength="6"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="signUpPasswordConfirm">비밀번호 확인 *</label>
+                    <input 
+                        type="password" 
+                        id="signUpPasswordConfirm" 
+                        name="passwordConfirm" 
+                        placeholder="••••••••"
+                        required
+                        minlength="6"
+                    >
+                </div>
+                
+                <button type="submit" class="btn btn-large btn-gradient" style="width: 100%;">
+                    <i class="fas fa-user-plus"></i>
+                    회원가입
+                </button>
+                
+                <small class="form-hint" style="text-align: center; display: block; margin-top: 15px;">
+                    <i class="fas fa-gift"></i>
+                    회원가입 시 10 크레딧이 무료로 지급됩니다!
+                </small>
+            </form>
+            
+            <p class="form-note" style="text-align: center; margin-top: 15px; font-size: 12px; color: var(--text-muted);">
+                가입 시 <a href="#" style="color: var(--primary-purple);">이용약관</a> 및 
+                <a href="#" style="color: var(--primary-purple);">개인정보처리방침</a>에 동의하게 됩니다.
+            </p>
+        </div>
+    </div>
+
+    <!-- Modal: Credit Charge -->
+    <div id="creditChargeModal" class="modal">
+        <div class="modal-content modal-md">
+            <button class="modal-close" aria-label="Close">&times;</button>
+            <div class="modal-header">
+                <h2>💰 크레딧 충전</h2>
+                <p>댄서 연락처 공개 및 채팅에 사용되는 크레딧을 충전하세요</p>
+            </div>
+            <div class="credit-packages">
+                <div class="credit-package">
+                    <div class="package-badge">기본</div>
+                    <div class="package-credits">10 크레딧</div>
+                    <div class="package-price">
+                        <span class="price-amount">55,000원</span>
+                        <span class="price-unit">/ 5,500원 per C</span>
+                    </div>
+                    <button class="btn btn-outline btn-purchase" data-package="10" data-price="55000">
+                        <i class="fas fa-shopping-cart"></i>
+                        충전하기
+                    </button>
+                </div>
+                
+                <div class="credit-package popular">
+                    <div class="package-badge">인기</div>
+                    <div class="package-discount">10% 할인</div>
+                    <div class="package-credits">50 크레딧</div>
+                    <div class="package-price">
+                        <span class="price-original">275,000원</span>
+                        <span class="price-amount">247,500원</span>
+                        <span class="price-unit">/ 4,950원 per C</span>
+                    </div>
+                    <button class="btn btn-gradient btn-purchase" data-package="50" data-price="247500">
+                        <i class="fas fa-shopping-cart"></i>
+                        충전하기
+                    </button>
+                </div>
+                
+                <div class="credit-package">
+                    <div class="package-badge">추천</div>
+                    <div class="package-discount">18% 할인</div>
+                    <div class="package-credits">100 크레딧</div>
+                    <div class="package-price">
+                        <span class="price-original">550,000원</span>
+                        <span class="price-amount">451,000원</span>
+                        <span class="price-unit">/ 4,510원 per C</span>
+                    </div>
+                    <button class="btn btn-outline btn-purchase" data-package="100" data-price="451000">
+                        <i class="fas fa-shopping-cart"></i>
+                        충전하기
+                    </button>
+                </div>
+                
+                <div class="credit-package best">
+                    <div class="package-badge">최고 혜택</div>
+                    <div class="package-discount">27% 할인</div>
+                    <div class="package-credits">200 크레딧</div>
+                    <div class="package-price">
+                        <span class="price-original">1,100,000원</span>
+                        <span class="price-amount">803,000원</span>
+                        <span class="price-unit">/ 4,015원 per C</span>
+                    </div>
+                    <button class="btn btn-gradient btn-purchase" data-package="200" data-price="803000">
+                        <i class="fas fa-shopping-cart"></i>
+                        충전하기
+                    </button>
+                </div>
+            </div>
+            <p class="form-note" style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                <i class="fas fa-shield-alt"></i>
+                안전한 결제 시스템으로 보호됩니다
+            </p>
+        </div>
+    </div>
+
+    <!-- Modal: Casting Request Form -->
+    <div id="castingModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Close">&times;</button>
+            <div class="modal-header">
+                <h2>댄서 섭외 신청</h2>
+                <p>프로젝트 정보를 입력하시면 AI가 최적의 댄서를 추천해드립니다</p>
+            </div>
+            <form id="castingForm" class="modal-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="clientName">이름 / Name *</label>
+                        <input type="text" id="clientName" name="clientName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clientEmail">이메일 / Email *</label>
+                        <input type="email" id="clientEmail" name="clientEmail" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="clientPhone">연락처 / Phone *</label>
+                        <input type="tel" id="clientPhone" name="clientPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventDate">행사 날짜 / Event Date *</label>
+                        <input type="date" id="eventDate" name="eventDate" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="eventType">프로젝트 유형 / Project Type *</label>
+                        <select id="eventType" name="eventType" required>
+                            <option value="">선택해주세요</option>
+                            <option value="popup">팝업스토어 & 브랜드 오픈 / Pop-up Store & Opening</option>
+                            <option value="shortform">숏폼 & 바이럴 챌린지 / Short-form & Challenge</option>
+                            <option value="idol">아이돌 백업 & 시안댄서 모집 / Idol Backup & Draft Dancer</option>
+                            <option value="corporate">기업 행사 & 워크샵 / Corporate Event</option>
+                            <option value="festival">대학 & 지역 축제 / Festival</option>
+                            <option value="commercial">CF, 광고 & 화보 / Commercial</option>
+                            <option value="mv">뮤직비디오 & 방송 / Music Video & Broadcast</option>
+                            <option value="other">기타 / Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dancerCount">필요 인원 / Number of Dancers *</label>
+                        <input type="number" id="dancerCount" name="dancerCount" min="1" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="budget">예산 (만원) / Budget (KRW 10,000) *</label>
+                    <input type="number" id="budget" name="budget" min="100" step="50" required>
+                    <small>예: 500만원 = 500</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="aiPrompt">원하시는 댄서 스타일을 자유롭게 설명해주세요 *</label>
+                    <textarea id="aiPrompt" name="aiPrompt" rows="5" placeholder="예: 힙합 스타일의 에너지 넘치는 댄서를 찾습니다. 키가 크고 파워풀한 춤을 추는 분들을 선호합니다. 어두운 분위기의 퍼포먼스에 적합한 댄서가 필요합니다." required></textarea>
+                    <small>AI가 입력하신 설명을 분석하여 최적의 댄서를 매칭해드립니다</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">추가 요청사항 / Additional Message</label>
+                    <textarea id="message" name="message" rows="3" placeholder="프로젝트에 대한 추가 설명이나 특별 요구사항을 입력해주세요"></textarea>
+                </div>
+                
+                <!-- AI Loading Indicator -->
+                <div id="aiLoadingIndicator" class="ai-loading" style="display: none;">
+                    <div class="loading-spinner"></div>
+                    <p>🤖 AI가 요청을 분석하고 최적의 댄서를 찾고 있습니다...</p>
+                    <small>잠시만 기다려주세요 (약 3초 소요)</small>
+                </div>
+                
+                <button type="submit" class="btn btn-large btn-gradient btn-submit">
+                    <i class="fas fa-robot"></i>
+                    AI 매칭 신청하기
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Artist Registration Form (Simplified) -->
+    <div id="artistModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Close">&times;</button>
+            <div class="modal-header">
+                <h2>아티스트 등록</h2>
+                <p>프로필을 등록하고 다양한 프로젝트 기회를 받아보세요</p>
+            </div>
+            <form id="artistForm" class="modal-form">
+                <!-- 📋 기본 정보 & 검증 / Basic Information & Verification -->
+                <div class="form-section-title">📋 기본 정보 & 검증 / Basic Information</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="artistName">이름 / Name *</label>
+                        <input type="text" id="artistName" name="artistName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="artistEmail">이메일 / Email *</label>
+                        <input type="email" id="artistEmail" name="artistEmail" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="artistPhone">연락처 / Phone *</label>
+                        <input type="tel" id="artistPhone" name="artistPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="activityRegion">활동 지역 / Activity Region *</label>
+                        <select id="activityRegion" name="activityRegion" required>
+                            <option value="">선택해주세요</option>
+                            <option value="seoul">서울 / Seoul</option>
+                            <option value="gyeonggi">경기 / Gyeonggi</option>
+                            <option value="incheon">인천 / Incheon</option>
+                            <option value="busan">부산 / Busan</option>
+                            <option value="daegu">대구 / Daegu</option>
+                            <option value="gwangju">광주 / Gwangju</option>
+                            <option value="daejeon">대전 / Daejeon</option>
+                            <option value="ulsan">울산 / Ulsan</option>
+                            <option value="sejong">세종 / Sejong</option>
+                            <option value="gangwon">강원 / Gangwon</option>
+                            <option value="chungbuk">충북 / Chungbuk</option>
+                            <option value="chungnam">충남 / Chungnam</option>
+                            <option value="jeonbuk">전북 / Jeonbuk</option>
+                            <option value="jeonnam">전남 / Jeonnam</option>
+                            <option value="gyeongbuk">경북 / Gyeongbuk</option>
+                            <option value="gyeongnam">경남 / Gyeongnam</option>
+                            <option value="jeju">제주 / Jeju</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="portfolioLink">포트폴리오 링크 / Portfolio Link * (Instagram, YouTube 등)</label>
+                        <input type="url" id="portfolioLink" name="portfolioLink" placeholder="https://instagram.com/..." required>
+                        <small>Instagram, YouTube, 개인 웹사이트 등</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="profilePhoto">프로필 사진 업로드 / Profile Photo *</label>
+                        <input type="file" id="profilePhoto" name="profilePhoto" accept="image/*" required>
+                        <small>JPG, PNG 형식, 최대 5MB</small>
+                    </div>
+                </div>
+
+                <!-- 👕 신체 정보 (의상 섭외용) / Physical Information -->
+                <div class="form-divider">
+                    <span>👕 신체 정보 (의상 섭외용) / Physical Information</span>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="gender">성별 / Gender *</label>
+                        <select id="gender" name="gender" required>
+                            <option value="">선택해주세요</option>
+                            <option value="male">남성 / Male</option>
+                            <option value="female">여성 / Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="heightCm">키 (cm) / Height *</label>
+                        <input type="number" id="heightCm" name="heightCm" min="140" max="210" required placeholder="170">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="weightKg">몸무게 (kg) / Weight *</label>
+                        <input type="number" id="weightKg" name="weightKg" min="30" max="150" required placeholder="60">
+                    </div>
+                    <div class="form-group">
+                        <label for="clothingSize">의상 사이즈 / Clothing Size *</label>
+                        <select id="clothingSize" name="clothingSize" required>
+                            <option value="">선택해주세요</option>
+                            <option value="xs">XS</option>
+                            <option value="s">S</option>
+                            <option value="m">M</option>
+                            <option value="l">L</option>
+                            <option value="xl">XL</option>
+                            <option value="xxl">XXL</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="shoeSize">신발 사이즈 (mm) / Shoe Size *</label>
+                        <input type="number" id="shoeSize" name="shoeSize" min="200" max="320" step="5" required placeholder="250">
+                        <small>예: 250mm (25.0cm)</small>
+                    </div>
+                    <div class="form-group">
+                        <!-- 빈 공간 -->
+                    </div>
+                </div>
+
+                <!-- 💰 페이 (Rate) / Payment Rate -->
+                <div class="form-divider">
+                    <span>💰 페이 (Rate) / Payment Rate</span>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="minimumBudget">최소 섭외 예산 (만원) / Minimum Budget *</label>
+                        <input type="number" id="minimumBudget" name="minimumBudget" min="10" step="5" required placeholder="50">
+                        <small>예: 50 (50만원)</small>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="negotiable" name="negotiable" value="yes">
+                            협의 가능 / Negotiable
+                        </label>
+                        <small>예산에 따라 협의 가능한 경우 체크하세요</small>
+                    </div>
+                </div>
+
+                <!-- 💃 댄스 스타일 & AI 매칭 데이터 / Dance Style & AI Matching -->
+                <div class="form-divider">
+                    <span>💃 댄스 스타일 & AI 매칭 데이터 / Dance Style</span>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="mainGenre">전문 장르 (Main Genre) *</label>
+                        <select id="mainGenre" name="mainGenre" multiple size="5" required>
+                            <option value="hiphop">힙합 / Hip-hop</option>
+                            <option value="kpop">케이팝 / K-pop</option>
+                            <option value="contemporary">컨템포러리 / Contemporary</option>
+                            <option value="ballet">발레 / Ballet</option>
+                            <option value="jazz">재즈 / Jazz</option>
+                            <option value="urban">어반 / Urban</option>
+                            <option value="breaking">브레이킹 / Breaking</option>
+                            <option value="popping">팝핑 / Popping</option>
+                            <option value="locking">락킹 / Locking</option>
+                            <option value="waacking">왁킹 / Waacking</option>
+                            <option value="krump">크럼프 / Krump</option>
+                            <option value="house">하우스 / House</option>
+                            <option value="voguing">보깅 / Voguing</option>
+                            <option value="latin">라틴 / Latin</option>
+                            <option value="belly">벨리댄스 / Belly Dance</option>
+                        </select>
+                        <small>Ctrl/Cmd 키를 눌러 다중 선택 가능</small>
+                    </div>
+                </div>
+
+                <!-- 이미지/무드 슬라이더 -->
+                <div class="form-section-title">🎨 이미지 & 무드 (AI 매칭용) / Image & Mood</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="freshDark">Fresh ↔ Dark</label>
+                        <div class="slider-labels">
+                            <span>Fresh</span>
+                            <span>Dark</span>
+                        </div>
+                        <input type="range" id="freshDark" name="freshDark" min="0" max="100" step="10" value="50">
+                        <div class="slider-value"><span id="freshDark-value">50</span> / 100</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="powerfulSoft">Powerful ↔ Soft</label>
+                        <div class="slider-labels">
+                            <span>Powerful</span>
+                            <span>Soft</span>
+                        </div>
+                        <input type="range" id="powerfulSoft" name="powerfulSoft" min="0" max="100" step="10" value="50">
+                        <div class="slider-value"><span id="powerfulSoft-value">50</span> / 100</div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="standardTrendy">Standard ↔ Trendy</label>
+                        <div class="slider-labels">
+                            <span>Standard</span>
+                            <span>Trendy</span>
+                        </div>
+                        <input type="range" id="standardTrendy" name="standardTrendy" min="0" max="100" step="10" value="50">
+                        <div class="slider-value"><span id="standardTrendy-value">50</span> / 100</div>
+                    </div>
+                    <div class="form-group">
+                        <!-- 빈 공간 -->
+                    </div>
+                </div>
+
+                <!-- 🌟 특기 사항 (Specialty) / Specialty -->
+                <div class="form-divider">
+                    <span>🌟 특기 사항 / Specialty</span>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>추가 특기 / Additional Skills</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" id="actingAvailable" name="actingAvailable"> 연기 가능 / Acting Available</label>
+                            <label><input type="checkbox" id="modelingAvailable" name="modelingAvailable"> 모델 활동 가능 / Modeling Available</label>
+                            <label><input type="checkbox" id="acrobaticAvailable" name="acrobaticAvailable"> 아크로바틱 / Acrobatic</label>
+                            <label><input type="checkbox" id="englishAvailable" name="englishAvailable"> 영어 소통 가능 / English Available</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-large btn-gradient btn-submit">
+                    <i class="fas fa-check"></i>
+                    등록 신청하기
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- AI Match Results Modal -->
+    <div id="resultsModal" class="modal">
+        <div class="modal-content results-modal-content">
+            <button class="modal-close" aria-label="Close" onclick="closeAllModals()">&times;</button>
+            <div id="resultsContent" class="results-content">
+                <!-- Results will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Authentication System -->
+    <script src="js/supabase-config.js"></script>
+    <script src="js/supabase-auth.js"></script>
+    
+    <!-- Main Scripts -->
+    <script src="js/credit-system.js"></script>
+    <script src="js/main.js"></script>
+    
+    <!-- Emergency Fix: Direct event binding -->
+    <script>
+        console.log('🚨 Emergency script loaded');
+        
+        // Initialize global state if not exists
+        if (typeof state === 'undefined') {
+            window.state = {
+                dancers: [],
+                featuredDancers: [],
+                isLoading: false,
+                aiMatchResults: null,
+                currentUser: null
+            };
+            console.log('✅ Global state initialized');
+        }
+        
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initEmergencyFixes);
+        } else {
+            initEmergencyFixes();
+        }
+        
+        function initEmergencyFixes() {
+            console.log('🔧 Initializing emergency fixes...');
+            
+            // Fix 1: Bind CTA cards (with login check)
+            bindCTAEvents();
+            
+            // Fix 2: Bind user menu
+            bindUserMenu();
+            
+            // Fix 3: Bind navigation login link
+            bindNavigationLogin();
+            
+            // Fix 4: Hide broken images
+            hideErrorImages();
+            
+            // Fix 5: Bind auth forms
+            bindAuthForms();
+            
+            console.log('✅ Emergency fixes ready');
+        }
+        
+        function bindCTAEvents() {
+            console.log('🎯 Binding CTA events...');
+            
+            // Get all CTA cards
+            const ctaCards = document.querySelectorAll('.cta-card');
+            console.log('📦 Found CTA cards:', ctaCards.length);
+            
+            ctaCards.forEach((card, index) => {
+                const modalType = card.getAttribute('data-modal');
+                console.log(`🎯 Card ${index + 1}: ${modalType}`);
+                
+                // Add click event to card
+                card.addEventListener('click', function(e) {
+                    console.log('🖱️ Card clicked:', modalType);
+                    handleCTAClick(modalType);
+                });
+                
+                // Add click event to button inside card
+                const button = card.querySelector('button');
+                if (button) {
+                    button.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        console.log('🔘 Button clicked:', modalType);
+                        handleCTAClick(modalType);
+                    });
+                    console.log(`✅ Button bound for ${modalType}`);
+                }
+            });
+            
+            console.log('✅ CTA events bound');
+        }
+        
+        function handleCTAClick(modalType) {
+            // Check if user is logged in
+            const isLoggedIn = checkLoginStatus();
+            
+            if (!isLoggedIn && (modalType === 'casting' || modalType === 'artist')) {
+                console.log('⚠️ User not logged in, showing login prompt');
+                showToast('먼저 로그인해주세요 🔐', 'info');
+                setTimeout(() => {
+                    openModalDirect('login');
+                }, 500);
+            } else {
+                openModalDirect(modalType);
+            }
+        }
+        
+        function checkLoginStatus() {
+            // Check if state.currentUser exists (from main.js)
+            if (typeof state !== 'undefined' && state.currentUser) {
+                return true;
+            }
+            
+            // Check session storage
+            const userEmail = sessionStorage.getItem('userEmail');
+            const userEmailDisplay = document.getElementById('userEmailDisplay');
+            
+            if (userEmail && userEmail !== 'Guest') {
+                if (userEmailDisplay) {
+                    userEmailDisplay.textContent = userEmail;
+                }
+                return true;
+            }
+            
+            return false;
+        }
+        
+        function showToast(message, type = 'info') {
+            console.log('📢 Toast:', message, type);
+            
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.textContent = message;
+                toast.className = `toast ${type} show`;
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            } else {
+                // Fallback: create toast if not exists
+                const newToast = document.createElement('div');
+                newToast.id = 'toast';
+                newToast.className = `toast ${type} show`;
+                newToast.textContent = message;
+                document.body.appendChild(newToast);
+                
+                setTimeout(() => {
+                    newToast.classList.remove('show');
+                }, 3000);
+            }
+        }
+        
+        function bindUserMenu() {
+            console.log('👤 Binding user menu...');
+            
+            const userMenuBtn = document.getElementById('userMenuBtn');
+            const userMenuDropdown = document.getElementById('userMenuDropdown');
+            
+            if (userMenuBtn && userMenuDropdown) {
+                userMenuBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    console.log('🖱️ User menu clicked');
+                    
+                    // Check if logged in
+                    const isLoggedIn = checkLoginStatus();
+                    if (!isLoggedIn) {
+                        console.log('⚠️ Not logged in, opening login modal');
+                        openModalDirect('login');
+                    } else {
+                        userMenuDropdown.classList.toggle('active');
+                    }
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!userMenuBtn.contains(e.target) && !userMenuDropdown.contains(e.target)) {
+                        userMenuDropdown.classList.remove('active');
+                    }
+                });
+                
+                // Bind "로그아웃" to logout
+                const btnLogout = document.getElementById('btnLogout');
+                if (btnLogout) {
+                    btnLogout.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        console.log('👋 Logout clicked');
+                        
+                        // Clear session
+                        sessionStorage.removeItem('userEmail');
+                        if (typeof state !== 'undefined') {
+                            state.currentUser = null;
+                        }
+                        
+                        // Update UI
+                        const userEmailDisplay = document.getElementById('userEmailDisplay');
+                        if (userEmailDisplay) {
+                            userEmailDisplay.textContent = 'Guest';
+                        }
+                        
+                        userMenuDropdown.classList.remove('active');
+                        showToast('로그아웃되었습니다', 'success');
+                    });
+                }
+                
+                console.log('✅ User menu bound');
+            } else {
+                console.warn('❌ User menu elements not found');
+            }
+        }
+        
+        function bindNavigationLogin() {
+            console.log('🔗 Binding navigation login link...');
+            
+            // Find all links that should open login modal
+            const loginLinks = document.querySelectorAll('a[href="#login"], .open-modal[data-modal="login"]');
+            console.log('📦 Found login links:', loginLinks.length);
+            
+            loginLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('🔓 Login link clicked');
+                    openModalDirect('login');
+                });
+            });
+            
+            console.log('✅ Navigation login bound');
+        }
+        
+        function hideErrorImages() {
+            console.log('🖼️ Hiding error images...');
+            
+            // Find all images with via.placeholder.com
+            const placeholderImages = document.querySelectorAll('img[src*="via.placeholder.com"]');
+            console.log('📦 Found placeholder images:', placeholderImages.length);
+            
+            placeholderImages.forEach(img => {
+                // Hide the parent container
+                const parent = img.closest('.client-logo');
+                if (parent) {
+                    parent.style.display = 'none';
+                }
+                
+                // Also hide on error
+                img.addEventListener('error', function() {
+                    const parent = this.closest('.client-logo');
+                    if (parent) {
+                        parent.style.display = 'none';
+                    }
+                });
+            });
+            
+            console.log('✅ Error images hidden');
+        }
+        
+        function openModalDirect(type) {
+            console.log('🚀 Opening modal:', type);
+            
+            // Close all modals first
+            document.querySelectorAll('.modal').forEach(m => {
+                m.classList.remove('active');
+            });
+            
+            // Map modal types to IDs
+            const modalIds = {
+                'casting': 'castingModal',
+                'artist': 'artistModal',
+                'login': 'loginModal'
+            };
+            
+            const modalId = modalIds[type];
+            const modal = document.getElementById(modalId);
+            
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                console.log('✅ Modal opened:', modalId);
+            } else {
+                console.error('❌ Modal not found:', modalId);
+            }
+        }
+        
+        // Close modal function
+        window.closeAllModals = function() {
+            console.log('🔒 Closing all modals');
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.classList.remove('active');
+            });
+            document.body.style.overflow = '';
+        };
+        
+        // Bind close buttons
+        document.querySelectorAll('.modal-close').forEach(btn => {
+            btn.addEventListener('click', closeAllModals);
+        });
+        
+        // ❌ 바깥 클릭으로 모달 닫기 제거
+        // ❌ ESC 키로 모달 닫기 제거
+        // → X 버튼으로만 닫을 수 있음
+        
+        // Authentication Forms Handler
+        function bindAuthForms() {
+            console.log('🔐 Binding auth forms...');
+            
+            // Sign In Form - Don't clone, just remove old listeners
+            const signInForm = document.getElementById('signInForm');
+            console.log('📝 SignIn form found:', !!signInForm);
+            
+            if (signInForm) {
+                // Create new handler
+                const handleSignIn = async function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('🔓 Sign in form submitted');
+                    
+                    const email = document.getElementById('signInEmail').value;
+                    const password = document.getElementById('signInPassword').value;
+                    
+                    console.log('🔐 Login attempt:');
+                    console.log('  - Email:', email);
+                    console.log('  - Password length:', password.length);
+                    
+                    // Validate
+                    if (!email || !password) {
+                        console.error('❌ Missing email or password');
+                        showToast('이메일과 비밀번호를 입력해주세요', 'error');
+                        return;
+                    }
+                    
+                    if (password.length < 6) {
+                        console.error('❌ Password too short');
+                        showToast('비밀번호를 6자 이상 입력해주세요', 'error');
+                        return;
+                    }
+                    
+                    // Check if auth functions are available
+                    if (typeof signIn === 'function') {
+                        console.log('✅ signIn function available, calling...');
+                        try {
+                            const result = await signIn(email, password);
+                            console.log('🔓 Login result:', result);
+                            
+                            if (result.success) {
+                                console.log('✅ Login successful, closing modal');
+                                closeAllModals();
+                            } else {
+                                console.error('❌ Login failed:', result);
+                            }
+                        } catch (error) {
+                            console.error('❌ Login exception:', error);
+                            showToast('로그인 중 오류가 발생했습니다', 'error');
+                        }
+                    } else {
+                        console.error('❌ signIn function not available');
+                        showToast('인증 시스템을 사용할 수 없습니다', 'error');
+                    }
+                };
+                
+                // Remove old event listeners by replacing with clone
+                const newSignInForm = signInForm.cloneNode(true);
+                signInForm.parentNode.replaceChild(newSignInForm, signInForm);
+                
+                // Add event listener to new form
+                newSignInForm.addEventListener('submit', handleSignIn, false);
+                
+                // Also add click handler to button
+                const signInButton = newSignInForm.querySelector('button[type="submit"]');
+                if (signInButton) {
+                    console.log('🔘 Binding click event to login button');
+                    signInButton.addEventListener('click', function(e) {
+                        console.log('🖱️ Login button clicked directly');
+                    }, false);
+                }
+                
+                console.log('✅ Sign in form handler attached');
+            }
+            
+            // Sign Up Form - Same approach
+            const signUpForm = document.getElementById('signUpForm');
+            console.log('📝 SignUp form found:', !!signUpForm);
+            
+            if (signUpForm) {
+                const handleSignUp = async function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('📝 Sign up form submitted');
+                    
+                    const email = document.getElementById('signUpEmail').value;
+                    const password = document.getElementById('signUpPassword').value;
+                    const passwordConfirm = document.getElementById('signUpPasswordConfirm').value;
+                    const role = document.querySelector('input[name="userRole"]:checked')?.value || 'client';
+                    
+                    console.log('📝 Signup attempt:', email, 'as', role);
+                    console.log('  - Password length:', password.length);
+                    console.log('  - Passwords match:', password === passwordConfirm);
+                    
+                    // Validate passwords match
+                    if (password !== passwordConfirm) {
+                        showToast('비밀번호가 일치하지 않습니다', 'error');
+                        return;
+                    }
+                    
+                    // Check if auth functions are available
+                    if (typeof signUp === 'function') {
+                        console.log('✅ signUp function available, calling...');
+                        try {
+                            const result = await signUp(email, password, role);
+                            console.log('📝 Signup result:', result);
+                            
+                            if (result.success && typeof switchAuthTab === 'function') {
+                                console.log('✅ Signup successful, switching to signin tab');
+                                switchAuthTab('signin');
+                            } else {
+                                console.error('❌ Signup failed:', result);
+                            }
+                        } catch (error) {
+                            console.error('❌ Signup exception:', error);
+                            showToast('회원가입 중 오류가 발생했습니다', 'error');
+                        }
+                    } else {
+                        console.error('❌ signUp function not available');
+                        showToast('인증 시스템을 사용할 수 없습니다', 'error');
+                    }
+                };
+                
+                // Remove old event listeners
+                const newSignUpForm = signUpForm.cloneNode(true);
+                signUpForm.parentNode.replaceChild(newSignUpForm, signUpForm);
+                
+                // Add event listener
+                newSignUpForm.addEventListener('submit', handleSignUp, false);
+                
+                // Button click handler
+                const signUpButton = newSignUpForm.querySelector('button[type="submit"]');
+                if (signUpButton) {
+                    console.log('🔘 Binding click event to signup button');
+                    signUpButton.addEventListener('click', function(e) {
+                        console.log('🖱️ Signup button clicked directly');
+                    }, false);
+                }
+                
+                console.log('✅ Sign up form handler attached');
+            }
+            
+            console.log('✅ Auth forms bound');
+        }
+        
+        // Switch between sign in and sign up tabs
+        window.switchAuthTab = function(tab) {
+            console.log('🔄 Switching to tab:', tab);
+            
+            const signInTab = document.querySelector('.auth-tab[data-tab="signin"]');
+            const signUpTab = document.querySelector('.auth-tab[data-tab="signup"]');
+            const signInForm = document.getElementById('signInForm');
+            const signUpForm = document.getElementById('signUpForm');
+            const modalTitle = document.getElementById('authModalTitle');
+            const modalSubtitle = document.getElementById('authModalSubtitle');
+            
+            if (tab === 'signin') {
+                // Switch to Sign In
+                if (signInTab) signInTab.classList.add('active');
+                if (signUpTab) signUpTab.classList.remove('active');
+                if (signInForm) signInForm.classList.add('active');
+                if (signUpForm) signUpForm.classList.remove('active');
+                
+                if (modalTitle) modalTitle.textContent = 'UTOPIA X 로그인';
+                if (modalSubtitle) modalSubtitle.textContent = '이메일로 간편하게 시작하세요';
+                
+                console.log('✅ Switched to Sign In tab');
+            } else if (tab === 'signup') {
+                // Switch to Sign Up
+                if (signInTab) signInTab.classList.remove('active');
+                if (signUpTab) signUpTab.classList.add('active');
+                if (signInForm) signInForm.classList.remove('active');
+                if (signUpForm) signUpForm.classList.add('active');
+                
+                if (modalTitle) modalTitle.textContent = '회원가입';
+                if (modalSubtitle) modalSubtitle.textContent = '프로젝트를 시작하거나 댄서로 활동하세요';
+                
+                console.log('✅ Switched to Sign Up tab');
+            }
+        };
+        
+        // Debug: Check localStorage
+        console.log('💾 Mock Users in localStorage:', localStorage.getItem('mockUsers'));
+        
+        // Debug: Test login function availability
+        setTimeout(() => {
+            console.log('🔍 Checking auth functions...');
+            console.log('  - signIn:', typeof signIn);
+            console.log('  - signUp:', typeof signUp);
+            console.log('  - initSupabase:', typeof initSupabase);
+        }, 2000);
+    </script>
+</body>
+</html>

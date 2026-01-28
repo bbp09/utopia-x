@@ -1,0 +1,217 @@
+<!-- Modal: Artist Registration Form (Simplified) -->
+<div id="artistModal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" aria-label="Close">&times;</button>
+        <div class="modal-header">
+            <h2>아티스트 등록</h2>
+            <p>프로필을 등록하고 다양한 프로젝트 기회를 받아보세요</p>
+        </div>
+        <form id="artistForm" class="modal-form">
+            <!-- 📋 기본 정보 & 검증 / Basic Information & Verification -->
+            <div class="form-section-title">📋 기본 정보 & 검증 / Basic Information</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="artistName">이름 / Name *</label>
+                    <input type="text" id="artistName" name="artistName" required>
+                </div>
+                <div class="form-group">
+                    <label for="artistEmail">이메일 / Email *</label>
+                    <input type="email" id="artistEmail" name="artistEmail" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="artistPhone">연락처 / Phone *</label>
+                    <input type="tel" id="artistPhone" name="artistPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="activityRegion">활동 지역 / Activity Region *</label>
+                    <select id="activityRegion" name="activityRegion" required>
+                        <option value="">선택해주세요</option>
+                        <option value="seoul">서울 / Seoul</option>
+                        <option value="gyeonggi">경기 / Gyeonggi</option>
+                        <option value="incheon">인천 / Incheon</option>
+                        <option value="busan">부산 / Busan</option>
+                        <option value="daegu">대구 / Daegu</option>
+                        <option value="gwangju">광주 / Gwangju</option>
+                        <option value="daejeon">대전 / Daejeon</option>
+                        <option value="ulsan">울산 / Ulsan</option>
+                        <option value="sejong">세종 / Sejong</option>
+                        <option value="gangwon">강원 / Gangwon</option>
+                        <option value="chungbuk">충북 / Chungbuk</option>
+                        <option value="chungnam">충남 / Chungnam</option>
+                        <option value="jeonbuk">전북 / Jeonbuk</option>
+                        <option value="jeonnam">전남 / Jeonnam</option>
+                        <option value="gyeongbuk">경북 / Gyeongbuk</option>
+                        <option value="gyeongnam">경남 / Gyeongnam</option>
+                        <option value="jeju">제주 / Jeju</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="portfolioLink">포트폴리오 링크 / Portfolio Link * (Instagram, YouTube 등)</label>
+                    <input type="url" id="portfolioLink" name="portfolioLink" placeholder="https://instagram.com/..." required>
+                    <small>Instagram, YouTube, 개인 웹사이트 등</small>
+                </div>
+                <div class="form-group">
+                    <label for="profilePhoto">프로필 사진 업로드 / Profile Photo *</label>
+                    <input type="file" id="profilePhoto" name="profilePhoto" accept="image/*" required>
+                    <small>JPG, PNG 형식, 최대 5MB</small>
+                </div>
+            </div>
+
+            <!-- 👕 신체 정보 (의상 섭외용) / Physical Information -->
+            <div class="form-divider">
+                <span>👕 신체 정보 (의상 섭외용) / Physical Information</span>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="gender">성별 / Gender *</label>
+                    <select id="gender" name="gender" required>
+                        <option value="">선택해주세요</option>
+                        <option value="male">남성 / Male</option>
+                        <option value="female">여성 / Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="heightCm">키 (cm) / Height *</label>
+                    <input type="number" id="heightCm" name="heightCm" min="140" max="210" required placeholder="170">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="weightKg">몸무게 (kg) / Weight *</label>
+                    <input type="number" id="weightKg" name="weightKg" min="30" max="150" required placeholder="60">
+                </div>
+                <div class="form-group">
+                    <label for="clothingSize">의상 사이즈 / Clothing Size *</label>
+                    <select id="clothingSize" name="clothingSize" required>
+                        <option value="">선택해주세요</option>
+                        <option value="xs">XS</option>
+                        <option value="s">S</option>
+                        <option value="m">M</option>
+                        <option value="l">L</option>
+                        <option value="xl">XL</option>
+                        <option value="xxl">XXL</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="shoeSize">신발 사이즈 (mm) / Shoe Size *</label>
+                    <input type="number" id="shoeSize" name="shoeSize" min="200" max="320" step="5" required placeholder="250">
+                    <small>예: 250mm (25.0cm)</small>
+                </div>
+                <div class="form-group">
+                    <!-- 빈 공간 -->
+                </div>
+            </div>
+
+            <!-- 💰 페이 (Rate) / Payment Rate -->
+            <div class="form-divider">
+                <span>💰 페이 (Rate) / Payment Rate</span>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="minimumBudget">최소 섭외 예산 (만원) / Minimum Budget *</label>
+                    <input type="number" id="minimumBudget" name="minimumBudget" min="10" step="5" required placeholder="50">
+                    <small>예: 50 (50만원)</small>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="negotiable" name="negotiable" value="yes">
+                        협의 가능 / Negotiable
+                    </label>
+                    <small>예산에 따라 협의 가능한 경우 체크하세요</small>
+                </div>
+            </div>
+
+            <!-- 💃 댄스 스타일 & AI 매칭 데이터 / Dance Style & AI Matching -->
+            <div class="form-divider">
+                <span>💃 댄스 스타일 & AI 매칭 데이터 / Dance Style</span>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="mainGenre">전문 장르 (Main Genre) *</label>
+                    <select id="mainGenre" name="mainGenre" multiple size="5" required>
+                        <option value="hiphop">힙합 / Hip-hop</option>
+                        <option value="kpop">케이팝 / K-pop</option>
+                        <option value="contemporary">컨템포러리 / Contemporary</option>
+                        <option value="ballet">발레 / Ballet</option>
+                        <option value="jazz">재즈 / Jazz</option>
+                        <option value="urban">어반 / Urban</option>
+                        <option value="breaking">브레이킹 / Breaking</option>
+                        <option value="popping">팝핑 / Popping</option>
+                        <option value="locking">락킹 / Locking</option>
+                        <option value="waacking">왁킹 / Waacking</option>
+                        <option value="krump">크럼프 / Krump</option>
+                        <option value="house">하우스 / House</option>
+                        <option value="voguing">보깅 / Voguing</option>
+                        <option value="latin">라틴 / Latin</option>
+                        <option value="belly">벨리댄스 / Belly Dance</option>
+                    </select>
+                    <small>Ctrl/Cmd 키를 눌러 다중 선택 가능</small>
+                </div>
+            </div>
+
+            <!-- 이미지/무드 슬라이더 -->
+            <div class="form-section-title">🎨 이미지 & 무드 (AI 매칭용) / Image & Mood</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="freshDark">Fresh ↔ Dark</label>
+                    <div class="slider-labels">
+                        <span>Fresh</span>
+                        <span>Dark</span>
+                    </div>
+                    <input type="range" id="freshDark" name="freshDark" min="0" max="100" step="10" value="50">
+                    <div class="slider-value"><span id="freshDark-value">50</span> / 100</div>
+                </div>
+                <div class="form-group">
+                    <label for="powerfulSoft">Powerful ↔ Soft</label>
+                    <div class="slider-labels">
+                        <span>Powerful</span>
+                        <span>Soft</span>
+                    </div>
+                    <input type="range" id="powerfulSoft" name="powerfulSoft" min="0" max="100" step="10" value="50">
+                    <div class="slider-value"><span id="powerfulSoft-value">50</span> / 100</div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="standardTrendy">Standard ↔ Trendy</label>
+                    <div class="slider-labels">
+                        <span>Standard</span>
+                        <span>Trendy</span>
+                    </div>
+                    <input type="range" id="standardTrendy" name="standardTrendy" min="0" max="100" step="10" value="50">
+                    <div class="slider-value"><span id="standardTrendy-value">50</span> / 100</div>
+                </div>
+                <div class="form-group">
+                    <!-- 빈 공간 -->
+                </div>
+            </div>
+
+            <!-- 🌟 특기 사항 (Specialty) / Specialty -->
+            <div class="form-divider">
+                <span>🌟 특기 사항 / Specialty</span>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>추가 특기 / Additional Skills</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" id="actingAvailable" name="actingAvailable"> 연기 가능 / Acting Available</label>
+                        <label><input type="checkbox" id="modelingAvailable" name="modelingAvailable"> 모델 활동 가능 / Modeling Available</label>
+                        <label><input type="checkbox" id="acrobaticAvailable" name="acrobaticAvailable"> 아크로바틱 / Acrobatic</label>
+                        <label><input type="checkbox" id="englishAvailable" name="englishAvailable"> 영어 소통 가능 / English Available</label>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-large btn-gradient btn-submit">
+                <i class="fas fa-check"></i>
+                등록 신청하기
+            </button>
+        </form>
+    </div>
+</div>

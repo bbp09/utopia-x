@@ -1,0 +1,323 @@
+<!-- Artist Registration Modal - Simplified Version -->
+<div id="artistModal" class="modal">
+    <div class="modal-content modal-lg">
+        <button class="modal-close" aria-label="Close">&times;</button>
+        <div class="modal-header">
+            <h2>🎭 아티스트 등록</h2>
+            <p>프로필을 등록하고 다양한 프로젝트 기회를 받아보세요</p>
+        </div>
+        <form id="artistForm" class="modal-form">
+            
+            <!-- 📋 Section 1: 기본 정보 & 검증 -->
+            <div class="form-section">
+                <h3 class="form-section-title">📋 기본 정보 & 검증</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="artistName">이름 *</label>
+                        <input type="text" id="artistName" name="artistName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="artistPhone">연락처 *</label>
+                        <input type="tel" id="artistPhone" name="artistPhone" required placeholder="010-0000-0000">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="artistEmail">이메일 *</label>
+                        <input type="email" id="artistEmail" name="artistEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="activityRegion">활동 지역 *</label>
+                        <select id="activityRegion" name="activityRegion" required>
+                            <option value="">선택하세요</option>
+                            <option value="서울">서울</option>
+                            <option value="경기">경기</option>
+                            <option value="인천">인천</option>
+                            <option value="부산">부산</option>
+                            <option value="대구">대구</option>
+                            <option value="대전">대전</option>
+                            <option value="광주">광주</option>
+                            <option value="울산">울산</option>
+                            <option value="세종">세종</option>
+                            <option value="강원">강원</option>
+                            <option value="충북">충북</option>
+                            <option value="충남">충남</option>
+                            <option value="전북">전북</option>
+                            <option value="전남">전남</option>
+                            <option value="경북">경북</option>
+                            <option value="경남">경남</option>
+                            <option value="제주">제주</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="portfolioLink">포트폴리오 링크 * (Instagram, YouTube 등)</label>
+                        <input type="url" id="portfolioLink" name="portfolioLink" required placeholder="https://instagram.com/...">
+                        <small>춤 영상을 확인할 수 있는 링크를 입력해주세요</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="profileImage">프로필 사진 링크 *</label>
+                        <input type="url" id="profileImage" name="profileImage" required placeholder="https://...">
+                        <small>프로필 이미지 URL을 입력해주세요</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 👕 Section 2: 신체 정보 (의상 섭외용) -->
+            <div class="form-section">
+                <h3 class="form-section-title">👕 신체 정보 (의상 섭외용)</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="gender">성별 *</label>
+                        <select id="gender" name="gender" required>
+                            <option value="">선택하세요</option>
+                            <option value="male">남성</option>
+                            <option value="female">여성</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="heightCm">키 (cm) *</label>
+                        <input type="number" id="heightCm" name="heightCm" required min="140" max="220" placeholder="170">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="weightKg">몸무게 (kg) *</label>
+                        <input type="number" id="weightKg" name="weightKg" required min="35" max="150" placeholder="60">
+                    </div>
+                    <div class="form-group">
+                        <label for="clothingSize">의상 사이즈 *</label>
+                        <select id="clothingSize" name="clothingSize" required>
+                            <option value="">선택하세요</option>
+                            <option value="XS">XS</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="shoeSize">신발 사이즈 (mm) *</label>
+                        <input type="number" id="shoeSize" name="shoeSize" required min="200" max="320" placeholder="250">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 💰 Section 3: 페이 (Rate) -->
+            <div class="form-section">
+                <h3 class="form-section-title">💰 페이 (Rate)</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="minimumBudget">최소 섭외 예산 (만원/일) *</label>
+                        <input type="number" id="minimumBudget" name="minimumBudget" required min="10" step="5" placeholder="50">
+                        <small>예: 50만원 = 50</small>
+                    </div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" id="negotiable" name="negotiable" style="width: auto; margin: 0;">
+                            <span>협의 가능 (Negotiable)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 💃 Section 4: 댄스 스타일 & AI 매칭 -->
+            <div class="form-section">
+                <h3 class="form-section-title">💃 댄스 스타일 & AI 매칭</h3>
+                <div class="form-group">
+                    <label for="mainGenre">전문 장르 (Main Genre) * - 다중 선택 가능</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="genre" value="힙합"> 힙합 (Hip-hop)</label>
+                        <label><input type="checkbox" name="genre" value="K-pop"> K-pop</label>
+                        <label><input type="checkbox" name="genre" value="왁킹"> 왁킹 (Waacking)</label>
+                        <label><input type="checkbox" name="genre" value="브레이킹"> 브레이킹 (Breaking)</label>
+                        <label><input type="checkbox" name="genre" value="팝핑"> 팝핑 (Popping)</label>
+                        <label><input type="checkbox" name="genre" value="하우스"> 하우스 (House)</label>
+                        <label><input type="checkbox" name="genre" value="컨템포러리"> 컨템포러리 (Contemporary)</label>
+                        <label><input type="checkbox" name="genre" value="발레"> 발레 (Ballet)</label>
+                        <label><input type="checkbox" name="genre" value="재즈"> 재즈 (Jazz)</label>
+                        <label><input type="checkbox" name="genre" value="기타"> 기타</label>
+                    </div>
+                </div>
+
+                <!-- AI 매칭용 이미지/무드 슬라이더 -->
+                <div class="form-group">
+                    <label>이미지 & 무드 (AI 매칭용)</label>
+                    <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 15px;">
+                        AI가 프로젝트와 매칭할 때 참고합니다. 자신의 댄스 스타일을 표현해주세요.
+                    </p>
+                    
+                    <div class="slider-group">
+                        <label>청량함 ↔ 힙함</label>
+                        <div class="slider-labels">
+                            <span>청량함 (Fresh)</span>
+                            <input type="range" id="freshDark" name="freshDark" min="0" max="100" value="50" class="mood-slider">
+                            <span>힙함 (Dark Hip)</span>
+                        </div>
+                        <output id="freshDarkValue" class="slider-value">50</output>
+                    </div>
+
+                    <div class="slider-group">
+                        <label>파워풀 ↔ 부드러움</label>
+                        <div class="slider-labels">
+                            <span>파워풀 (Powerful)</span>
+                            <input type="range" id="powerfulSoft" name="powerfulSoft" min="0" max="100" value="50" class="mood-slider">
+                            <span>부드러움 (Soft)</span>
+                        </div>
+                        <output id="powerfulSoftValue" class="slider-value">50</output>
+                    </div>
+
+                    <div class="slider-group">
+                        <label>정석 ↔ 트렌디</label>
+                        <div class="slider-labels">
+                            <span>정석 (Standard)</span>
+                            <input type="range" id="standardTrendy" name="standardTrendy" min="0" max="100" value="50" class="mood-slider">
+                            <span>트렌디 (Trendy)</span>
+                        </div>
+                        <output id="standardTrendyValue" class="slider-value">50</output>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ⭐ Section 5: 특기 사항 -->
+            <div class="form-section">
+                <h3 class="form-section-title">⭐ 특기 사항 (Specialty)</h3>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="specialty" value="acting"> 연기 가능 (Acting)</label>
+                    <label><input type="checkbox" name="specialty" value="modeling"> 모델 활동 가능 (Modeling)</label>
+                    <label><input type="checkbox" name="specialty" value="acrobatic"> 아크로바틱 (Acrobatic)</label>
+                    <label><input type="checkbox" name="specialty" value="english"> 영어 소통 가능 (English)</label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-submit">
+                <i class="fas fa-check"></i> 등록 신청하기
+            </button>
+        </form>
+    </div>
+</div>
+
+<style>
+/* Slider Styles */
+.slider-group {
+    margin-bottom: 25px;
+}
+
+.slider-labels {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 10px 0;
+}
+
+.slider-labels span {
+    font-size: 12px;
+    color: var(--text-secondary);
+    min-width: 100px;
+}
+
+.mood-slider {
+    flex: 1;
+    height: 6px;
+    background: linear-gradient(to right, var(--primary-pink), var(--primary-purple), var(--primary-blue));
+    border-radius: 5px;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.mood-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border: 3px solid var(--primary-purple);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.mood-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: white;
+    border: 3px solid var(--primary-purple);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.slider-value {
+    display: block;
+    text-align: center;
+    font-weight: 600;
+    color: var(--primary-purple);
+    margin-top: 5px;
+}
+
+/* Checkbox Group */
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    transition: var(--transition-base);
+}
+
+.checkbox-group label:hover {
+    border-color: var(--primary-purple);
+    background: rgba(157, 78, 221, 0.05);
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+}
+
+.form-section {
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.form-section:last-of-type {
+    border-bottom: none;
+}
+
+.form-section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--primary-gradient);
+}
+</style>
+
+<script>
+// Slider value display
+document.addEventListener('DOMContentLoaded', () => {
+    const sliders = document.querySelectorAll('.mood-slider');
+    sliders.forEach(slider => {
+        const outputId = slider.id + 'Value';
+        const output = document.getElementById(outputId);
+        if (output) {
+            slider.addEventListener('input', (e) => {
+                output.textContent = e.target.value;
+            });
+        }
+    });
+});
+</script>

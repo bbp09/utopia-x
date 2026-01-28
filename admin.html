@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTOPIA X - Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <img src="https://www.genspark.ai/api/files/s/7TQDuNp1" alt="UTOPIA X Logo" class="login-logo">
+            <h1 class="login-title">Admin Dashboard</h1>
+            <p class="login-subtitle">관리자 로그인</p>
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="adminPassword">
+                        <i class="fas fa-lock"></i> 비밀번호
+                    </label>
+                    <input type="password" id="adminPassword" placeholder="관리자 비밀번호 입력" required>
+                </div>
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> 로그인
+                </button>
+                <p class="login-hint">개발용 비밀번호: <code>admin123</code></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Admin Dashboard -->
+    <div id="adminDashboard" class="admin-dashboard" style="display: none;">
+        <!-- Sidebar Navigation -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <img src="https://www.genspark.ai/api/files/s/7TQDuNp1" alt="Logo" class="sidebar-logo">
+                <h2>UTOPIA X</h2>
+                <p class="sidebar-subtitle">Admin Panel</p>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#dashboard" class="nav-item active" data-section="dashboard">
+                    <i class="fas fa-chart-line"></i>
+                    <span>대시보드</span>
+                    <span class="nav-badge">Dashboard</span>
+                </a>
+                <a href="#casting-requests" class="nav-item" data-section="casting-requests">
+                    <i class="fas fa-user-check"></i>
+                    <span>섭외 요청</span>
+                    <span class="nav-badge" id="castingRequestsBadge">0</span>
+                </a>
+                <a href="#artist-applications" class="nav-item" data-section="artist-applications">
+                    <i class="fas fa-user-plus"></i>
+                    <span>아티스트 신청</span>
+                    <span class="nav-badge pending" id="pendingApplicationsBadge">0</span>
+                </a>
+                <a href="#featured-dancers" class="nav-item" data-section="featured-dancers">
+                    <i class="fas fa-star"></i>
+                    <span>빠른섭외 관리</span>
+                    <span class="nav-badge">10</span>
+                </a>
+                <a href="#dancers-db" class="nav-item" data-section="dancers-db">
+                    <i class="fas fa-database"></i>
+                    <span>댄서 DB</span>
+                    <span class="nav-badge" id="dancersCountBadge">0</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    로그아웃
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Top Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <h1 id="sectionTitle">대시보드</h1>
+                    <p id="sectionSubtitle">전체 현황을 한눈에 확인하세요</p>
+                </div>
+                <div class="header-right">
+                    <div class="header-time" id="currentTime"></div>
+                    <div class="header-user">
+                        <i class="fas fa-user-shield"></i>
+                        <span>관리자</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Sections -->
+            <div class="admin-content">
+                <!-- Section: Dashboard (E) -->
+                <section id="section-dashboard" class="content-section active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #E91E84, #9D4EDD);">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalDancers">0</h3>
+                                <p>총 댄서</p>
+                                <span class="stat-change positive">+0 이번 주</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #6366F1, #8B5CF6);">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalCastingRequests">0</h3>
+                                <p>섭외 요청</p>
+                                <span class="stat-change positive">+0 오늘</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #F59E0B, #EF4444);">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="pendingApplications">0</h3>
+                                <p>대기중 신청</p>
+                                <span class="stat-change">승인 필요</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #10B981, #059669);">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>98%</h3>
+                                <p>매칭 성공률</p>
+                                <span class="stat-change positive">+2% 이번 달</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-chart-bar"></i> 최근 활동</h3>
+                                <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+                            </div>
+                            <div class="activity-list" id="recentActivityList">
+                                <div class="activity-item">
+                                    <div class="activity-icon new">
+                                        <i class="fas fa-user-plus"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <p class="activity-title">데이터 로딩 중...</p>
+                                        <p class="activity-time">잠시만 기다려주세요</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-tags"></i> 인기 태그</h3>
+                                <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+                            </div>
+                            <div class="tags-cloud" id="popularTags">
+                                <span class="tag-chip">tag_fresh <span class="tag-count">24</span></span>
+                                <span class="tag-chip">tag_energetic <span class="tag-count">18</span></span>
+                                <span class="tag-chip">tag_cute <span class="tag-count">16</span></span>
+                                <span class="tag-chip">tag_elegant <span class="tag-count">12</span></span>
+                                <span class="tag-chip">tag_powerful <span class="tag-count">10</span></span>
+                                <span class="tag-chip">tag_trendy <span class="tag-count">9</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Casting Requests (C) -->
+                <section id="section-casting-requests" class="content-section">
+                    <div class="section-toolbar">
+                        <div class="toolbar-left">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchCastingRequests" placeholder="섭외 요청 검색...">
+                            </div>
+                            <select id="filterCastingStatus" class="filter-select">
+                                <option value="all">전체 상태</option>
+                                <option value="new">신규</option>
+                                <option value="reviewing">검토중</option>
+                                <option value="completed">완료</option>
+                            </select>
+                        </div>
+                        <div class="toolbar-right">
+                            <button class="btn-secondary" onclick="loadCastingRequests()">
+                                <i class="fas fa-sync-alt"></i> 새로고침
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="cards-grid" id="castingRequestsGrid">
+                        <!-- Cards will be dynamically inserted -->
+                    </div>
+                </section>
+
+                <!-- Section: Artist Applications (A) -->
+                <section id="section-artist-applications" class="content-section">
+                    <div class="section-toolbar">
+                        <div class="toolbar-left">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchApplications" placeholder="아티스트 검색...">
+                            </div>
+                            <select id="filterApplicationStatus" class="filter-select">
+                                <option value="all">전체 상태</option>
+                                <option value="pending">대기중</option>
+                                <option value="approved">승인</option>
+                                <option value="rejected">거부</option>
+                            </select>
+                        </div>
+                        <div class="toolbar-right">
+                            <button class="btn-secondary" onclick="loadArtistApplications()">
+                                <i class="fas fa-sync-alt"></i> 새로고침
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="cards-grid" id="artistApplicationsGrid">
+                        <!-- Cards will be dynamically inserted -->
+                    </div>
+                </section>
+
+                <!-- Section: Featured Dancers (B) -->
+                <section id="section-featured-dancers" class="content-section">
+                    <div class="section-info">
+                        <p><i class="fas fa-info-circle"></i> 드래그 앤 드롭으로 순서를 변경하세요. 최대 10명까지 선택 가능합니다.</p>
+                    </div>
+
+                    <div class="featured-management">
+                        <div class="featured-list-container">
+                            <h3><i class="fas fa-star"></i> 빠른섭외 리스트 (10명)</h3>
+                            <div id="featuredDancersList" class="dancers-sortable">
+                                <!-- Sortable dancer cards -->
+                            </div>
+                            <button class="btn-primary btn-save-featured" onclick="saveFeaturedDancers()">
+                                <i class="fas fa-save"></i> 변경사항 저장
+                            </button>
+                        </div>
+
+                        <div class="dancers-pool-container">
+                            <h3><i class="fas fa-database"></i> 전체 댄서 목록</h3>
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchDancersPool" placeholder="댄서 검색...">
+                            </div>
+                            <div id="dancersPoolList" class="dancers-pool">
+                                <!-- Available dancers -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Dancers DB (D) -->
+                <section id="section-dancers-db" class="content-section">
+                    <div class="section-toolbar">
+                        <div class="toolbar-left">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchDancersDB" placeholder="댄서 검색...">
+                            </div>
+                            <select id="filterGenre" class="filter-select">
+                                <option value="all">전체 장르</option>
+                                <option value="Hip-hop">Hip-hop</option>
+                                <option value="K-pop">K-pop</option>
+                                <option value="Contemporary">Contemporary</option>
+                                <option value="Jazz">Jazz</option>
+                            </select>
+                        </div>
+                        <div class="toolbar-right">
+                            <button class="btn-primary" onclick="openAddDancerModal()">
+                                <i class="fas fa-plus"></i> 댄서 추가
+                            </button>
+                            <button class="btn-secondary" onclick="loadDancersDB()">
+                                <i class="fas fa-sync-alt"></i> 새로고침
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="cards-grid" id="dancersDBGrid">
+                        <!-- Cards will be dynamically inserted -->
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Application Detail Modal -->
+    <div id="applicationDetailModal" class="modal">
+        <div class="modal-content modal-large">
+            <button class="modal-close" onclick="closeModal('applicationDetailModal')">&times;</button>
+            <div id="applicationDetailContent">
+                <!-- Application details will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Casting Request Detail Modal -->
+    <div id="castingDetailModal" class="modal">
+        <div class="modal-content modal-large">
+            <button class="modal-close" onclick="closeModal('castingDetailModal')">&times;</button>
+            <div id="castingDetailContent">
+                <!-- Casting details will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="adminToast" class="admin-toast"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

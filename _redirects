@@ -1,0 +1,8 @@
+# Netlify Redirects
+# HTTP → HTTPS 자동 리다이렉트
+
+# www → non-www
+https://www.utopiax.kr/*  https://utopiax.kr/:splat  301!
+
+# SPA Routing (모든 경로를 index.html로)
+/*    /index.html   200

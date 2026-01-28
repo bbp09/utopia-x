@@ -1,0 +1,170 @@
+/* ===================================
+   Authentication System Styles
+   =================================== */
+
+/* Auth Tabs */
+.auth-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.auth-tab::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--primary-gradient);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.auth-tab.active {
+    color: var(--primary-purple);
+}
+
+.auth-tab.active::after {
+    opacity: 1;
+}
+
+.auth-tab:hover {
+    color: var(--primary-purple);
+}
+
+/* Auth Forms */
+.auth-form {
+    display: none;
+}
+
+.auth-form.active {
+    display: block;
+}
+
+/* Radio Group for User Type Selection */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.radio-label:hover {
+    border-color: var(--primary-purple);
+    background: rgba(157, 78, 221, 0.05);
+}
+
+.radio-label input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.radio-custom {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    margin-right: 15px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.radio-custom::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--primary-gradient);
+    transition: transform 0.3s ease;
+}
+
+.radio-label input[type="radio"]:checked ~ .radio-custom {
+    border-color: var(--primary-purple);
+}
+
+.radio-label input[type="radio"]:checked ~ .radio-custom::after {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.radio-label input[type="radio"]:checked ~ .radio-text strong {
+    color: var(--primary-purple);
+}
+
+.radio-text {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.radio-text strong {
+    font-size: 16px;
+    color: var(--text-primary);
+    transition: color 0.3s ease;
+}
+
+.radio-text small {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* Form Hints */
+.form-hint {
+    display: block;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.form-hint i {
+    margin-right: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .auth-tab {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+    
+    .radio-label {
+        padding: 12px;
+    }
+    
+    .radio-text strong {
+        font-size: 14px;
+    }
+    
+    .radio-text small {
+        font-size: 12px;
+    }
+}

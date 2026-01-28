@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>클라이언트 대시보드 - UTOPIA X</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <style>
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 100px auto 60px;
+            padding: 0 20px;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .dashboard-title h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .dashboard-title p {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+        
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(157, 78, 221, 0.2);
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .stat-icon.credit {
+            background: linear-gradient(135deg, #E91E84, #9D4EDD);
+            color: white;
+        }
+        
+        .stat-icon.dancers {
+            background: linear-gradient(135deg, #6366F1, #3B82F6);
+            color: white;
+        }
+        
+        .stat-icon.projects {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+        }
+        
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .dashboard-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .dancer-list {
+            display: grid;
+            gap: 16px;
+        }
+        
+        .dancer-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: rgba(157, 78, 221, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .dancer-item:hover {
+            background: rgba(157, 78, 221, 0.1);
+            border-color: var(--primary-purple);
+        }
+        
+        .dancer-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-purple);
+        }
+        
+        .dancer-info {
+            flex: 1;
+        }
+        
+        .dancer-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .dancer-genre {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .dancer-contact {
+            font-size: 14px;
+            color: var(--primary-purple);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+        
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+        
+        .empty-state p {
+            font-size: 16px;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .dancer-item {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <a href="index.html" class="logo">
+                    <img src="https://www.genspark.ai/api/files/s/qeJgU55W" alt="UTOPIA X">
+                </a>
+                <ul class="nav-links">
+                    <li><a href="index.html">홈</a></li>
+                    <li><a href="#" class="active">대시보드</a></li>
+                </ul>
+                <div class="user-menu">
+                    <button class="user-menu-btn" id="userMenuBtn">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="user-email" id="userEmailDisplay">Loading...</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="user-menu-dropdown" id="userMenuDropdown">
+                        <div class="user-menu-header">
+                            <div class="credit-display">
+                                <i class="fas fa-coins"></i>
+                                <span id="creditDisplay">0</span> C
+                            </div>
+                            <button class="btn btn-sm btn-gradient" id="btnCreditCharge">크레딧 충전</button>
+                        </div>
+                        <div class="user-menu-items">
+                            <button class="user-menu-item" id="btnMyProfile">
+                                <i class="fas fa-user"></i>
+                                내 정보
+                            </button>
+                            <button class="user-menu-item" id="btnPurchaseHistory">
+                                <i class="fas fa-receipt"></i>
+                                구매 내역
+                            </button>
+                            <button class="user-menu-item" id="btnUnlockedDancers">
+                                <i class="fas fa-unlock"></i>
+                                잠금 해제 댄서
+                            </button>
+                        </div>
+                        <div class="user-menu-divider"></div>
+                        <button class="user-menu-item logout-btn" id="btnLogout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            로그아웃
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-container">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h1>클라이언트 대시보드</h1>
+                <p id="welcomeMessage">환영합니다! 댄서 섭외를 시작하세요.</p>
+            </div>
+            <a href="index.html#hero" class="btn btn-gradient">
+                <i class="fas fa-search"></i>
+                댄서 찾기
+            </a>
+        </div>
+
+        <!-- Stats -->
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <div class="stat-icon credit">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div class="stat-value" id="statCredits">10</div>
+                <div class="stat-label">잔여 크레딧</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon dancers">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-value" id="statUnlockedDancers">0</div>
+                <div class="stat-label">잠금 해제 댄서</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon projects">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <div class="stat-value" id="statProjects">0</div>
+                <div class="stat-label">진행 중인 프로젝트</div>
+            </div>
+        </div>
+
+        <!-- Unlocked Dancers -->
+        <div class="dashboard-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-unlock"></i>
+                    최근 본 댄서
+                </h2>
+            </div>
+            <div class="dancer-list" id="unlockedDancersList">
+                <!-- Empty state -->
+                <div class="empty-state">
+                    <i class="fas fa-users"></i>
+                    <p>아직 잠금 해제한 댄서가 없습니다.</p>
+                    <p style="margin-top: 10px; font-size: 14px;">댄서 프로필을 확인하고 연락처를 잠금 해제하세요.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Authentication System -->
+    <script src="js/supabase-config.js"></script>
+    <script src="js/supabase-auth.js"></script>
+    
+    <!-- Main Scripts -->
+    <script src="js/credit-system.js"></script>
+    
+    <!-- Dashboard Script -->
+    <script>
+        // Check authentication
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('📊 Loading client dashboard...');
+            
+            // Check if user is logged in
+            const userEmail = sessionStorage.getItem('userEmail');
+            const userRole = sessionStorage.getItem('userRole');
+            
+            if (!userEmail) {
+                console.log('⚠️ No user logged in, redirecting to home');
+                showToast('로그인이 필요합니다', 'info');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+                return;
+            }
+            
+            // Check if user is client
+            if (userRole !== 'client') {
+                console.log('⚠️ User is not a client, redirecting...');
+                showToast('클라이언트만 접근 가능합니다', 'error');
+                setTimeout(() => {
+                    if (userRole === 'artist') {
+                        window.location.href = 'artist-dashboard.html';
+                    } else {
+                        window.location.href = 'index.html';
+                    }
+                }, 1000);
+                return;
+            }
+            
+            // Update UI with user data
+            const userEmailDisplay = document.getElementById('userEmailDisplay');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            
+            if (userEmailDisplay) {
+                userEmailDisplay.textContent = userEmail;
+            }
+            
+            if (welcomeMessage) {
+                welcomeMessage.textContent = `환영합니다, ${userEmail}!`;
+            }
+            
+            // Load user data
+            loadDashboardData();
+            
+            // Initialize event listeners
+            initDashboardEvents();
+            
+            console.log('✅ Dashboard loaded');
+        });
+        
+        // Load dashboard data
+        function loadDashboardData() {
+            // Mock data for now
+            const mockCredits = 10;
+            const mockUnlockedDancers = 0;
+            const mockProjects = 0;
+            
+            // Update stats
+            document.getElementById('statCredits').textContent = mockCredits;
+            document.getElementById('statUnlockedDancers').textContent = mockUnlockedDancers;
+            document.getElementById('statProjects').textContent = mockProjects;
+            document.getElementById('creditDisplay').textContent = mockCredits;
+            
+            // Load unlocked dancers
+            loadUnlockedDancers();
+        }
+        
+        // Load unlocked dancers
+        function loadUnlockedDancers() {
+            const unlockedDancersList = document.getElementById('unlockedDancersList');
+            
+            // Check localStorage for unlocked dancers
+            const unlockedDancers = JSON.parse(localStorage.getItem('unlockedDancers') || '[]');
+            
+            if (unlockedDancers.length === 0) {
+                // Show empty state (already in HTML)
+                return;
+            }
+            
+            // Clear empty state
+            unlockedDancersList.innerHTML = '';
+            
+            // Render unlocked dancers
+            unlockedDancers.forEach(dancer => {
+                const dancerItem = document.createElement('div');
+                dancerItem.className = 'dancer-item';
+                dancerItem.innerHTML = `
+                    <img src="${dancer.image || 'https://via.placeholder.com/60'}" 
+                         alt="${dancer.name}" 
+                         class="dancer-avatar">
+                    <div class="dancer-info">
+                        <div class="dancer-name">${dancer.name}</div>
+                        <div class="dancer-genre">${dancer.genre || 'Hip-hop'}</div>
+                    </div>
+                    <div class="dancer-contact">
+                        <i class="fas fa-phone"></i>
+                        ${dancer.contact || '010-XXXX-XXXX'}
+                    </div>
+                `;
+                unlockedDancersList.appendChild(dancerItem);
+            });
+            
+            // Update stat
+            document.getElementById('statUnlockedDancers').textContent = unlockedDancers.length;
+        }
+        
+        // Initialize dashboard events
+        function initDashboardEvents() {
+            // Logout button
+            const logoutBtn = document.getElementById('btnLogout');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async () => {
+                    console.log('👋 Logging out...');
+                    
+                    // Sign out
+                    if (typeof signOut === 'function') {
+                        await signOut();
+                    } else {
+                        // Fallback
+                        sessionStorage.clear();
+                        localStorage.removeItem('unlockedDancers');
+                        showToast('로그아웃되었습니다', 'success');
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
+            
+            // User menu toggle
+            const userMenuBtn = document.getElementById('userMenuBtn');
+            const userMenuDropdown = document.getElementById('userMenuDropdown');
+            
+            if (userMenuBtn && userMenuDropdown) {
+                userMenuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    userMenuDropdown.classList.toggle('active');
+                });
+                
+                // Close on outside click
+                document.addEventListener('click', () => {
+                    userMenuDropdown.classList.remove('active');
+                });
+            }
+            
+            // Credit charge button
+            const btnCreditCharge = document.getElementById('btnCreditCharge');
+            if (btnCreditCharge) {
+                btnCreditCharge.addEventListener('click', () => {
+                    showToast('크레딧 충전 기능은 준비 중입니다', 'info');
+                });
+            }
+        }
+        
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.textContent = message;
+                toast.className = `toast ${type} show`;
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            } else {
+                console.log(`[${type.toUpperCase()}] ${message}`);
+            }
+        }
+    </script>
+</body>
+</html>

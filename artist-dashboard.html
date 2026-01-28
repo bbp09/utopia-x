@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아티스트 대시보드 - UTOPIA X</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <style>
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 100px auto 60px;
+            padding: 0 20px;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .dashboard-title h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .dashboard-title p {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+        
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(157, 78, 221, 0.2);
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .stat-icon.profile {
+            background: linear-gradient(135deg, #E91E84, #9D4EDD);
+            color: white;
+        }
+        
+        .stat-icon.requests {
+            background: linear-gradient(135deg, #6366F1, #3B82F6);
+            color: white;
+        }
+        
+        .stat-icon.projects {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+        }
+        
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .dashboard-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .profile-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .profile-item {
+            padding: 16px;
+            background: rgba(157, 78, 221, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+        
+        .profile-item-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        
+        .profile-item-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .status-badge.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+        }
+        
+        .status-badge.pending {
+            background: rgba(251, 191, 36, 0.1);
+            color: #F59E0B;
+        }
+        
+        .status-badge.inactive {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+        
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+        
+        .empty-state p {
+            font-size: 16px;
+        }
+        
+        .request-list {
+            display: grid;
+            gap: 16px;
+        }
+        
+        .request-item {
+            padding: 20px;
+            background: rgba(157, 78, 221, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .request-item:hover {
+            background: rgba(157, 78, 221, 0.1);
+            border-color: var(--primary-purple);
+        }
+        
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        
+        .request-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .request-date {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .request-details {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+        
+        .request-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .request-header {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .request-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <a href="index.html" class="logo">
+                    <img src="https://www.genspark.ai/api/files/s/qeJgU55W" alt="UTOPIA X">
+                </a>
+                <ul class="nav-links">
+                    <li><a href="index.html">홈</a></li>
+                    <li><a href="#" class="active">대시보드</a></li>
+                </ul>
+                <div class="user-menu">
+                    <button class="user-menu-btn" id="userMenuBtn">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="user-email" id="userEmailDisplay">Loading...</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="user-menu-dropdown" id="userMenuDropdown">
+                        <div class="user-menu-items">
+                            <button class="user-menu-item" id="btnMyProfile">
+                                <i class="fas fa-user"></i>
+                                내 프로필 수정
+                            </button>
+                            <button class="user-menu-item" id="btnMyRequests">
+                                <i class="fas fa-inbox"></i>
+                                받은 섭외 요청
+                            </button>
+                            <button class="user-menu-item" id="btnSettings">
+                                <i class="fas fa-cog"></i>
+                                설정
+                            </button>
+                        </div>
+                        <div class="user-menu-divider"></div>
+                        <button class="user-menu-item logout-btn" id="btnLogout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            로그아웃
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-container">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h1>아티스트 대시보드</h1>
+                <p id="welcomeMessage">환영합니다! 프로필을 관리하세요.</p>
+            </div>
+            <button class="btn btn-gradient" id="btnEditProfile">
+                <i class="fas fa-edit"></i>
+                프로필 수정
+            </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <div class="stat-icon profile">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="stat-value">
+                    <span class="status-badge pending" id="profileStatus">심사 대기중</span>
+                </div>
+                <div class="stat-label">프로필 상태</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon requests">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="stat-value" id="statRequests">0</div>
+                <div class="stat-label">받은 섭외 요청</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon projects">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-value" id="statCompleted">0</div>
+                <div class="stat-label">완료한 프로젝트</div>
+            </div>
+        </div>
+
+        <!-- Profile Summary -->
+        <div class="dashboard-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-id-card"></i>
+                    내 프로필 요약
+                </h2>
+                <button class="btn btn-sm btn-outline" id="btnViewPublicProfile">
+                    <i class="fas fa-eye"></i>
+                    공개 프로필 보기
+                </button>
+            </div>
+            <div class="profile-summary">
+                <div class="profile-item">
+                    <div class="profile-item-label">전문 장르</div>
+                    <div class="profile-item-value" id="profileGenre">미등록</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-item-label">활동 지역</div>
+                    <div class="profile-item-value" id="profileRegion">미등록</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-item-label">섭외 횟수</div>
+                    <div class="profile-item-value" id="profileHireCount">0회</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-item-label">평균 평점</div>
+                    <div class="profile-item-value" id="profileRating">
+                        <i class="fas fa-star" style="color: #F59E0B;"></i> 0.0
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Requests -->
+        <div class="dashboard-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-inbox"></i>
+                    최근 섭외 요청
+                </h2>
+            </div>
+            <div class="request-list" id="requestList">
+                <!-- Empty state -->
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p>아직 받은 섭외 요청이 없습니다.</p>
+                    <p style="margin-top: 10px; font-size: 14px;">프로필을 완성하고 승인받으면 클라이언트로부터 섭외 요청을 받을 수 있습니다.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Authentication System -->
+    <script src="js/supabase-config.js"></script>
+    <script src="js/supabase-auth.js"></script>
+    
+    <!-- Dashboard Script -->
+    <script>
+        // Check authentication
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🎭 Loading artist dashboard...');
+            
+            // Check if user is logged in
+            const userEmail = sessionStorage.getItem('userEmail');
+            const userRole = sessionStorage.getItem('userRole');
+            
+            if (!userEmail) {
+                console.log('⚠️ No user logged in, redirecting to home');
+                showToast('로그인이 필요합니다', 'info');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+                return;
+            }
+            
+            // Check if user is artist
+            if (userRole !== 'artist') {
+                console.log('⚠️ User is not an artist, redirecting...');
+                showToast('아티스트만 접근 가능합니다', 'error');
+                setTimeout(() => {
+                    if (userRole === 'client') {
+                        window.location.href = 'client-dashboard.html';
+                    } else {
+                        window.location.href = 'index.html';
+                    }
+                }, 1000);
+                return;
+            }
+            
+            // Update UI with user data
+            const userEmailDisplay = document.getElementById('userEmailDisplay');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            
+            if (userEmailDisplay) {
+                userEmailDisplay.textContent = userEmail;
+            }
+            
+            if (welcomeMessage) {
+                welcomeMessage.textContent = `환영합니다, ${userEmail}!`;
+            }
+            
+            // Load user data
+            loadDashboardData();
+            
+            // Initialize event listeners
+            initDashboardEvents();
+            
+            console.log('✅ Dashboard loaded');
+        });
+        
+        // Load dashboard data
+        function loadDashboardData() {
+            // Mock data for now
+            const mockProfile = {
+                status: 'pending', // pending, active, inactive
+                genre: '힙합, 케이팝',
+                region: '서울',
+                hireCount: 0,
+                rating: 0.0,
+                requests: 0,
+                completed: 0
+            };
+            
+            // Update profile status
+            const profileStatus = document.getElementById('profileStatus');
+            if (profileStatus) {
+                const statusMap = {
+                    'pending': '심사 대기중',
+                    'active': '활성',
+                    'inactive': '비활성'
+                };
+                profileStatus.textContent = statusMap[mockProfile.status] || '미등록';
+                profileStatus.className = `status-badge ${mockProfile.status}`;
+            }
+            
+            // Update stats
+            document.getElementById('statRequests').textContent = mockProfile.requests;
+            document.getElementById('statCompleted').textContent = mockProfile.completed;
+            
+            // Update profile summary
+            document.getElementById('profileGenre').textContent = mockProfile.genre || '미등록';
+            document.getElementById('profileRegion').textContent = mockProfile.region || '미등록';
+            document.getElementById('profileHireCount').textContent = `${mockProfile.hireCount}회`;
+            document.getElementById('profileRating').innerHTML = `<i class="fas fa-star" style="color: #F59E0B;"></i> ${mockProfile.rating.toFixed(1)}`;
+            
+            // Load requests
+            loadRequests();
+        }
+        
+        // Load requests
+        function loadRequests() {
+            const requestList = document.getElementById('requestList');
+            
+            // Mock requests (empty for now)
+            const mockRequests = [];
+            
+            if (mockRequests.length === 0) {
+                // Show empty state (already in HTML)
+                return;
+            }
+            
+            // Clear empty state and render requests
+            requestList.innerHTML = '';
+            
+            mockRequests.forEach(request => {
+                const requestItem = document.createElement('div');
+                requestItem.className = 'request-item';
+                requestItem.innerHTML = `
+                    <div class="request-header">
+                        <div>
+                            <div class="request-title">${request.title}</div>
+                            <div class="request-date">${request.date}</div>
+                        </div>
+                        <span class="status-badge ${request.status}">${request.statusText}</span>
+                    </div>
+                    <div class="request-details">${request.details}</div>
+                    <div class="request-actions">
+                        <button class="btn btn-sm btn-gradient">상세 보기</button>
+                        <button class="btn btn-sm btn-outline">메시지 보내기</button>
+                    </div>
+                `;
+                requestList.appendChild(requestItem);
+            });
+        }
+        
+        // Initialize dashboard events
+        function initDashboardEvents() {
+            // Logout button
+            const logoutBtn = document.getElementById('btnLogout');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async () => {
+                    console.log('👋 Logging out...');
+                    
+                    // Sign out
+                    if (typeof signOut === 'function') {
+                        await signOut();
+                    } else {
+                        // Fallback
+                        sessionStorage.clear();
+                        showToast('로그아웃되었습니다', 'success');
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
+            
+            // User menu toggle
+            const userMenuBtn = document.getElementById('userMenuBtn');
+            const userMenuDropdown = document.getElementById('userMenuDropdown');
+            
+            if (userMenuBtn && userMenuDropdown) {
+                userMenuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    userMenuDropdown.classList.toggle('active');
+                });
+                
+                // Close on outside click
+                document.addEventListener('click', () => {
+                    userMenuDropdown.classList.remove('active');
+                });
+            }
+            
+            // Edit profile button
+            const btnEditProfile = document.getElementById('btnEditProfile');
+            if (btnEditProfile) {
+                btnEditProfile.addEventListener('click', () => {
+                    showToast('프로필 수정 기능은 준비 중입니다', 'info');
+                });
+            }
+            
+            // View public profile button
+            const btnViewPublicProfile = document.getElementById('btnViewPublicProfile');
+            if (btnViewPublicProfile) {
+                btnViewPublicProfile.addEventListener('click', () => {
+                    showToast('공개 프로필 보기 기능은 준비 중입니다', 'info');
+                });
+            }
+        }
+        
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.textContent = message;
+                toast.className = `toast ${type} show`;
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            } else {
+                console.log(`[${type.toUpperCase()}] ${message}`);
+            }
+        }
+    </script>
+</body>
+</html>
