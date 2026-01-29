@@ -402,6 +402,9 @@ const UIModule = {
         modal.style.display = 'flex';
         AppState.activeModal = modalId;
         
+        // Prevent body scroll when modal is open
+        document.body.style.overflow = 'hidden';
+        
         // Special handling for loginModal
         if (modalId === 'loginModal') {
             this.initLoginModal();
@@ -418,6 +421,10 @@ const UIModule = {
         if (modal) {
             modal.style.display = 'none';
             AppState.activeModal = null;
+            
+            // Restore body scroll when modal is closed
+            document.body.style.overflow = '';
+            
             console.log('✅ Modal closed:', modalId);
         }
     },
@@ -429,6 +436,10 @@ const UIModule = {
             modal.style.display = 'none';
         });
         AppState.activeModal = null;
+        
+        // Restore body scroll when all modals are closed
+        document.body.style.overflow = '';
+        
         console.log('✅ All modals closed');
     },
     
@@ -926,11 +937,21 @@ const EventModule = {
             // Only bind event to the inner button
             const innerButton = card.querySelector('.cta-btn-large');
             if (innerButton) {
+                // Check if already bound to prevent duplicate bindings
+                if (innerButton.dataset.ctaBound === 'true') {
+                    console.log('  ⚠️ Already bound, skipping:', modalType);
+                    return;
+                }
+                
                 innerButton.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
+                    console.log('🖱️ CTA button clicked:', modalType);
                     this.handleCTAClick(modalType);
                 });
+                
+                // Mark as bound
+                innerButton.dataset.ctaBound = 'true';
                 console.log('  ✅ Button bound for:', modalType);
             }
         });
