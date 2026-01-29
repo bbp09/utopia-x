@@ -63,8 +63,8 @@ const CastingModule = {
             }
             
             // If we have name and phone in sessionStorage, fill them
-            const nameInput = document.getElementById('clientName');
-            const phoneInput = document.getElementById('clientPhone');
+            const nameInput = document.getElementById('modalClientName');
+            const phoneInput = document.getElementById('modalClientPhone');
             
             if (userName && userName !== 'null') {
                 if (nameInput) nameInput.value = userName;
@@ -120,8 +120,8 @@ const CastingModule = {
             console.log('📦 User data from DB:', userData);
             
             // Fill form fields
-            const nameInput = document.getElementById('clientName');
-            const phoneInput = document.getElementById('clientPhone');
+            const nameInput = document.getElementById('modalClientName');
+            const phoneInput = document.getElementById('modalClientPhone');
             
             if (userData.name && nameInput && !nameInput.value) {
                 nameInput.value = userData.name;

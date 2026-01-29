@@ -832,8 +832,8 @@
             <form id="castingForm" class="modal-form">
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="clientName">이름 / Name *</label>
-                        <input type="text" id="clientName" name="clientName" required>
+                        <label for="modalClientName">이름 / Name *</label>
+                        <input type="text" id="modalClientName" name="clientName" required>
                     </div>
                     <div class="form-group">
                         <label for="clientEmail">이메일 / Email *</label>
@@ -842,8 +842,8 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="clientPhone">연락처 / Phone *</label>
-                        <input type="tel" id="clientPhone" name="clientPhone" required>
+                        <label for="modalClientPhone">연락처 / Phone *</label>
+                        <input type="tel" id="modalClientPhone" name="clientPhone" required>
                     </div>
                     <div class="form-group">
                         <label for="eventDate">행사 날짜 / Event Date *</label>
@@ -1533,21 +1533,26 @@
                 console.log('✅ Sign in form handler attached');
             }
             
-            // Sign Up Form - Same approach
+            // Sign Up Form - Wait for main.js to fully load
             const signUpForm = document.getElementById('signUpForm');
             console.log('📝 SignUp form found:', !!signUpForm);
             
-            // Signup form will be handled by main.js initSignUpForm()
-            if (typeof window.initSignUpForm === 'function') {
-                window.initSignUpForm();
-            } else {
-                console.warn('⚠️ initSignUpForm not yet loaded, will retry...');
-                setTimeout(() => {
-                    if (typeof window.initSignUpForm === 'function') {
-                        window.initSignUpForm();
-                    }
-                }, 1000);
-            }
+            // Ensure all scripts are loaded before calling initSignUpForm
+            const waitForMainJS = setInterval(() => {
+                if (typeof window.initSignUpForm === 'function') {
+                    clearInterval(waitForMainJS);
+                    window.initSignUpForm();
+                    console.log('✅ initSignUpForm called successfully');
+                }
+            }, 100);  // Check every 100ms until loaded
+            
+            // Timeout after 5 seconds
+            setTimeout(() => {
+                clearInterval(waitForMainJS);
+                if (typeof window.initSignUpForm !== 'function') {
+                    console.error('❌ initSignUpForm failed to load after 5 seconds');
+                }
+            }, 5000);
             
             console.log('✅ Auth forms bound');
         }
