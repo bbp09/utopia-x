@@ -1586,7 +1586,22 @@
                 if (modalTitle) modalTitle.textContent = '회원가입';
                 if (modalSubtitle) modalSubtitle.textContent = '프로젝트를 시작하거나 댄서로 활동하세요';
                 
-                console.log('✅ Switched to Sign Up tab');
+                // CRITICAL: Initialize signup steps
+                // Always show Step 1 (user type selection) first
+                const signUpStep1 = document.getElementById('signUpStep1');
+                const signUpStep2 = document.getElementById('signUpStep2');
+                
+                if (signUpStep1) {
+                    signUpStep1.style.display = 'block';
+                    console.log('✅ Step 1 (User Type Selection) visible');
+                }
+                
+                if (signUpStep2) {
+                    signUpStep2.style.display = 'none';
+                    console.log('✅ Step 2 (Form) hidden');
+                }
+                
+                console.log('✅ Switched to Sign Up tab with Step 1 initialized');
             }
         };
         

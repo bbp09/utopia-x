@@ -309,6 +309,39 @@ function openModalDirect(type) {
         if (modal) {
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
+            
+            // CRITICAL: Initialize login modal to Sign In tab
+            if (modalId === 'loginModal') {
+                console.log('🔑 Initializing login modal to Sign In tab...');
+                
+                // Always start with Sign In tab
+                const signInTab = document.querySelector('.auth-tab[data-tab="signin"]');
+                const signUpTab = document.querySelector('.auth-tab[data-tab="signup"]');
+                const signInForm = document.getElementById('signInForm');
+                const signUpForm = document.getElementById('signUpForm');
+                
+                if (signInTab) signInTab.classList.add('active');
+                if (signUpTab) signUpTab.classList.remove('active');
+                if (signInForm) signInForm.classList.add('active');
+                if (signUpForm) signUpForm.classList.remove('active');
+                
+                // CRITICAL: Initialize signup steps (hide Step 2)
+                const signUpStep1 = document.getElementById('signUpStep1');
+                const signUpStep2 = document.getElementById('signUpStep2');
+                
+                if (signUpStep1) {
+                    signUpStep1.style.display = 'block';
+                    console.log('  ✅ Step 1 ready (hidden for now)');
+                }
+                
+                if (signUpStep2) {
+                    signUpStep2.style.display = 'none';
+                    console.log('  ✅ Step 2 hidden');
+                }
+                
+                console.log('✅ Login modal initialized to Sign In tab');
+            }
+            
             console.log(`✅ Modal opened: ${modalId}`);
         } else {
             console.error(`❌ Modal not found: ${modalId}`);

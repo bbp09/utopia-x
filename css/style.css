@@ -2689,3 +2689,13 @@ input[type="range"]::-moz-range-thumb:hover {
     }
 }
 
+
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+.visible {
+    display: block !important;
+}
