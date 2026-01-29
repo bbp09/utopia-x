@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UTOPIA X - Admin Dashboard</title>
+    <title>UTOPIA X - Dashboard</title>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -16,7 +16,6 @@
     <script>
         const SUPABASE_URL = 'https://idfpmynjfkvtcsqcjgnm.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlkZnBteW5qZmt2dGNzcWNqZ25tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2NzQ2NTgsImV4cCI6MjA4NTI1MDY1OH0.KFmClnG-XuW818uUIMlPW0yQ7UswXvIWh-ipv6z5p4I';
-
         if (typeof supabase !== 'undefined') {
             window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             console.log("✅ Supabase Connected!");
@@ -24,43 +23,16 @@
     </script>
     
     <style>
-        /* [필수] JS 로드 전 무조건 숨김 처리 (FOUC 방지) */
-        #dashboard-container, .dashboard-content { 
-            display: none !important; 
+        /* [핵심] CSS로 원천 차단 - JS 권한 확인 전까지 화면 숨김 */
+        body {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         
-        #global-loader { 
-            display: flex !important; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100vh; 
-            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%); 
-            z-index: 9999; 
-            justify-content: center; 
-            align-items: center;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .loader-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(157, 78, 221, 0.2);
-            border-top-color: #9d4edd;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .loader-text {
-            color: white;
-            font-size: 18px;
-            font-weight: 500;
+        body.loaded {
+            visibility: visible;
+            opacity: 1;
         }
 
         /* Base Styles */
@@ -73,12 +45,15 @@
         :root {
             --bg-dark: #0a0a0f;
             --bg-card: #1a1a2e;
+            --bg-input: #16162a;
             --text-primary: #ffffff;
             --text-secondary: #a0a0b8;
             --neon-purple: #9d4edd;
             --neon-pink: #e91e84;
+            --border-color: rgba(255, 255, 255, 0.1);
             --success: #10b981;
             --danger: #ef4444;
+            --warning: #f59e0b;
         }
 
         body {
@@ -88,71 +63,108 @@
             min-height: 100vh;
         }
 
-        /* Header */
-        .admin-header {
-            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
-            padding: 30px;
-            border-radius: 20px;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 40px rgba(157, 78, 221, 0.3);
+        /* Header - index.html과 동일한 구조 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 0;
+            z-index: 1000;
         }
 
-        .header-top {
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
         }
 
-        .admin-header h1 {
-            font-size: 32px;
-            font-weight: 700;
+        .logo {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 800;
+            font-size: 24px;
         }
 
-        /* User Profile Dropdown */
-        .user-profile {
+        .logo img {
+            height: 40px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--neon-purple);
+        }
+
+        /* Header Profile Section */
+        .header-profile-section {
             position: relative;
         }
 
-        .profile-dropdown-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 12px 20px;
+        .user-menu-btn {
+            background: rgba(157, 78, 221, 0.1);
+            border: 1px solid rgba(157, 78, 221, 0.3);
+            color: var(--text-primary);
+            padding: 10px 20px;
             border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 10px;
+            font-size: 14px;
+            font-weight: 500;
             transition: all 0.3s;
         }
 
-        .profile-dropdown-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+        .user-menu-btn:hover {
+            background: rgba(157, 78, 221, 0.2);
+            border-color: var(--neon-purple);
             transform: translateY(-2px);
         }
 
+        .user-email {
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Profile Dropdown Menu */
         .profile-dropdown-menu {
             position: absolute;
-            top: 100%;
+            top: calc(100% + 10px);
             right: 0;
-            margin-top: 10px;
             background: var(--bg-card);
             border: 1px solid rgba(157, 78, 221, 0.3);
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 10px;
-            min-width: 250px;
+            min-width: 280px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
             opacity: 0;
             visibility: hidden;
             transform: translateY(-10px);
-            transition: all 0.3s;
-            z-index: 1000;
+            transition: all 0.3s ease;
+            z-index: 2000;
         }
 
         .profile-dropdown-menu.active {
@@ -163,36 +175,98 @@
 
         .dropdown-header {
             padding: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--border-color);
             margin-bottom: 10px;
         }
 
-        .dropdown-credit {
+        .dropdown-credit-display {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 18px;
-            font-weight: 600;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .credit-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            font-weight: 700;
             color: var(--neon-purple);
+        }
+
+        .btn-credit-charge {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-credit-charge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(157, 78, 221, 0.4);
         }
 
         .dropdown-item {
             padding: 12px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
+            border-radius: 10px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            color: var(--text-primary);
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
             text-decoration: none;
+            color: var(--text-primary);
         }
 
         .dropdown-item:hover {
             background: rgba(157, 78, 221, 0.1);
         }
 
-        /* Stats Cards */
+        .dropdown-item i {
+            width: 20px;
+            text-align: center;
+            color: var(--neon-purple);
+        }
+
+        /* Dashboard Container */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 100px auto 60px;
+            padding: 0 40px;
+        }
+
+        /* Dashboard Sections - 초기 숨김 */
+        #client-dashboard,
+        #artist-dashboard {
+            display: none;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            margin-bottom: 40px;
+        }
+
+        .dashboard-title {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-subtitle {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -202,9 +276,9 @@
 
         .stat-card {
             background: var(--bg-card);
-            border: 1px solid rgba(157, 78, 221, 0.2);
-            border-radius: 16px;
-            padding: 25px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
             display: flex;
             align-items: center;
             gap: 20px;
@@ -214,12 +288,13 @@
         .stat-card:hover {
             border-color: var(--neon-purple);
             transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(157, 78, 221, 0.2);
         }
 
         .stat-icon {
             width: 60px;
             height: 60px;
-            border-radius: 12px;
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -252,11 +327,11 @@
             font-size: 14px;
         }
 
-        /* Requests Section */
-        .section {
+        /* Section Card */
+        .section-card {
             background: var(--bg-card);
-            border: 1px solid rgba(157, 78, 221, 0.2);
-            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
             padding: 30px;
             margin-bottom: 30px;
         }
@@ -276,134 +351,144 @@
             gap: 12px;
         }
 
-        .request-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            transition: all 0.3s;
-        }
-
-        .request-card:hover {
-            border-color: var(--neon-purple);
-            background: rgba(157, 78, 221, 0.05);
-        }
-
-        .request-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .request-info h4 {
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-
-        .request-info p {
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
             color: var(--text-secondary);
-            font-size: 14px;
         }
 
-        .status-badge {
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.3;
         }
 
-        .status-pending {
-            background: rgba(245, 158, 11, 0.2);
-            color: #f59e0b;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
-            color: white;
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 40px 20px;
+        .empty-state p {
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
-    <!-- [필수] 로딩 오버레이 (JS 로드 전까지 표시) -->
-    <div id="global-loader">
-        <div class="loader-spinner"></div>
-        <p class="loader-text">대시보드를 불러오는 중...</p>
-    </div>
-
-    <!-- [필수] 대시보드 컨테이너 (JS가 권한 검사 후 표시) -->
-    <div id="dashboard-container">
-        <div class="container">
-            <!-- Header -->
-            <div class="admin-header">
-                <div class="header-top">
-                    <div>
-                        <h1>
-                            <i class="fas fa-shield-alt"></i>
-                            Admin Dashboard
-                        </h1>
-                        <p>관리자 대시보드에 오신 것을 환영합니다</p>
+    <!-- Header -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html" class="logo">
+                <img src="https://www.genspark.ai/api/files/s/qeJgU55W" alt="UTOPIA X">
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="index.html">홈</a></li>
+                <li><a href="#" style="color: var(--neon-purple);">대시보드</a></li>
+            </ul>
+            
+            <!-- Header Profile Section -->
+            <div class="header-profile-section" id="header-profile-section">
+                <button class="user-menu-btn" id="user-menu-btn">
+                    <i class="fas fa-user-circle"></i>
+                    <span class="user-email" id="user-email-display">Loading...</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                
+                <!-- Profile Dropdown Menu -->
+                <div class="profile-dropdown-menu" id="profile-dropdown-menu">
+                    <div class="dropdown-header">
+                        <div class="dropdown-credit-display">
+                            <div class="credit-info">
+                                <i class="fas fa-coins"></i>
+                                <span id="dropdown-credit">0</span> C
+                            </div>
+                            <button class="btn-credit-charge" id="btn-credit-charge">
+                                충전하기
+                            </button>
+                        </div>
                     </div>
                     
-                    <!-- User Profile Dropdown -->
-                    <div class="user-profile">
-                        <button class="profile-dropdown-btn" id="profile-dropdown-btn">
-                            <i class="fas fa-user-circle"></i>
-                            <span id="user-email-display">Loading...</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        
-                        <div class="profile-dropdown-menu" id="profile-dropdown-menu">
-                            <div class="dropdown-header">
-                                <div class="dropdown-credit">
-                                    <i class="fas fa-coins"></i>
-                                    <span id="header-user-credits">0</span> C
-                                </div>
-                            </div>
-                            <a href="client-profile.html" class="dropdown-item">
-                                <i class="fas fa-user"></i>
-                                내 정보
-                            </a>
-                            <div class="dropdown-item" id="btn-logout">
-                                <i class="fas fa-sign-out-alt"></i>
-                                로그아웃
-                            </div>
-                        </div>
+                    <a href="client-profile.html" class="dropdown-item" id="dropdown-my-profile">
+                        <i class="fas fa-user"></i>
+                        <span>내 정보</span>
+                    </a>
+                    
+                    <div class="dropdown-item" id="dropdown-logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>로그아웃</span>
                     </div>
                 </div>
             </div>
+        </div>
+    </nav>
 
-            <!-- Stats -->
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        
+        <!-- Client Dashboard -->
+        <div id="client-dashboard">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">클라이언트 대시보드</h1>
+                <p class="dashboard-subtitle">댄서 섭외 및 프로젝트를 관리하세요</p>
+            </div>
+            
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon purple">
                         <i class="fas fa-coins"></i>
                     </div>
                     <div class="stat-info">
-                        <h3 id="credit-amount">0</h3>
+                        <h3 id="client-credit-display">0</h3>
                         <p>잔여 크레딧</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="client-unlocked-count">0</h3>
+                        <p>잠금 해제 댄서</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon pink">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="client-project-count">0</h3>
+                        <p>진행 중인 프로젝트</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-card">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-unlock"></i>
+                        최근 본 댄서
+                    </h2>
+                </div>
+                <div class="empty-state">
+                    <i class="fas fa-users"></i>
+                    <p>아직 잠금 해제한 댄서가 없습니다.</p>
+                    <p style="margin-top: 10px; font-size: 14px;">댄서 프로필을 확인하고 연락처를 잠금 해제하세요.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Artist Dashboard -->
+        <div id="artist-dashboard">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">아티스트 대시보드</h1>
+                <p class="dashboard-subtitle">프로필 관리 및 섭외 요청을 확인하세요</p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="artist-view-count">0</h3>
+                        <p>프로필 조회수</p>
                     </div>
                 </div>
                 
@@ -412,42 +497,184 @@
                         <i class="fas fa-check-circle"></i>
                     </div>
                     <div class="stat-info">
-                        <h3 id="approved-count">0</h3>
-                        <p>승인된 요청</p>
+                        <h3 id="artist-request-count">0</h3>
+                        <p>섭외 요청</p>
                     </div>
                 </div>
                 
                 <div class="stat-card">
                     <div class="stat-icon pink">
-                        <i class="fas fa-clock"></i>
+                        <i class="fas fa-star"></i>
                     </div>
                     <div class="stat-info">
-                        <h3 id="pending-count">0</h3>
-                        <p>대기 중인 요청</p>
+                        <h3 id="artist-rating">5.0</h3>
+                        <p>평균 평점</p>
                     </div>
                 </div>
             </div>
-
-            <!-- Requests Section -->
-            <div class="section">
+            
+            <div class="section-card">
                 <div class="section-header">
                     <h2 class="section-title">
-                        <i class="fas fa-list-alt"></i>
-                        최근 요청 목록
+                        <i class="fas fa-bell"></i>
+                        최근 섭외 요청
                     </h2>
                 </div>
-                
-                <div id="requests-list">
-                    <!-- Requests will be loaded here -->
-                    <p style="text-align: center; color: var(--text-secondary); padding: 40px;">
-                        요청 목록을 불러오는 중...
-                    </p>
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p>아직 섭외 요청이 없습니다.</p>
+                    <p style="margin-top: 10px; font-size: 14px;">프로필을 최신 상태로 유지하여 더 많은 기회를 얻으세요.</p>
                 </div>
             </div>
         </div>
+        
     </div>
 
-    <!-- Admin Dashboard Script -->
-    <script src="js/admin.js"></script>
+    <!-- Dashboard Script -->
+    <script>
+        console.log('🚀 Dashboard: Starting initialization...');
+        
+        (async function initDashboard() {
+            try {
+                // Step 1: Auth Check
+                console.log('🔐 Step 1: Checking authentication...');
+                
+                if (typeof window.supabase === 'undefined') {
+                    console.error('❌ Supabase not available');
+                    alert('데이터베이스 연결에 실패했습니다');
+                    window.location.replace('/');
+                    return;
+                }
+                
+                const { data: { user }, error: authError } = await window.supabase.auth.getUser();
+                
+                if (authError || !user) {
+                    console.error('❌ Not authenticated:', authError);
+                    alert('로그인이 필요합니다');
+                    window.location.replace('/');
+                    return;
+                }
+                
+                console.log('✅ User authenticated:', user.id);
+                
+                // Step 2: Role Check
+                console.log('👤 Step 2: Checking user role...');
+                
+                const { data: userData, error: dbError } = await window.supabase
+                    .from('users')
+                    .select('*')
+                    .eq('id', user.id)
+                    .single();
+                
+                if (dbError) {
+                    console.error('❌ Failed to fetch user data:', dbError);
+                    alert('사용자 정보를 불러올 수 없습니다');
+                    window.location.replace('/');
+                    return;
+                }
+                
+                const userRole = userData.role || 'client';
+                console.log('✅ User role:', userRole);
+                
+                // Step 3: Data Fetching & UI Update
+                console.log('📦 Step 3: Fetching data and updating UI...');
+                
+                // 이메일 표시
+                const userEmailDisplay = document.getElementById('user-email-display');
+                if (userEmailDisplay) {
+                    userEmailDisplay.textContent = userData.email || user.email;
+                }
+                
+                // [중요] 크레딧을 두 군데에 동시에 업데이트
+                const credits = userData.credits || 0;
+                
+                // 1) 드롭다운 크레딧
+                const dropdownCredit = document.getElementById('dropdown-credit');
+                if (dropdownCredit) {
+                    dropdownCredit.textContent = credits;
+                    console.log('✅ Dropdown credit updated:', credits);
+                }
+                
+                // 2) 메인 대시보드 크레딧
+                if (userRole === 'client') {
+                    const clientCredit = document.getElementById('client-credit-display');
+                    if (clientCredit) {
+                        clientCredit.textContent = credits;
+                        console.log('✅ Client dashboard credit updated:', credits);
+                    }
+                }
+                
+                // Step 4: Dropdown Event Binding
+                console.log('🎯 Step 4: Binding dropdown events...');
+                
+                const userMenuBtn = document.getElementById('user-menu-btn');
+                const dropdownMenu = document.getElementById('profile-dropdown-menu');
+                const creditChargeBtn = document.getElementById('btn-credit-charge');
+                const logoutBtn = document.getElementById('dropdown-logout');
+                
+                if (userMenuBtn && dropdownMenu) {
+                    // 드롭다운 토글
+                    userMenuBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        dropdownMenu.classList.toggle('active');
+                        console.log('✅ Dropdown toggled');
+                    });
+                    
+                    // 외부 클릭 시 닫기
+                    document.addEventListener('click', (e) => {
+                        if (!userMenuBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                            dropdownMenu.classList.remove('active');
+                        }
+                    });
+                    
+                    console.log('✅ Dropdown events bound');
+                }
+                
+                // 크레딧 충전 버튼
+                if (creditChargeBtn) {
+                    creditChargeBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        alert('크레딧 충전 기능은 준비 중입니다');
+                    });
+                }
+                
+                // 로그아웃 버튼
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        console.log('🚪 Logging out...');
+                        await window.supabase.auth.signOut();
+                        sessionStorage.clear();
+                        window.location.replace('index.html');
+                    });
+                }
+                
+                // Step 5: Show UI
+                console.log('🎨 Step 5: Showing appropriate dashboard...');
+                
+                // 역할에 맞는 대시보드 표시
+                if (userRole === 'client') {
+                    document.getElementById('client-dashboard').style.display = 'block';
+                    console.log('✅ Client dashboard displayed');
+                } else if (userRole === 'artist' || userRole === 'dancer') {
+                    document.getElementById('artist-dashboard').style.display = 'block';
+                    console.log('✅ Artist dashboard displayed');
+                } else {
+                    // 역할이 명확하지 않으면 클라이언트로 기본 설정
+                    document.getElementById('client-dashboard').style.display = 'block';
+                    console.warn('⚠️ Unknown role, defaulting to client dashboard');
+                }
+                
+                // body를 visible로 변경 (화면 표시)
+                document.body.classList.add('loaded');
+                console.log('🎉 Dashboard initialization complete!');
+                
+            } catch (error) {
+                console.error('❌ Exception during initialization:', error);
+                alert('대시보드를 불러오는 중 오류가 발생했습니다');
+                window.location.replace('/');
+            }
+        })();
+    </script>
 </body>
 </html>
