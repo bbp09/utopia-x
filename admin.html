@@ -4,326 +4,639 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UTOPIA X - Admin Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/admin.css">
+    
+    <!-- Supabase JS Library (Must load before any Supabase code) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Supabase Direct Initialization -->
+    <script>
+        const SUPABASE_URL = 'https://idfpmynjfkvtcsqcjgnm.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlkZnBteW5qZmt2dGNzcWNqZ25tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2NzQ2NTgsImV4cCI6MjA4NTI1MDY1OH0.KFmClnG-XuW818uUIMlPW0yQ7UswXvIWh-ipv6z5p4I';
+
+        if (typeof supabase !== 'undefined') {
+            window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log("✅ Supabase Admin: Connected!");
+        } else {
+            console.error("❌ Supabase library not loaded!");
+        }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #1a1a2e;
+            --bg-input: #16162a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b8;
+            --neon-purple: #9d4edd;
+            --neon-pink: #e91e84;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', 'Montserrat', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .admin-header {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 40px rgba(157, 78, 221, 0.3);
+        }
+
+        .admin-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .admin-header p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .btn-home {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-home:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Add Section */
+        .add-section {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            border: 2px solid rgba(157, 78, 221, 0.3);
+        }
+
+        .add-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--neon-purple);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .form-group input,
+        .form-group select {
+            background: var(--bg-input);
+            border: 2px solid rgba(157, 78, 221, 0.2);
+            color: var(--text-primary);
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 20px rgba(157, 78, 221, 0.3);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            color: white;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(157, 78, 221, 0.4);
+        }
+
+        /* List Section */
+        .list-section {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid rgba(157, 78, 221, 0.3);
+        }
+
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .list-header h2 {
+            font-size: 24px;
+            color: var(--neon-purple);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-secondary {
+            background: rgba(157, 78, 221, 0.2);
+            border: 2px solid var(--neon-purple);
+            color: var(--neon-purple);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(157, 78, 221, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* Table */
+        .dancers-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .dancers-table thead {
+            background: rgba(157, 78, 221, 0.2);
+        }
+
+        .dancers-table th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--neon-purple);
+            border-bottom: 2px solid var(--neon-purple);
+        }
+
+        .dancers-table td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dancers-table tbody tr {
+            transition: all 0.3s;
+        }
+
+        .dancers-table tbody tr:hover {
+            background: rgba(157, 78, 221, 0.1);
+        }
+
+        .dancer-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid var(--neon-purple);
+        }
+
+        .premium-badge {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-delete:hover {
+            background: #dc2626;
+            transform: scale(1.05);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--bg-card);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            border: 2px solid var(--neon-purple);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            z-index: 9999;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success {
+            border-color: var(--success);
+        }
+
+        .toast.error {
+            border-color: var(--danger);
+        }
+
+        /* Loading Spinner */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dancers-table {
+                font-size: 12px;
+            }
+
+            .dancers-table th,
+            .dancers-table td {
+                padding: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Login Screen -->
-    <div id="loginScreen" class="login-screen">
-        <div class="login-container">
-            <img src="https://www.genspark.ai/api/files/s/7TQDuNp1" alt="UTOPIA X Logo" class="login-logo">
-            <h1 class="login-title">Admin Dashboard</h1>
-            <p class="login-subtitle">관리자 로그인</p>
-            <form id="loginForm" class="login-form">
-                <div class="form-group">
-                    <label for="adminPassword">
-                        <i class="fas fa-lock"></i> 비밀번호
-                    </label>
-                    <input type="password" id="adminPassword" placeholder="관리자 비밀번호 입력" required>
+    <div class="container">
+        <!-- Header -->
+        <div class="admin-header">
+            <div>
+                <h1>
+                    <i class="fas fa-shield-alt"></i>
+                    UTOPIA X Admin
+                </h1>
+                <p>댄서 데이터베이스 관리 시스템</p>
+            </div>
+            <a href="index.html" class="btn-home">
+                <i class="fas fa-home"></i>
+                메인으로 돌아가기
+            </a>
+        </div>
+
+        <!-- Add Dancer Section -->
+        <div class="add-section">
+            <h2>
+                <i class="fas fa-plus-circle"></i>
+                댄서 추가하기
+            </h2>
+            <form id="addDancerForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="dancerName">이름 *</label>
+                        <input type="text" id="dancerName" placeholder="예: 김댄서" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dancerGenre">장르 *</label>
+                        <input type="text" id="dancerGenre" placeholder="예: Hip-hop, K-pop" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dancerImage">이미지 URL (선택)</label>
+                        <input type="url" id="dancerImage" placeholder="https://...">
+                        <small style="color: var(--text-secondary); font-size: 12px;">
+                            비워두면 랜덤 이미지가 자동으로 들어갑니다
+                        </small>
+                    </div>
                 </div>
-                <button type="submit" class="btn-login">
-                    <i class="fas fa-sign-in-alt"></i> 로그인
+                <div class="checkbox-group">
+                    <input type="checkbox" id="isPremium">
+                    <label for="isPremium" style="font-weight: 600; color: var(--neon-purple);">
+                        <i class="fas fa-star"></i> 빠른섭외(Premium) 댄서로 등록
+                    </label>
+                </div>
+                <button type="submit" class="btn-primary" style="margin-top: 20px;">
+                    <i class="fas fa-user-plus"></i>
+                    댄서 등록
                 </button>
-                <p class="login-hint">개발용 비밀번호: <code>admin123</code></p>
             </form>
         </div>
-    </div>
 
-    <!-- Main Admin Dashboard -->
-    <div id="adminDashboard" class="admin-dashboard" style="display: none;">
-        <!-- Sidebar Navigation -->
-        <aside class="admin-sidebar">
-            <div class="sidebar-header">
-                <img src="https://www.genspark.ai/api/files/s/7TQDuNp1" alt="Logo" class="sidebar-logo">
-                <h2>UTOPIA X</h2>
-                <p class="sidebar-subtitle">Admin Panel</p>
-            </div>
-
-            <nav class="sidebar-nav">
-                <a href="#dashboard" class="nav-item active" data-section="dashboard">
-                    <i class="fas fa-chart-line"></i>
-                    <span>대시보드</span>
-                    <span class="nav-badge">Dashboard</span>
-                </a>
-                <a href="#casting-requests" class="nav-item" data-section="casting-requests">
-                    <i class="fas fa-user-check"></i>
-                    <span>섭외 요청</span>
-                    <span class="nav-badge" id="castingRequestsBadge">0</span>
-                </a>
-                <a href="#artist-applications" class="nav-item" data-section="artist-applications">
-                    <i class="fas fa-user-plus"></i>
-                    <span>아티스트 신청</span>
-                    <span class="nav-badge pending" id="pendingApplicationsBadge">0</span>
-                </a>
-                <a href="#featured-dancers" class="nav-item" data-section="featured-dancers">
-                    <i class="fas fa-star"></i>
-                    <span>빠른섭외 관리</span>
-                    <span class="nav-badge">10</span>
-                </a>
-                <a href="#dancers-db" class="nav-item" data-section="dancers-db">
-                    <i class="fas fa-database"></i>
-                    <span>댄서 DB</span>
-                    <span class="nav-badge" id="dancersCountBadge">0</span>
-                </a>
-            </nav>
-
-            <div class="sidebar-footer">
-                <button id="logoutBtn" class="btn-logout">
-                    <i class="fas fa-sign-out-alt"></i>
-                    로그아웃
+        <!-- Dancers List Section -->
+        <div class="list-section">
+            <div class="list-header">
+                <h2>
+                    <i class="fas fa-users"></i>
+                    전체 댄서 목록
+                    <span id="dancerCount" style="color: var(--text-secondary); font-size: 18px;">(0명)</span>
+                </h2>
+                <button class="btn-secondary" onclick="loadDancers()">
+                    <i class="fas fa-sync-alt"></i>
+                    새로고침
                 </button>
             </div>
-        </aside>
 
-        <!-- Main Content -->
-        <main class="admin-main">
-            <!-- Top Header -->
-            <header class="admin-header">
-                <div class="header-left">
-                    <h1 id="sectionTitle">대시보드</h1>
-                    <p id="sectionSubtitle">전체 현황을 한눈에 확인하세요</p>
-                </div>
-                <div class="header-right">
-                    <div class="header-time" id="currentTime"></div>
-                    <div class="header-user">
-                        <i class="fas fa-user-shield"></i>
-                        <span>관리자</span>
-                    </div>
-                </div>
-            </header>
-
-            <!-- Content Sections -->
-            <div class="admin-content">
-                <!-- Section: Dashboard (E) -->
-                <section id="section-dashboard" class="content-section active">
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-icon" style="background: linear-gradient(135deg, #E91E84, #9D4EDD);">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div class="stat-content">
-                                <h3 id="totalDancers">0</h3>
-                                <p>총 댄서</p>
-                                <span class="stat-change positive">+0 이번 주</span>
-                            </div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-icon" style="background: linear-gradient(135deg, #6366F1, #8B5CF6);">
-                                <i class="fas fa-user-check"></i>
-                            </div>
-                            <div class="stat-content">
-                                <h3 id="totalCastingRequests">0</h3>
-                                <p>섭외 요청</p>
-                                <span class="stat-change positive">+0 오늘</span>
-                            </div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-icon" style="background: linear-gradient(135deg, #F59E0B, #EF4444);">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                            <div class="stat-content">
-                                <h3 id="pendingApplications">0</h3>
-                                <p>대기중 신청</p>
-                                <span class="stat-change">승인 필요</span>
-                            </div>
-                        </div>
-
-                        <div class="stat-card">
-                            <div class="stat-icon" style="background: linear-gradient(135deg, #10B981, #059669);">
-                                <i class="fas fa-percentage"></i>
-                            </div>
-                            <div class="stat-content">
-                                <h3>98%</h3>
-                                <p>매칭 성공률</p>
-                                <span class="stat-change positive">+2% 이번 달</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Recent Activity -->
-                    <div class="dashboard-grid">
-                        <div class="dashboard-card">
-                            <div class="card-header">
-                                <h3><i class="fas fa-chart-bar"></i> 최근 활동</h3>
-                                <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
-                            </div>
-                            <div class="activity-list" id="recentActivityList">
-                                <div class="activity-item">
-                                    <div class="activity-icon new">
-                                        <i class="fas fa-user-plus"></i>
-                                    </div>
-                                    <div class="activity-content">
-                                        <p class="activity-title">데이터 로딩 중...</p>
-                                        <p class="activity-time">잠시만 기다려주세요</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="dashboard-card">
-                            <div class="card-header">
-                                <h3><i class="fas fa-tags"></i> 인기 태그</h3>
-                                <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
-                            </div>
-                            <div class="tags-cloud" id="popularTags">
-                                <span class="tag-chip">tag_fresh <span class="tag-count">24</span></span>
-                                <span class="tag-chip">tag_energetic <span class="tag-count">18</span></span>
-                                <span class="tag-chip">tag_cute <span class="tag-count">16</span></span>
-                                <span class="tag-chip">tag_elegant <span class="tag-count">12</span></span>
-                                <span class="tag-chip">tag_powerful <span class="tag-count">10</span></span>
-                                <span class="tag-chip">tag_trendy <span class="tag-count">9</span></span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Section: Casting Requests (C) -->
-                <section id="section-casting-requests" class="content-section">
-                    <div class="section-toolbar">
-                        <div class="toolbar-left">
-                            <div class="search-box">
-                                <i class="fas fa-search"></i>
-                                <input type="text" id="searchCastingRequests" placeholder="섭외 요청 검색...">
-                            </div>
-                            <select id="filterCastingStatus" class="filter-select">
-                                <option value="all">전체 상태</option>
-                                <option value="new">신규</option>
-                                <option value="reviewing">검토중</option>
-                                <option value="completed">완료</option>
-                            </select>
-                        </div>
-                        <div class="toolbar-right">
-                            <button class="btn-secondary" onclick="loadCastingRequests()">
-                                <i class="fas fa-sync-alt"></i> 새로고침
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="cards-grid" id="castingRequestsGrid">
-                        <!-- Cards will be dynamically inserted -->
-                    </div>
-                </section>
-
-                <!-- Section: Artist Applications (A) -->
-                <section id="section-artist-applications" class="content-section">
-                    <div class="section-toolbar">
-                        <div class="toolbar-left">
-                            <div class="search-box">
-                                <i class="fas fa-search"></i>
-                                <input type="text" id="searchApplications" placeholder="아티스트 검색...">
-                            </div>
-                            <select id="filterApplicationStatus" class="filter-select">
-                                <option value="all">전체 상태</option>
-                                <option value="pending">대기중</option>
-                                <option value="approved">승인</option>
-                                <option value="rejected">거부</option>
-                            </select>
-                        </div>
-                        <div class="toolbar-right">
-                            <button class="btn-secondary" onclick="loadArtistApplications()">
-                                <i class="fas fa-sync-alt"></i> 새로고침
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="cards-grid" id="artistApplicationsGrid">
-                        <!-- Cards will be dynamically inserted -->
-                    </div>
-                </section>
-
-                <!-- Section: Featured Dancers (B) -->
-                <section id="section-featured-dancers" class="content-section">
-                    <div class="section-info">
-                        <p><i class="fas fa-info-circle"></i> 드래그 앤 드롭으로 순서를 변경하세요. 최대 10명까지 선택 가능합니다.</p>
-                    </div>
-
-                    <div class="featured-management">
-                        <div class="featured-list-container">
-                            <h3><i class="fas fa-star"></i> 빠른섭외 리스트 (10명)</h3>
-                            <div id="featuredDancersList" class="dancers-sortable">
-                                <!-- Sortable dancer cards -->
-                            </div>
-                            <button class="btn-primary btn-save-featured" onclick="saveFeaturedDancers()">
-                                <i class="fas fa-save"></i> 변경사항 저장
-                            </button>
-                        </div>
-
-                        <div class="dancers-pool-container">
-                            <h3><i class="fas fa-database"></i> 전체 댄서 목록</h3>
-                            <div class="search-box">
-                                <i class="fas fa-search"></i>
-                                <input type="text" id="searchDancersPool" placeholder="댄서 검색...">
-                            </div>
-                            <div id="dancersPoolList" class="dancers-pool">
-                                <!-- Available dancers -->
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Section: Dancers DB (D) -->
-                <section id="section-dancers-db" class="content-section">
-                    <div class="section-toolbar">
-                        <div class="toolbar-left">
-                            <div class="search-box">
-                                <i class="fas fa-search"></i>
-                                <input type="text" id="searchDancersDB" placeholder="댄서 검색...">
-                            </div>
-                            <select id="filterGenre" class="filter-select">
-                                <option value="all">전체 장르</option>
-                                <option value="Hip-hop">Hip-hop</option>
-                                <option value="K-pop">K-pop</option>
-                                <option value="Contemporary">Contemporary</option>
-                                <option value="Jazz">Jazz</option>
-                            </select>
-                        </div>
-                        <div class="toolbar-right">
-                            <button class="btn-primary" onclick="openAddDancerModal()">
-                                <i class="fas fa-plus"></i> 댄서 추가
-                            </button>
-                            <button class="btn-secondary" onclick="loadDancersDB()">
-                                <i class="fas fa-sync-alt"></i> 새로고침
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="cards-grid" id="dancersDBGrid">
-                        <!-- Cards will be dynamically inserted -->
-                    </div>
-                </section>
-            </div>
-        </main>
-    </div>
-
-    <!-- Modals -->
-    <!-- Application Detail Modal -->
-    <div id="applicationDetailModal" class="modal">
-        <div class="modal-content modal-large">
-            <button class="modal-close" onclick="closeModal('applicationDetailModal')">&times;</button>
-            <div id="applicationDetailContent">
-                <!-- Application details will be inserted here -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Casting Request Detail Modal -->
-    <div id="castingDetailModal" class="modal">
-        <div class="modal-content modal-large">
-            <button class="modal-close" onclick="closeModal('castingDetailModal')">&times;</button>
-            <div id="castingDetailContent">
-                <!-- Casting details will be inserted here -->
-            </div>
+            <table class="dancers-table">
+                <thead>
+                    <tr>
+                        <th>이미지</th>
+                        <th>이름</th>
+                        <th>장르</th>
+                        <th>상태</th>
+                        <th>등록일</th>
+                        <th>관리</th>
+                    </tr>
+                </thead>
+                <tbody id="dancersTableBody">
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                            <i class="fas fa-spinner fa-spin"></i> 데이터 로딩 중...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
     <!-- Toast Notification -->
-    <div id="adminToast" class="admin-toast"></div>
+    <div id="toast" class="toast"></div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-    <script src="js/admin.js"></script>
+    <script>
+        console.log('🔧 Admin page loaded');
+
+        // Load dancers on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('📄 DOM ready, loading dancers...');
+            loadDancers();
+        });
+
+        // Add dancer form submission
+        document.getElementById('addDancerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            console.log('➕ Adding new dancer...');
+
+            const name = document.getElementById('dancerName').value.trim();
+            const genre = document.getElementById('dancerGenre').value.trim();
+            let imageUrl = document.getElementById('dancerImage').value.trim();
+            const isPremium = document.getElementById('isPremium').checked;
+
+            // Validation
+            if (!name || !genre) {
+                showToast('이름과 장르를 입력해주세요', 'error');
+                return;
+            }
+
+            // Generate random Unsplash image if not provided
+            if (!imageUrl) {
+                const randomId = Math.floor(Math.random() * 1000);
+                imageUrl = `https://images.unsplash.com/photo-${1500000000000 + randomId}?w=400&h=400&fit=crop`;
+                console.log('🎲 Generated random image:', imageUrl);
+            }
+
+            try {
+                const { data, error } = await window.supabase
+                    .from('dancers')
+                    .insert([{
+                        name: name,
+                        genre: genre,
+                        image_url: imageUrl,
+                        is_premium: isPremium,
+                        rating: 0,
+                        bio: `${name} - ${genre} 댄서`
+                    }])
+                    .select();
+
+                if (error) {
+                    console.error('❌ Insert error:', error);
+                    showToast('등록 실패: ' + error.message, 'error');
+                    return;
+                }
+
+                console.log('✅ Dancer added:', data);
+                showToast(`${name} 댄서가 성공적으로 등록되었습니다!`, 'success');
+
+                // Reset form
+                document.getElementById('addDancerForm').reset();
+
+                // Reload list
+                setTimeout(() => loadDancers(), 500);
+            } catch (err) {
+                console.error('❌ Exception:', err);
+                showToast('등록 중 오류가 발생했습니다', 'error');
+            }
+        });
+
+        // Load dancers from database
+        async function loadDancers() {
+            console.log('📥 Loading dancers from database...');
+
+            try {
+                const { data, error } = await window.supabase
+                    .from('dancers')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    console.error('❌ Query error:', error);
+                    showToast('데이터 로드 실패: ' + error.message, 'error');
+                    return;
+                }
+
+                console.log('✅ Loaded dancers:', data.length);
+                renderDancers(data);
+            } catch (err) {
+                console.error('❌ Exception:', err);
+                showToast('데이터 로드 중 오류가 발생했습니다', 'error');
+            }
+        }
+
+        // Render dancers in table
+        function renderDancers(dancers) {
+            const tbody = document.getElementById('dancersTableBody');
+            const countSpan = document.getElementById('dancerCount');
+
+            countSpan.textContent = `(${dancers.length}명)`;
+
+            if (dancers.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                            <i class="fas fa-inbox"></i><br>
+                            등록된 댄서가 없습니다
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = dancers.map(dancer => `
+                <tr>
+                    <td>
+                        <img src="${dancer.image_url || 'https://via.placeholder.com/60'}" 
+                             alt="${dancer.name}" 
+                             class="dancer-img"
+                             onerror="this.src='https://via.placeholder.com/60'">
+                    </td>
+                    <td style="font-weight: 600;">${dancer.name}</td>
+                    <td>${dancer.genre || '-'}</td>
+                    <td>
+                        ${dancer.is_premium ? '<span class="premium-badge"><i class="fas fa-star"></i> Premium</span>' : '<span style="color: var(--text-secondary);">일반</span>'}
+                    </td>
+                    <td style="color: var(--text-secondary); font-size: 13px;">
+                        ${dancer.created_at ? new Date(dancer.created_at).toLocaleDateString('ko-KR') : '-'}
+                    </td>
+                    <td>
+                        <button class="btn-delete" onclick="deleteDancer('${dancer.id}', '${dancer.name}')">
+                            <i class="fas fa-trash"></i> 삭제
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            console.log('✅ Rendered', dancers.length, 'dancers in table');
+        }
+
+        // Delete dancer
+        async function deleteDancer(id, name) {
+            if (!confirm(`정말로 "${name}" 댄서를 삭제하시겠습니까?\n\n이 작업은 되돌릴 수 없습니다.`)) {
+                return;
+            }
+
+            console.log('🗑️ Deleting dancer:', id, name);
+
+            try {
+                const { error } = await window.supabase
+                    .from('dancers')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) {
+                    console.error('❌ Delete error:', error);
+                    showToast('삭제 실패: ' + error.message, 'error');
+                    return;
+                }
+
+                console.log('✅ Dancer deleted');
+                showToast(`${name} 댄서가 삭제되었습니다`, 'success');
+
+                // Reload list
+                setTimeout(() => loadDancers(), 500);
+            } catch (err) {
+                console.error('❌ Exception:', err);
+                showToast('삭제 중 오류가 발생했습니다', 'error');
+            }
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
