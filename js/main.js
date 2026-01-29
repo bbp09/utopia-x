@@ -1445,69 +1445,50 @@ function initUserMenu() {
     
     // Toggle dropdown on button click
     if (userMenuBtn) {
-        userMenuBtn.addEventListener('click', (e) => {
+        userMenuBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
             console.log('🖱️ User menu button clicked!');
             
-            try {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log('✅ Event prevented and stopped');
-                
-                console.log('🔍 Checking dropdown element...');
-                console.log('  - userMenuDropdown:', userMenuDropdown);
-                console.log('  - Is null?', userMenuDropdown === null);
-                console.log('  - Is undefined?', userMenuDropdown === undefined);
-                
-                if (!userMenuDropdown) {
-                    console.error('❌ userMenuDropdown is null or undefined!');
-                    console.log('🔍 Trying to find dropdown again...');
-                    const dropdown = document.getElementById('userMenuDropdown');
-                    console.log('  - Found via getElementById:', dropdown);
-                    return;
+            // Check if user is logged in
+            let isLoggedIn = false;
+            
+            // Check Supabase auth first
+            if (typeof window.supabase !== 'undefined') {
+                try {
+                    const { data: { user } } = await window.supabase.auth.getUser();
+                    isLoggedIn = !!user;
+                } catch (error) {
+                    console.error('Error checking Supabase auth:', error);
                 }
-                
-                console.log('✅ Dropdown element exists');
-                
-                const isShown = userMenuDropdown.classList.contains('show');
-                console.log('  - Current state:', isShown ? 'shown' : 'hidden');
-                console.log('  - Current classes:', userMenuDropdown.className);
-                
-                console.log('🔄 Toggling show class...');
-                userMenuDropdown.classList.toggle('show');
-                console.log('✅ Class toggled');
-                
-                const newState = userMenuDropdown.classList.contains('show');
-                console.log('  - New state:', newState ? 'shown' : 'hidden');
-                console.log('  - New classes:', userMenuDropdown.className);
-                
-                // Force style update for debugging
-                console.log('🎨 Applying forced styles...');
-                if (newState) {
-                    userMenuDropdown.style.display = 'block';
-                    userMenuDropdown.style.opacity = '1';
-                    userMenuDropdown.style.visibility = 'visible';
-                    userMenuDropdown.style.transform = 'translateY(0)';
-                    userMenuDropdown.style.pointerEvents = 'auto';
-                    console.log('✅ Forced dropdown to show with styles:', {
-                        display: userMenuDropdown.style.display,
-                        opacity: userMenuDropdown.style.opacity,
-                        visibility: userMenuDropdown.style.visibility
-                    });
-                } else {
-                    userMenuDropdown.style.display = '';
-                    userMenuDropdown.style.opacity = '';
-                    userMenuDropdown.style.visibility = '';
-                    userMenuDropdown.style.transform = '';
-                    userMenuDropdown.style.pointerEvents = '';
-                    console.log('✅ Reset dropdown styles');
-                }
-                
-                console.log('🎉 Menu toggle completed successfully!');
-            } catch (error) {
-                console.error('❌ ERROR in user menu click handler:', error);
-                console.error('  - Error message:', error.message);
-                console.error('  - Error stack:', error.stack);
             }
+            
+            // Fallback to sessionStorage
+            if (!isLoggedIn) {
+                const userEmail = sessionStorage.getItem('userEmail');
+                isLoggedIn = !!userEmail;
+            }
+            
+            console.log('✅ User logged in:', isLoggedIn);
+            
+            // If not logged in, show login modal
+            if (!isLoggedIn) {
+                console.log('❌ User not logged in, showing login modal');
+                openModal('loginModal');
+                return;
+            }
+            
+            // If logged in, toggle dropdown
+            if (!userMenuDropdown) {
+                console.error('❌ userMenuDropdown not found!');
+                return;
+            }
+            
+            const isShown = userMenuDropdown.classList.contains('show');
+            userMenuDropdown.classList.toggle('show');
+            
+            console.log('🎉 Dropdown toggled:', isShown ? 'hidden' : 'shown');
         });
         console.log('✅ User menu button click handler attached');
     } else {

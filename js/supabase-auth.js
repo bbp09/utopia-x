@@ -311,7 +311,7 @@ function handleSignOut() {
     // Update UI
     const userEmailDisplay = document.getElementById('userEmailDisplay');
     if (userEmailDisplay) {
-        userEmailDisplay.textContent = 'Guest';
+        userEmailDisplay.textContent = 'Login';
     }
     
     // Redirect to home

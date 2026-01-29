@@ -33,7 +33,7 @@
                 <div class="user-menu">
                     <button class="user-menu-btn" id="userMenuBtn" onclick="console.log('INLINE CLICK WORKS!'); document.getElementById('userMenuDropdown').classList.toggle('show');">
                         <i class="fas fa-user-circle"></i>
-                        <span class="user-email" id="userEmailDisplay">Guest</span>
+                        <span class="user-email" id="userEmailDisplay">Login</span>
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="user-menu-dropdown" id="userMenuDropdown">
@@ -1144,7 +1144,7 @@
             const userEmail = sessionStorage.getItem('userEmail');
             const userEmailDisplay = document.getElementById('userEmailDisplay');
             
-            if (userEmail && userEmail !== 'Guest') {
+            if (userEmail && userEmail !== 'Login') {
                 if (userEmailDisplay) {
                     userEmailDisplay.textContent = userEmail;
                 }
