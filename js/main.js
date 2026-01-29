@@ -13,22 +13,53 @@ const state = {
 
 // ===== Initialize App =====
 document.addEventListener('DOMContentLoaded', async () => {
-    // Initialize authentication system
-    if (typeof initAuth === 'function') {
-        await initAuth();
-    }
+    console.log('🚀 UTOPIA X - Starting initialization...');
     
-    await checkUserSession();
-    initNavigation();
-    initModals();
-    await loadDancers();
-    await loadFeaturedDancers();
-    initInfiniteSlider();
-    initForms();
-    initScrollAnimations();
-    initUserMenu();
-    initCreditSystem();
-    initAuthForms(); // Initialize auth form handlers
+    try {
+        // Initialize authentication system
+        if (typeof initAuth === 'function') {
+            console.log('✅ Initializing auth...');
+            await initAuth();
+        }
+        
+        console.log('✅ Checking user session...');
+        await checkUserSession();
+        
+        console.log('✅ Initializing navigation...');
+        initNavigation();
+        
+        console.log('✅ Initializing modals...');
+        initModals();
+        
+        console.log('✅ Loading dancers...');
+        await loadDancers();
+        
+        console.log('✅ Loading featured dancers...');
+        await loadFeaturedDancers();
+        
+        console.log('✅ Initializing infinite slider...');
+        initInfiniteSlider();
+        
+        console.log('✅ Initializing forms...');
+        initForms();
+        
+        console.log('✅ Initializing scroll animations...');
+        initScrollAnimations();
+        
+        console.log('✅ Initializing user menu...');
+        initUserMenu();
+        
+        console.log('✅ Initializing credit system...');
+        initCreditSystem();
+        
+        console.log('✅ Initializing auth forms...');
+        initAuthForms();
+        
+        console.log('🎉 All initialization complete!');
+    } catch (error) {
+        console.error('❌ Initialization error:', error);
+        console.error('Stack trace:', error.stack);
+    }
 });
 
 // ===== Navigation =====
@@ -69,153 +100,209 @@ function initNavigation() {
 function initModals() {
     console.log('🔧 Initializing modals...');
     
-    // CTA Cards click to open modals (with event delegation for buttons)
-    document.querySelectorAll('.cta-card').forEach(card => {
-        console.log('✅ Found CTA card:', card.dataset.modal);
+    try {
+        // CTA Cards click to open modals (with event delegation for buttons)
+        const ctaCards = document.querySelectorAll('.cta-card');
+        console.log(`📦 Found ${ctaCards.length} CTA cards`);
         
-        card.addEventListener('click', (e) => {
+        ctaCards.forEach((card, index) => {
             const modalType = card.dataset.modal;
-            console.log('🖱️ CTA card clicked:', modalType);
-            openModal(modalType);
-        });
-        
-        // Also add click event to buttons inside the card
-        const button = card.querySelector('button');
-        if (button) {
-            button.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent double triggering
-                const modalType = card.dataset.modal;
-                console.log('🖱️ Button clicked inside card:', modalType);
-                openModal(modalType);
+            console.log(`  - Card ${index + 1}: ${modalType}`);
+            
+            if (!modalType) {
+                console.warn(`⚠️ Card ${index + 1} has no data-modal attribute`);
+                return;
+            }
+            
+            // Card click handler
+            card.addEventListener('click', (e) => {
+                console.log('🖱️ CTA card clicked:', modalType);
+                handleModalOpen(modalType);
             });
-        }
-    });
+            
+            // Button inside card click handler
+            const button = card.querySelector('button');
+            if (button) {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent double triggering
+                    console.log('🖱️ Button clicked inside card:', modalType);
+                    handleModalOpen(modalType);
+                });
+                console.log(`  ✅ Button bound for ${modalType}`);
+            }
+        });
 
-    // Footer links to open modals
-    document.querySelectorAll('.open-modal').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
+        // Footer links to open modals
+        const modalLinks = document.querySelectorAll('.open-modal');
+        console.log(`🔗 Found ${modalLinks.length} modal links`);
+        
+        modalLinks.forEach(link => {
             const modalType = link.dataset.modal;
-            openModal(modalType);
+            if (!modalType) {
+                console.warn('⚠️ Link has no data-modal attribute');
+                return;
+            }
+            
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log('🔗 Modal link clicked:', modalType);
+                handleModalOpen(modalType);
+            });
         });
-    });
 
-    // Close buttons
-    document.querySelectorAll('.modal-close').forEach(btn => {
-        btn.addEventListener('click', () => {
-            closeAllModals();
+        // Close buttons
+        const closeButtons = document.querySelectorAll('.modal-close');
+        console.log(`❌ Found ${closeButtons.length} close buttons`);
+        
+        closeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                console.log('❌ Close button clicked');
+                closeAllModals();
+            });
         });
-    });
 
-    // ❌ 바깥 클릭으로 모달 닫기 제거
-    // ❌ ESC 키로 모달 닫기 제거
-    // → X 버튼으로만 닫을 수 있음
-    
-    console.log('✅ Modals initialized');
-}
-
-async function openModal(type) {
-    console.log(`🎯 Opening modal: ${type}`);
-    
-    // Check user role and permissions
-    const userType = sessionStorage.getItem('userType');
-    const userRole = sessionStorage.getItem('userRole');
-    const isLoggedIn = !!(sessionStorage.getItem('userEmail'));
-    
-    console.log('👤 User info:', { isLoggedIn, userType, userRole });
-    
-    // Role-based access control
-    if (type === 'casting') {
-        if (!isLoggedIn) {
-            showToast('댄서 섭외는 로그인이 필요합니다', 'info');
-            setTimeout(() => openModal('loginModal'), 300);
-            return;
-        }
-        
-        // Only clients can make casting requests
-        if (userType === 'artist' || userRole === 'artist') {
-            showToast('❌ 댄서 섭외는 클라이언트 계정만 가능합니다', 'error');
-            return;
-        }
-    }
-    
-    if (type === 'artist') {
-        if (!isLoggedIn) {
-            showToast('아티스트 등록은 로그인이 필요합니다', 'info');
-            setTimeout(() => openModal('loginModal'), 300);
-            return;
-        }
-        
-        // Only artists can register profiles
-        if (userType === 'client' || userRole === 'client') {
-            showToast('❌ 아티스트 프로필 등록은 아티스트 계정만 가능합니다', 'error');
-            return;
-        }
-    }
-    
-    closeAllModals();
-    
-    const modalMap = {
-        'casting': 'castingModal',
-        'artist': 'artistModal',
-        'loginModal': 'loginModal',
-        'login': 'loginModal',
-        'creditCharge': 'creditChargeModal'
-    };
-    
-    const modalId = modalMap[type] || (type + 'Modal');
-    const modal = document.getElementById(modalId);
-    
-    if (modal) {
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        console.log(`✅ Modal opened: ${modalId}`);
-        
-        // Auto-fill form for casting modal
-        if (type === 'casting' && isLoggedIn) {
-            await prefillCastingForm();
-        }
-    } else {
-        console.error(`❌ Modal not found: ${modalId}`);
+        console.log('✅ Modals initialized successfully');
+    } catch (error) {
+        console.error('❌ Error initializing modals:', error);
     }
 }
 
-// Prefill casting form with user profile data
-async function prefillCastingForm() {
+// Safe modal open handler with role checking
+function handleModalOpen(modalType) {
+    console.log(`🎯 handleModalOpen called: ${modalType}`);
+    
+    try {
+        // Get user info from sessionStorage (synchronous, fast)
+        const userEmail = sessionStorage.getItem('userEmail');
+        const userType = sessionStorage.getItem('userType');
+        const userRole = sessionStorage.getItem('userRole');
+        const isLoggedIn = !!(userEmail && userEmail !== 'Login');
+        
+        console.log('👤 User status:', { isLoggedIn, userEmail, userType, userRole });
+        
+        // Handle different modal types
+        if (modalType === 'login' || modalType === 'loginModal') {
+            // Always allow opening login modal
+            console.log('✅ Opening login modal');
+            openModalDirect(modalType);
+            return;
+        }
+        
+        // Check if login required for other modals
+        if (modalType === 'casting' || modalType === 'artist') {
+            if (!isLoggedIn) {
+                console.log('⚠️ User not logged in, showing login modal');
+                showToast('먼저 로그인해주세요 🔐', 'info');
+                setTimeout(() => {
+                    openModalDirect('loginModal');
+                }, 500);
+                return;
+            }
+            
+            // Role-based access control
+            if (modalType === 'casting') {
+                if (userType === 'artist' || userRole === 'artist') {
+                    console.log('❌ Artist trying to access casting');
+                    showToast('❌ 댄서 섭외는 클라이언트 계정만 가능합니다', 'error');
+                    return;
+                }
+            }
+            
+            if (modalType === 'artist') {
+                if (userType === 'client' || userRole === 'client') {
+                    console.log('❌ Client trying to access artist registration');
+                    showToast('❌ 아티스트 프로필 등록은 아티스트 계정만 가능합니다', 'error');
+                    return;
+                }
+            }
+        }
+        
+        // Open the modal
+        console.log('✅ Opening modal:', modalType);
+        openModalDirect(modalType);
+        
+        // Prefill form if needed
+        if (modalType === 'casting' && isLoggedIn) {
+            setTimeout(() => {
+                prefillCastingForm();
+            }, 100);
+        }
+        
+    } catch (error) {
+        console.error('❌ Error in handleModalOpen:', error);
+        // Fallback: just open the modal
+        openModalDirect(modalType);
+    }
+}
+
+// Direct modal opener (no async, no checks)
+function openModalDirect(type) {
+    console.log(`📂 openModalDirect: ${type}`);
+    
+    try {
+        closeAllModals();
+        
+        const modalMap = {
+            'casting': 'castingModal',
+            'artist': 'artistModal',
+            'loginModal': 'loginModal',
+            'login': 'loginModal',
+            'creditCharge': 'creditChargeModal'
+        };
+        
+        const modalId = modalMap[type] || (type + 'Modal');
+        const modal = document.getElementById(modalId);
+        
+        if (modal) {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            console.log(`✅ Modal opened: ${modalId}`);
+        } else {
+            console.error(`❌ Modal not found: ${modalId}`);
+        }
+    } catch (error) {
+        console.error('❌ Error in openModalDirect:', error);
+    }
+}
+
+// Make functions globally accessible
+window.handleModalOpen = handleModalOpen;
+window.openModalDirect = openModalDirect;
+
+// Wrapper for backward compatibility
+function openModal(type) {
+    console.log(`🔄 openModal called (redirecting to handleModalOpen): ${type}`);
+    handleModalOpen(type);
+}
+
+// Make openModal globally accessible
+window.openModal = openModal;
+
+// Prefill casting form with user profile data (synchronous)
+function prefillCastingForm() {
     console.log('📝 Prefilling casting form...');
     
-    const userEmail = sessionStorage.getItem('userEmail');
-    const userProfile = sessionStorage.getItem('userProfile');
+    try {
+        const userEmail = sessionStorage.getItem('userEmail');
+        const userProfile = sessionStorage.getItem('userProfile');
+        
+        if (!userEmail) {
+            console.warn('⚠️ No user email found');
+            return;
+        }
+        
+        // Get user data from sessionStorage (fast, synchronous)
+        let userData = null;
     
-    if (!userEmail) {
-        console.warn('⚠️ No user email found');
-        return;
-    }
-    
-    // Try to get user data from Supabase first
-    let userData = null;
-    
-    if (typeof window.supabase !== 'undefined') {
-        try {
-            const { data: { user } } = await window.supabase.auth.getUser();
-            if (user && user.user_metadata) {
-                userData = user.user_metadata;
-                console.log('✅ Got user data from Supabase:', userData);
+        // Use sessionStorage profile (synchronous)
+        if (userProfile) {
+            try {
+                userData = JSON.parse(userProfile);
+                console.log('✅ Got user data from sessionStorage:', userData);
+            } catch (error) {
+                console.error('Error parsing user profile:', error);
             }
-        } catch (error) {
-            console.error('Error getting Supabase user:', error);
         }
-    }
-    
-    // Fallback to sessionStorage profile
-    if (!userData && userProfile) {
-        try {
-            userData = JSON.parse(userProfile);
-            console.log('✅ Got user data from sessionStorage:', userData);
-        } catch (error) {
-            console.error('Error parsing user profile:', error);
-        }
-    }
     
     // Prefill fields
     const clientNameField = document.getElementById('clientName');
@@ -228,21 +315,24 @@ async function prefillCastingForm() {
         console.log('✅ Prefilled email:', userEmail);
     }
     
-    if (userData) {
-        if (clientNameField && userData.name) {
-            clientNameField.value = userData.name;
-            clientNameField.style.backgroundColor = 'rgba(157, 78, 221, 0.1)';
-            console.log('✅ Prefilled name:', userData.name);
+        if (userData) {
+            if (clientNameField && userData.name) {
+                clientNameField.value = userData.name;
+                clientNameField.style.backgroundColor = 'rgba(157, 78, 221, 0.1)';
+                console.log('✅ Prefilled name:', userData.name);
+            }
+            
+            if (clientPhoneField && userData.phone) {
+                clientPhoneField.value = userData.phone;
+                clientPhoneField.style.backgroundColor = 'rgba(157, 78, 221, 0.1)';
+                console.log('✅ Prefilled phone:', userData.phone);
+            }
         }
         
-        if (clientPhoneField && userData.phone) {
-            clientPhoneField.value = userData.phone;
-            clientPhoneField.style.backgroundColor = 'rgba(157, 78, 221, 0.1)';
-            console.log('✅ Prefilled phone:', userData.phone);
-        }
+        console.log('✅ Casting form prefilled successfully');
+    } catch (error) {
+        console.error('❌ Error prefilling form:', error);
     }
-    
-    console.log('✅ Casting form prefilled successfully');
 }
 
 function closeModal(modalId) {
