@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase Connection Test</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1a1a2e;
+            color: #eee;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #9d4edd;
+            border-bottom: 2px solid #9d4edd;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            background: #16213e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #9d4edd;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .status.success {
+            background: rgba(0, 255, 0, 0.1);
+            color: #0f0;
+        }
+        .status.error {
+            background: rgba(255, 0, 0, 0.1);
+            color: #f00;
+        }
+        .status.warning {
+            background: rgba(255, 255, 0, 0.1);
+            color: #ff0;
+        }
+        button {
+            background: linear-gradient(135deg, #9d4edd, #c77dff);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 5px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(157, 78, 221, 0.3);
+        }
+        pre {
+            background: #0f0f0f;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .dancer-card {
+            background: #16213e;
+            border: 2px solid #9d4edd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .dancer-info h3 {
+            margin: 0 0 5px 0;
+            color: #c77dff;
+        }
+        .dancer-info p {
+            margin: 5px 0;
+            color: #aaa;
+        }
+        .badge {
+            background: linear-gradient(135deg, #9d4edd, #c77dff);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Supabase Connection Test - UTOPIA X</h1>
+    
+    <div class="test-section">
+        <h2>📊 Status Dashboard</h2>
+        <div id="statusDisplay"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🧪 Test Actions</h2>
+        <button onclick="testConnection()">Test Connection</button>
+        <button onclick="testDancersQuery()">Query Dancers Table</button>
+        <button onclick="testPremiumDancers()">Query Premium Dancers</button>
+        <button onclick="clearResults()">Clear Results</button>
+    </div>
+
+    <div class="test-section">
+        <h2>📦 Results</h2>
+        <div id="results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎭 Premium Dancers Preview</h2>
+        <div id="dancersPreview"></div>
+    </div>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    
+    <script>
+        const statusDisplay = document.getElementById('statusDisplay');
+        const results = document.getElementById('results');
+        const dancersPreview = document.getElementById('dancersPreview');
+
+        // Check initial status
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                checkStatus();
+            }, 500);
+        });
+
+        function checkStatus() {
+            let html = '';
+            
+            // Check Supabase library
+            if (typeof window.supabase !== 'undefined') {
+                html += '<div class="status success">✅ Supabase client initialized</div>';
+            } else {
+                html += '<div class="status error">❌ Supabase client NOT found</div>';
+            }
+            
+            // Check configuration
+            const configured = typeof SUPABASE_URL !== 'undefined' && 
+                              SUPABASE_URL !== 'YOUR_SUPABASE_URL';
+            
+            if (configured) {
+                html += '<div class="status success">✅ Configuration loaded</div>';
+                html += `<div class="status success">🌐 URL: ${SUPABASE_URL}</div>`;
+            } else {
+                html += '<div class="status error">❌ Configuration not loaded</div>';
+            }
+            
+            statusDisplay.innerHTML = html;
+        }
+
+        async function testConnection() {
+            results.innerHTML = '<div class="status warning">⏳ Testing connection...</div>';
+            
+            try {
+                if (!window.supabase) {
+                    throw new Error('Supabase client not initialized');
+                }
+                
+                // Simple ping test
+                const { error } = await window.supabase.from('dancers').select('count');
+                
+                if (error) {
+                    results.innerHTML = `<div class="status error">❌ Connection failed: ${error.message}</div>`;
+                } else {
+                    results.innerHTML = '<div class="status success">✅ Connection successful!</div>';
+                }
+            } catch (error) {
+                results.innerHTML = `<div class="status error">❌ Exception: ${error.message}</div>`;
+            }
+        }
+
+        async function testDancersQuery() {
+            results.innerHTML = '<div class="status warning">⏳ Querying dancers table...</div>';
+            
+            try {
+                if (!window.supabase) {
+                    throw new Error('Supabase client not initialized');
+                }
+                
+                const { data, error } = await window.supabase
+                    .from('dancers')
+                    .select('*');
+                
+                if (error) {
+                    results.innerHTML = `<div class="status error">❌ Query failed: ${error.message}</div>`;
+                } else {
+                    results.innerHTML = `
+                        <div class="status success">✅ Query successful!</div>
+                        <div class="status success">📊 Total dancers: ${data.length}</div>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                results.innerHTML = `<div class="status error">❌ Exception: ${error.message}</div>`;
+            }
+        }
+
+        async function testPremiumDancers() {
+            results.innerHTML = '<div class="status warning">⏳ Querying premium dancers...</div>';
+            dancersPreview.innerHTML = '';
+            
+            try {
+                if (!window.supabase) {
+                    throw new Error('Supabase client not initialized');
+                }
+                
+                const { data, error } = await window.supabase
+                    .from('dancers')
+                    .select('*')
+                    .eq('is_premium', true)
+                    .order('created_at', { ascending: false });
+                
+                if (error) {
+                    results.innerHTML = `<div class="status error">❌ Query failed: ${error.message}</div>`;
+                } else {
+                    results.innerHTML = `
+                        <div class="status success">✅ Query successful!</div>
+                        <div class="status success">🌟 Premium dancers: ${data.length}</div>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                    
+                    // Render preview cards
+                    if (data.length > 0) {
+                        let cardsHTML = '<h3>Preview:</h3>';
+                        data.forEach(dancer => {
+                            cardsHTML += `
+                                <div class="dancer-card">
+                                    <div>
+                                        <span class="badge">⭐ Premium</span>
+                                    </div>
+                                    <div class="dancer-info">
+                                        <h3>${dancer.name}</h3>
+                                        <p><strong>Genre:</strong> ${dancer.genre || 'N/A'}</p>
+                                        <p><strong>ID:</strong> ${dancer.id}</p>
+                                        <p><strong>Created:</strong> ${new Date(dancer.created_at).toLocaleString()}</p>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        dancersPreview.innerHTML = cardsHTML;
+                    }
+                }
+            } catch (error) {
+                results.innerHTML = `<div class="status error">❌ Exception: ${error.message}</div>`;
+            }
+        }
+
+        function clearResults() {
+            results.innerHTML = '';
+            dancersPreview.innerHTML = '';
+        }
+    </script>
+</body>
+</html>
