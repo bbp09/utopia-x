@@ -83,52 +83,63 @@ function updateUserUI() {
 // ===== Sign Up =====
 async function signUp(email, password, userType, profileData = {}) {
     console.log('📝 Signing up:', email, 'as', userType);
-    console.log('📋 Profile data:', profileData);
+    console.log('📋 Profile data:', JSON.stringify(profileData, null, 2));
     
-    // Validate inputs
+    // ✅ STEP 1: Validate inputs
     if (!email || !email.includes('@')) {
+        console.error('❌ Invalid email:', email);
         showToast('유효한 이메일을 입력해주세요', 'error');
-        return { success: false };
+        return { success: false, error: { message: 'Invalid email' } };
     }
     
     if (!password || password.length < 6) {
+        console.error('❌ Password too short:', password?.length);
         showToast('비밀번호를 6자 이상 입력해주세요', 'error');
-        return { success: false };
+        return { success: false, error: { message: 'Password too short' } };
     }
     
-    if (!userType) {
+    if (!userType || (userType !== 'client' && userType !== 'artist')) {
+        console.error('❌ Invalid user type:', userType);
         showToast('회원 유형을 선택해주세요', 'error');
-        return { success: false };
+        return { success: false, error: { message: 'Invalid user type' } };
     }
     
-    // Validate required fields based on user type
+    // ✅ STEP 2: Validate required fields based on user type
     if (userType === 'client') {
         if (!profileData.name || !profileData.phone) {
+            console.error('❌ Missing client fields:', { name: profileData.name, phone: profileData.phone });
             showToast('담당자 이름과 연락처를 입력해주세요', 'error');
-            return { success: false };
+            return { success: false, error: { message: 'Missing client fields' } };
         }
     } else if (userType === 'artist') {
-        if (!profileData.stageName || !profileData.realName || !profileData.phone) {
-            showToast('활동명, 본명, 연락처를 입력해주세요', 'error');
-            return { success: false };
+        if (!profileData.stageName || !profileData.phone) {
+            console.error('❌ Missing artist fields:', { stageName: profileData.stageName, phone: profileData.phone });
+            showToast('활동명과 연락처를 입력해주세요', 'error');
+            return { success: false, error: { message: 'Missing artist fields' } };
         }
     }
+    
+    console.log('✅ All validation passed, attempting signup...');
     
     const client = initSupabase();
     if (!client) {
+        console.warn('⚠️ No Supabase client - using fallback');
         // No Supabase configured - use mock database
         return fallbackSignUp(email, password, userType, profileData);
     }
     
     try {
-        // Prepare user metadata
+        // ✅ STEP 3: Prepare user metadata with role info
         const userMetadata = {
             user_type: userType,
             userRole: userType,
+            role: userType,  // Add role explicitly
             ...profileData,
             credits: 10, // Initial credits
             createdAt: new Date().toISOString()
         };
+        
+        console.log('📤 Sending to Supabase with metadata:', JSON.stringify(userMetadata, null, 2));
         
         const { data, error } = await client.auth.signUp({
             email: email,
@@ -138,22 +149,42 @@ async function signUp(email, password, userType, profileData = {}) {
             }
         });
         
+        // ✅ STEP 4: CRITICAL - Check for errors FIRST
         if (error) {
-            console.error('❌ Sign up error:', error);
+            console.error('❌ Supabase sign up error:', error);
+            console.error('  - Error message:', error.message);
+            console.error('  - Error code:', error.code);
+            console.error('  - Error status:', error.status);
             
             // Handle specific error messages
-            if (error.message.includes('already registered')) {
+            if (error.message.includes('already registered') || error.message.includes('already been registered')) {
                 showToast('이미 가입된 이메일입니다', 'error');
+            } else if (error.message.includes('Invalid email')) {
+                showToast('유효하지 않은 이메일 형식입니다', 'error');
+            } else if (error.message.includes('Password')) {
+                showToast('비밀번호가 요구사항을 충족하지 않습니다', 'error');
             } else {
-                showToast(error.message, 'error');
+                showToast('회원가입 실패: ' + error.message, 'error');
             }
             
             return { success: false, error };
         }
         
-        console.log('✅ Sign up successful');
+        // ✅ STEP 5: Verify data is returned
+        if (!data || !data.user) {
+            console.error('❌ No user data returned from Supabase:', data);
+            showToast('회원가입 처리 중 오류가 발생했습니다', 'error');
+            return { success: false, error: { message: 'No user data returned' } };
+        }
         
-        // Store in sessionStorage for immediate access
+        console.log('✅ Sign up successful!');
+        console.log('📥 User data:', {
+            id: data.user.id,
+            email: data.user.email,
+            user_metadata: data.user.user_metadata
+        });
+        
+        // ✅ STEP 6: Store in sessionStorage for immediate access
         sessionStorage.setItem('userEmail', email);
         sessionStorage.setItem('userType', userType);
         sessionStorage.setItem('userRole', userType);
@@ -164,6 +195,8 @@ async function signUp(email, password, userType, profileData = {}) {
         return { success: true, data, userType };
     } catch (error) {
         console.error('❌ Sign up exception:', error);
+        console.error('  - Exception message:', error.message);
+        console.error('  - Exception stack:', error.stack);
         showToast('회원가입 중 오류가 발생했습니다', 'error');
         return { success: false, error };
     }
@@ -172,6 +205,7 @@ async function signUp(email, password, userType, profileData = {}) {
 // ===== Fallback Sign Up (Without Supabase) =====
 function fallbackSignUp(email, password, userType, profileData = {}) {
     console.log('⚠️ Using fallback sign up (Demo mode)');
+    console.log('📋 Fallback data:', { email, userType, profileData });
     
     // Get mock users from localStorage
     const mockUsers = JSON.parse(localStorage.getItem('mockUsers') || '[]');
@@ -179,22 +213,31 @@ function fallbackSignUp(email, password, userType, profileData = {}) {
     // Check if email already exists
     const existingUser = mockUsers.find(u => u.email === email);
     if (existingUser) {
+        console.error('❌ Email already exists in mock database');
         showToast('이미 가입된 이메일입니다', 'error');
-        return { success: false };
+        return { success: false, error: { message: 'Email already exists' } };
     }
     
     // Add new user with full profile
     const newUser = {
+        id: 'mock_' + Date.now(),
         email: email,
         password: password,
         user_type: userType,
         userRole: userType,
+        role: userType,
         ...profileData,
         credits: 10,
         createdAt: new Date().toISOString()
     };
     
     mockUsers.push(newUser);
+    
+    console.log('✅ New user added to mock database:', {
+        id: newUser.id,
+        email: newUser.email,
+        userType: newUser.user_type
+    });
     
     // Save to localStorage
     localStorage.setItem('mockUsers', JSON.stringify(mockUsers));

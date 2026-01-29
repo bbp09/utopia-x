@@ -574,10 +574,136 @@ const EventModule = {
             console.log('✅ Back to Step 1 button event bound');
         }
         
-        // Sign Up form (Step 2)
-        if (typeof window.initSignUpForm === 'function') {
-            window.initSignUpForm();
-            console.log('✅ Sign Up form initialized');
+        // ✅ Sign Up form (Step 2) - NEW HANDLER
+        const signUpForm = document.getElementById('signUpStep2');
+        if (signUpForm) {
+            signUpForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                console.log('📝 Sign up form submitted');
+                
+                // 1️⃣ Get form values with validation
+                const email = document.getElementById('signUpEmail')?.value?.trim();
+                const password = document.getElementById('signUpPassword')?.value;
+                const passwordConfirm = document.getElementById('signUpPasswordConfirm')?.value;
+                const userType = document.getElementById('selectedUserType')?.value;
+                
+                console.log('📋 Form data check:');
+                console.log('  - Email:', email || '❌ EMPTY');
+                console.log('  - Password length:', password?.length || 0);
+                console.log('  - User type:', userType || '❌ EMPTY');
+                
+                // Validate basic fields
+                if (!email || !email.includes('@')) {
+                    console.error('❌ Invalid email:', email);
+                    UIModule.showToast('유효한 이메일을 입력해주세요', 'error');
+                    return;
+                }
+                
+                if (!password || password.length < 6) {
+                    console.error('❌ Password too short');
+                    UIModule.showToast('비밀번호를 6자 이상 입력해주세요', 'error');
+                    return;
+                }
+                
+                if (password !== passwordConfirm) {
+                    console.error('❌ Passwords do not match');
+                    UIModule.showToast('비밀번호가 일치하지 않습니다', 'error');
+                    return;
+                }
+                
+                if (!userType || (userType !== 'client' && userType !== 'artist')) {
+                    console.error('❌ Invalid user type:', userType);
+                    UIModule.showToast('회원 유형을 선택해주세요', 'error');
+                    return;
+                }
+                
+                // 2️⃣ Get profile data based on user type
+                let profileData = {};
+                
+                if (userType === 'client') {
+                    const name = document.getElementById('clientName')?.value?.trim();
+                    const phone = document.getElementById('clientPhone')?.value?.trim();
+                    
+                    console.log('  - Client name:', name || '❌ EMPTY');
+                    console.log('  - Client phone:', phone || '❌ EMPTY');
+                    
+                    if (!name || !phone) {
+                        console.error('❌ Missing client fields');
+                        UIModule.showToast('담당자 이름과 연락처를 입력해주세요', 'error');
+                        return;
+                    }
+                    
+                    profileData = {
+                        name: name,
+                        phone: phone,
+                        role: 'client'
+                    };
+                } else if (userType === 'artist') {
+                    const stageName = document.getElementById('artistStageName')?.value?.trim();
+                    const phone = document.getElementById('artistPhone')?.value?.trim();
+                    
+                    console.log('  - Artist stage name:', stageName || '❌ EMPTY');
+                    console.log('  - Artist phone:', phone || '❌ EMPTY');
+                    
+                    if (!stageName || !phone) {
+                        console.error('❌ Missing artist fields');
+                        UIModule.showToast('활동명과 연락처를 입력해주세요', 'error');
+                        return;
+                    }
+                    
+                    profileData = {
+                        stageName: stageName,
+                        phone: phone,
+                        role: 'artist'
+                    };
+                }
+                
+                console.log('✅ All form validation passed');
+                console.log('📤 Calling signUp with:', { email, userType, profileData });
+                
+                // 3️⃣ Call signUp function
+                if (typeof window.signUp === 'function') {
+                    try {
+                        const result = await window.signUp(email, password, userType, profileData);
+                        
+                        console.log('📥 Sign up result:', result);
+                        
+                        // 4️⃣ CRITICAL: Only show success if no error
+                        if (result.success && !result.error) {
+                            console.log('✅ Sign up successful!');
+                            
+                            // Close modal after short delay
+                            setTimeout(() => {
+                                UIModule.closeModal('loginModal');
+                                
+                                // Reload after 1 second
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1000);
+                            }, 1500);
+                        } else {
+                            // Show error from Supabase
+                            console.error('❌ Sign up failed:', result.error);
+                            
+                            if (result.error?.message) {
+                                UIModule.showToast('가입 실패: ' + result.error.message, 'error');
+                            } else {
+                                UIModule.showToast('회원가입에 실패했습니다', 'error');
+                            }
+                        }
+                    } catch (error) {
+                        console.error('❌ Sign up exception:', error);
+                        UIModule.showToast('회원가입 중 오류가 발생했습니다', 'error');
+                    }
+                } else {
+                    console.error('❌ signUp function not available');
+                    UIModule.showToast('인증 시스템을 사용할 수 없습니다', 'error');
+                }
+            });
+            
+            console.log('✅ Sign Up form event bound (NEW HANDLER)');
         }
     },
     
