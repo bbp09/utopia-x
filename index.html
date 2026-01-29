@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/chat.css">
 </head>
 <body>
     <!-- Navigation -->
@@ -1590,6 +1591,56 @@
             console.log('  - signUp:', typeof signUp);
             console.log('  - initSupabase:', typeof initSupabase);
         }, 2000);
+        
+        // =====================================
+        // Chat Functions for Dancer Profiles
+        // =====================================
+        
+        /**
+         * Open 1:1 chat with dancer from profile
+         * @param {string} dancerId - Dancer's user ID
+         * @param {string} dancerName - Dancer's name
+         * @param {string} dancerEmail - Dancer's email
+         */
+        window.openChatWithDancer = async function(dancerId, dancerName, dancerEmail) {
+            console.log('💬 Opening chat with dancer:', dancerName, dancerId);
+            
+            // Check if user is logged in
+            const userEmail = sessionStorage.getItem('userEmail');
+            if (!userEmail || userEmail === 'Login') {
+                showToast('로그인이 필요한 서비스입니다', 'info');
+                
+                // Open login modal if available
+                if (typeof UIModule !== 'undefined' && UIModule.openModal) {
+                    UIModule.openModal('loginModal');
+                }
+                return;
+            }
+            
+            // Check if ChatModule is loaded
+            if (typeof ChatModule === 'undefined') {
+                console.error('❌ ChatModule not loaded');
+                showToast('채팅 시스템을 불러올 수 없습니다', 'error');
+                return;
+            }
+            
+            // Initialize ChatModule if needed
+            if (!ChatModule.currentUserId) {
+                const success = await ChatModule.init();
+                if (!success) {
+                    showToast('채팅 시스템을 초기화할 수 없습니다', 'error');
+                    return;
+                }
+            }
+            
+            // Open chat
+            await ChatModule.openChatWith(dancerId, dancerName, dancerEmail);
+        };
+        
+        console.log('✅ Chat functions loaded');
     </script>
+    
+    <!-- Chat Module (Only load if needed) -->
+    <script src="js/chat.js"></script>
 </body>
 </html>
