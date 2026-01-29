@@ -54,13 +54,13 @@
         
         if (isClientPage && userRole === 'artist') {
             console.warn('⚠️ Artist on client dashboard - redirecting...');
-            window.location.href = 'artist-dashboard.html';
+            window.location.replace('artist-dashboard.html'); // Use replace to avoid back button issue
             return;
         }
         
         if (isArtistPage && userRole === 'client') {
             console.warn('⚠️ Client on artist dashboard - redirecting...');
-            window.location.href = 'client-dashboard.html';
+            window.location.replace('client-dashboard.html'); // Use replace to avoid back button issue
             return;
         }
         
@@ -71,16 +71,14 @@
         sessionStorage.setItem('userName', userData.name || '');
         sessionStorage.setItem('userRole', userRole);
         
-        // Remove loading state
-        setTimeout(() => {
-            document.body.classList.remove('loading');
-            
-            const overlay = document.getElementById('globalLoadingOverlay');
-            if (overlay) {
-                overlay.classList.add('hidden');
-                console.log('✅ Loading overlay hidden');
-            }
-        }, 300); // Small delay to ensure smooth transition
+        // Remove loading state immediately
+        document.body.classList.remove('loading');
+        
+        const overlay = document.getElementById('globalLoadingOverlay');
+        if (overlay) {
+            overlay.classList.add('hidden');
+            console.log('✅ Loading overlay hidden');
+        }
         
         console.log('🎉 Dashboard loaded successfully');
         
