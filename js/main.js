@@ -162,7 +162,144 @@ const AuthModule = {
 };
 
 // =====================================
-// 3. UI MODULE (UI 관리 모듈)
+// 3. DANCER MODULE (댄서 데이터 관리)
+// =====================================
+const DancerModule = {
+    // Fetch premium dancers from Supabase
+    async fetchPremiumDancers() {
+        console.log('🎭 Fetching premium dancers...');
+        
+        try {
+            // Check if Supabase is available
+            if (typeof window.supabase === 'undefined') {
+                console.warn('⚠️ Supabase not available, loading fallback dancers');
+                this.renderFallbackDancers();
+                return;
+            }
+            
+            // Query premium dancers
+            const { data, error } = await window.supabase
+                .from('dancers')
+                .select('*')
+                .eq('is_premium', true)
+                .order('created_at', { ascending: false });
+            
+            if (error) {
+                console.error('❌ Error fetching premium dancers:', error);
+                this.renderFallbackDancers();
+                return;
+            }
+            
+            if (!data || data.length === 0) {
+                console.warn('⚠️ No premium dancers found');
+                this.renderEmptyState();
+                return;
+            }
+            
+            console.log(`✅ Loaded ${data.length} premium dancers`);
+            AppState.featuredDancers = data;
+            this.renderPremiumDancers(data);
+            
+        } catch (error) {
+            console.error('❌ Exception fetching premium dancers:', error);
+            this.renderFallbackDancers();
+        }
+    },
+    
+    // Render premium dancers to grid
+    renderPremiumDancers(dancers) {
+        const grid = document.getElementById('featuredDancersGrid');
+        if (!grid) {
+            console.error('❌ featuredDancersGrid element not found');
+            return;
+        }
+        
+        grid.innerHTML = dancers.map(dancer => this.createDancerCard(dancer)).join('');
+        console.log('✅ Premium dancers rendered');
+    },
+    
+    // Create dancer card HTML
+    createDancerCard(dancer) {
+        // Fallback image if image_url is null
+        const imageUrl = dancer.image_url || `https://source.unsplash.com/random/400x400/?dancer,${dancer.id}`;
+        
+        return `
+            <div class="dancer-card premium-dancer" data-dancer-id="${dancer.id}">
+                <div class="dancer-card-image-wrapper">
+                    <img 
+                        src="${imageUrl}" 
+                        alt="${dancer.name}"
+                        class="dancer-card-image"
+                        onerror="this.src='https://source.unsplash.com/random/400x400/?dancer'"
+                    >
+                    <div class="premium-badge">Premium</div>
+                </div>
+                <div class="dancer-card-content">
+                    <h3 class="dancer-name">${dancer.name}</h3>
+                    <p class="dancer-genre">${dancer.genre || '장르 미지정'}</p>
+                    <button class="btn-view-profile" onclick="DancerModule.viewProfile('${dancer.id}')">
+                        <i class="fas fa-user"></i> 프로필 보기
+                    </button>
+                </div>
+            </div>
+        `;
+    },
+    
+    // View dancer profile
+    viewProfile(dancerId) {
+        console.log('🔍 View profile:', dancerId);
+        // TODO: Implement profile modal or redirect to profile page
+        alert(`댄서 프로필 보기 기능은 곧 추가됩니다.\nDancer ID: ${dancerId}`);
+    },
+    
+    // Render empty state
+    renderEmptyState() {
+        const grid = document.getElementById('featuredDancersGrid');
+        if (!grid) return;
+        
+        grid.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-users" style="font-size: 64px; color: #9d4edd; margin-bottom: 20px;"></i>
+                <h3>등록된 프리미엄 댄서가 없습니다</h3>
+                <p>곧 멋진 댄서들을 만나보실 수 있습니다!</p>
+            </div>
+        `;
+    },
+    
+    // Render fallback dancers (for demo)
+    renderFallbackDancers() {
+        console.log('🎭 Loading fallback demo dancers...');
+        
+        const fallbackDancers = [
+            {
+                id: 'demo1',
+                name: 'DJ Koo',
+                genre: 'Hip-Hop, Popping',
+                image_url: 'https://source.unsplash.com/random/400x400/?hiphop,dancer',
+                is_premium: true
+            },
+            {
+                id: 'demo2',
+                name: 'Luna Park',
+                genre: 'Contemporary, Ballet',
+                image_url: 'https://source.unsplash.com/random/400x400/?ballet,dancer',
+                is_premium: true
+            },
+            {
+                id: 'demo3',
+                name: 'B-boy Storm',
+                genre: 'Breaking, Locking',
+                image_url: 'https://source.unsplash.com/random/400x400/?breakdance,dancer',
+                is_premium: true
+            }
+        ];
+        
+        this.renderPremiumDancers(fallbackDancers);
+    }
+};
+
+// =====================================
+// 4. UI MODULE (UI 관리 모듈)
 // =====================================
 const UIModule = {
     // DOM Elements cache
@@ -886,11 +1023,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         // 3. Initialize event listeners
         EventModule.init();
         
-        // 4. Expose global functions for backward compatibility
+        // 4. Load premium dancers
+        await DancerModule.fetchPremiumDancers();
+        
+        // 5. Expose global functions for backward compatibility
         window.selectUserType = (type) => UIModule.selectUserType(type);
         window.backToStep1 = () => UIModule.backToStep1();
         window.openModal = (modalId) => UIModule.openModal(modalId);
         window.closeModal = (modalId) => UIModule.closeModal(modalId);
+        window.DancerModule = DancerModule; // Expose for onclick handlers
         
         console.log('🎉 All initialization complete! (Refactored)');
         
@@ -904,6 +1045,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 // =====================================
 window.AppState = AppState;
 window.AuthModule = AuthModule;
+window.DancerModule = DancerModule;
 window.UIModule = UIModule;
 window.EventModule = EventModule;
 

@@ -2708,3 +2708,122 @@ input[type="range"]::-moz-range-thumb:hover {
 .visible {
     display: block !important;
 }
+
+/* =====================================
+   Premium Dancer Cards (Updated)
+   ===================================== */
+
+.dancer-card.premium-dancer {
+    background: var(--bg-card);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 2px solid #9d4edd;
+    transition: var(--transition-base);
+    position: relative;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(157, 78, 221, 0.2);
+}
+
+.dancer-card.premium-dancer:hover {
+    transform: translateY(-8px);
+    border-color: #c77dff;
+    box-shadow: 0 12px 40px rgba(157, 78, 221, 0.4);
+}
+
+.dancer-card-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    overflow: hidden;
+}
+
+.dancer-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.dancer-card.premium-dancer:hover .dancer-card-image {
+    transform: scale(1.05);
+}
+
+.premium-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: linear-gradient(135deg, #9d4edd, #c77dff);
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-size: 12px;
+    font-weight: 700;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 4px 15px rgba(157, 78, 221, 0.5);
+}
+
+.premium-badge::before {
+    content: '⭐';
+    font-size: 14px;
+}
+
+.dancer-card-content {
+    padding: 25px;
+}
+
+.dancer-name {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.dancer-genre {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+}
+
+.btn-view-profile {
+    width: 100%;
+    padding: 12px 24px;
+    background: var(--primary-gradient);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-view-profile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(157, 78, 221, 0.3);
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-state h3 {
+    font-size: 24px;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
