@@ -1198,16 +1198,11 @@
                 const modalType = card.getAttribute('data-modal');
                 console.log(`🎯 Card ${index + 1}: ${modalType}`);
                 
-                // Add click event to card
-                card.addEventListener('click', function(e) {
-                    console.log('🖱️ Card clicked:', modalType);
-                    handleCTAClick(modalType);
-                });
-                
-                // Add click event to button inside card
+                // 🚨 FIX: Only bind click to button, NOT to card
                 const button = card.querySelector('button');
                 if (button) {
                     button.addEventListener('click', function(e) {
+                        e.preventDefault();
                         e.stopPropagation();
                         console.log('🔘 Button clicked:', modalType);
                         handleCTAClick(modalType);
@@ -1227,28 +1222,43 @@
             
             console.log('🎯 CTA Click:', { modalType, isLoggedIn, userType, userRole });
             
-            if (!isLoggedIn && (modalType === 'casting' || modalType === 'artist')) {
-                console.log('⚠️ User not logged in, showing login prompt');
-                showToast('먼저 로그인해주세요 🔐', 'info');
-                setTimeout(() => {
-                    openModalDirect('login');
-                }, 500);
-                return;
-            }
-            
-            // Role-based access control
-            if (modalType === 'casting') {
-                if (userType === 'artist' || userRole === 'artist') {
-                    console.log('❌ Artist trying to access casting');
-                    showToast('❌ 댄서 섭외는 클라이언트 계정만 가능합니다', 'error');
+            // 🆕 Artist registration - redirect to dedicated page
+            if (modalType === 'artist') {
+                if (!isLoggedIn) {
+                    console.log('⚠️ User not logged in for artist registration');
+                    showToast('먼저 로그인해주세요 🔐', 'info');
+                    setTimeout(() => {
+                        openModalDirect('login');
+                    }, 500);
                     return;
                 }
-            }
-            
-            if (modalType === 'artist') {
+                
                 if (userType === 'client' || userRole === 'client') {
                     console.log('❌ Client trying to access artist registration');
                     showToast('❌ 아티스트 프로필 등록은 아티스트 계정만 가능합니다', 'error');
+                    return;
+                }
+                
+                // Redirect to artist registration page
+                console.log('✅ Redirecting to artist-register.html');
+                window.location.href = 'artist-register.html';
+                return;
+            }
+            
+            // Casting request - show modal
+            if (modalType === 'casting') {
+                if (!isLoggedIn) {
+                    console.log('⚠️ User not logged in for casting');
+                    showToast('먼저 로그인해주세요 🔐', 'info');
+                    setTimeout(() => {
+                        openModalDirect('login');
+                    }, 500);
+                    return;
+                }
+                
+                if (userType === 'artist' || userRole === 'artist') {
+                    console.log('❌ Artist trying to access casting');
+                    showToast('❌ 댄서 섭외는 클라이언트 계정만 가능합니다', 'error');
                     return;
                 }
             }

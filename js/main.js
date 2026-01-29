@@ -920,24 +920,22 @@ const EventModule = {
             
             if (!modalType) return;
             
-            // Prevent event bubbling from inner button
+            // Remove card click event entirely (only button should be clickable)
+            card.style.cursor = 'default';
+            
+            // Only bind event to the inner button
             const innerButton = card.querySelector('.cta-btn-large');
             if (innerButton) {
                 innerButton.addEventListener('click', (e) => {
+                    e.preventDefault();
                     e.stopPropagation();
                     this.handleCTAClick(modalType);
                 });
+                console.log('  ✅ Button bound for:', modalType);
             }
-            
-            // Card click (only if not clicking inner button)
-            card.addEventListener('click', (e) => {
-                if (e.target === card || e.target.closest('.cta-card-content') === card.querySelector('.cta-card-content')) {
-                    this.handleCTAClick(modalType);
-                }
-            });
         });
         
-        console.log('✅ CTA events bound successfully');
+        console.log('✅ CTA events bound successfully (buttons only)');
     },
     
     // Handle CTA click logic

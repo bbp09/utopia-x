@@ -1721,11 +1721,12 @@ input[type="range"]::-moz-range-thumb:hover {
     border-radius: 25px;
     padding: 40px 30px;
     text-align: center;
-    cursor: pointer;
+    cursor: default; /* 카드는 클릭 불가 */
+    pointer-events: none; /* 카드 자체는 클릭 차단 */
     transition: var(--transition-base);
     position: relative;
     overflow: hidden;
-    z-index: 10; /* 클릭 가능하도록 z-index 추가 */
+    z-index: 10;
 }
 
 .cta-card::before {
@@ -1776,6 +1777,13 @@ input[type="range"]::-moz-range-thumb:hover {
 
 .cta-card .btn {
     width: 100%;
+    pointer-events: auto; /* 버튼만 클릭 가능 */
+    cursor: pointer;
+}
+
+.cta-card .cta-btn-large {
+    pointer-events: auto; /* 버튼만 클릭 가능 */
+    cursor: pointer;
 }
 
 /* Scroll Indicator Adjustment */
