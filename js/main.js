@@ -1438,12 +1438,29 @@ function initUserMenu() {
     const btnDashboard = document.getElementById('btnDashboard');
     const btnLogout = document.getElementById('btnLogout');
     
+    console.log('🎯 initUserMenu called');
+    console.log('  - userMenuBtn:', userMenuBtn ? 'found' : 'NOT FOUND');
+    console.log('  - userMenuDropdown:', userMenuDropdown ? 'found' : 'NOT FOUND');
+    console.log('  - btnDashboard:', btnDashboard ? 'found' : 'NOT FOUND');
+    
     // Toggle dropdown on button click
     if (userMenuBtn) {
         userMenuBtn.addEventListener('click', (e) => {
+            e.preventDefault();
             e.stopPropagation();
-            userMenuDropdown?.classList.toggle('show');
+            console.log('🖱️ User menu button clicked!');
+            
+            const isShown = userMenuDropdown?.classList.contains('show');
+            console.log('  - Current state:', isShown ? 'shown' : 'hidden');
+            
+            if (userMenuDropdown) {
+                userMenuDropdown.classList.toggle('show');
+                console.log('  - New state:', userMenuDropdown.classList.contains('show') ? 'shown' : 'hidden');
+            }
         });
+        console.log('✅ User menu button click handler attached');
+    } else {
+        console.error('❌ User menu button NOT FOUND!');
     }
     
     // Close dropdown when clicking outside
@@ -1457,22 +1474,31 @@ function initUserMenu() {
     if (btnDashboard) {
         btnDashboard.addEventListener('click', (e) => {
             e.preventDefault();
+            console.log('🎯 Dashboard button clicked!');
             navigateToDashboard();
         });
+        console.log('✅ Dashboard button click handler attached');
+    } else {
+        console.warn('⚠️ Dashboard button NOT FOUND');
     }
     
     // Logout button
     if (btnLogout) {
         btnLogout.addEventListener('click', async (e) => {
             e.preventDefault();
+            console.log('🚪 Logout button clicked!');
             if (typeof signOut === 'function') {
                 await signOut();
             } else {
                 // Fallback logout
                 sessionStorage.clear();
+                localStorage.clear();
                 location.reload();
             }
         });
+        console.log('✅ Logout button click handler attached');
+    } else {
+        console.warn('⚠️ Logout button NOT FOUND');
     }
     
     console.log('✅ User menu initialized');
