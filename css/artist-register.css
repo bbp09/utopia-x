@@ -35,18 +35,24 @@
     display: flex;
     align-items: center;
     text-decoration: none;
-    transition: transform 0.3s, filter 0.3s;
+    transition: transform 0.3s;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 12px 20px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .logo-link:hover {
     transform: scale(1.05);
-    filter: brightness(1.1);
+    background: rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
 .logo-img {
-    height: 40px;
+    height: 32px;
     width: auto;
-    filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.3));
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5)) brightness(1.1);
 }
 
 /* Header Center - Title */
