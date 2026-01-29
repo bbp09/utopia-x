@@ -168,6 +168,7 @@ const DancerModule = {
     // Fetch premium dancers from Supabase
     async fetchPremiumDancers() {
         console.log('🎭 Fetching premium dancers...');
+        console.log('🔍 Supabase available?', typeof window.supabase !== 'undefined');
         
         try {
             // Check if Supabase is available
@@ -177,6 +178,8 @@ const DancerModule = {
                 return;
             }
             
+            console.log('🔄 Querying dancers table...');
+            
             // Query premium dancers
             const { data, error } = await window.supabase
                 .from('dancers')
@@ -184,38 +187,56 @@ const DancerModule = {
                 .eq('is_premium', true)
                 .order('created_at', { ascending: false });
             
+            console.log('📦 댄서 데이터:', data);
+            console.log('❗ 에러:', error);
+            
             if (error) {
                 console.error('❌ Error fetching premium dancers:', error);
+                console.error('❌ Error details:', JSON.stringify(error, null, 2));
                 this.renderFallbackDancers();
                 return;
             }
             
             if (!data || data.length === 0) {
-                console.warn('⚠️ No premium dancers found');
+                console.warn('⚠️ No premium dancers found in database');
+                console.warn('⚠️ Data:', data);
                 this.renderEmptyState();
                 return;
             }
             
-            console.log(`✅ Loaded ${data.length} premium dancers`);
+            console.log(`✅ Loaded ${data.length} premium dancers:`, data);
             AppState.featuredDancers = data;
             this.renderPremiumDancers(data);
             
         } catch (error) {
             console.error('❌ Exception fetching premium dancers:', error);
+            console.error('❌ Exception stack:', error.stack);
             this.renderFallbackDancers();
         }
     },
     
     // Render premium dancers to grid
     renderPremiumDancers(dancers) {
+        console.log('🎨 Rendering premium dancers...', dancers.length, 'cards');
+        
         const grid = document.getElementById('featuredDancersGrid');
         if (!grid) {
-            console.error('❌ featuredDancersGrid element not found');
+            console.error('❌ featuredDancersGrid element not found in DOM');
+            console.error('❌ Available IDs:', Array.from(document.querySelectorAll('[id]')).map(el => el.id));
             return;
         }
         
-        grid.innerHTML = dancers.map(dancer => this.createDancerCard(dancer)).join('');
-        console.log('✅ Premium dancers rendered');
+        console.log('✅ Grid element found:', grid);
+        
+        const cardsHTML = dancers.map(dancer => {
+            console.log('🃏 Creating card for:', dancer.name);
+            return this.createDancerCard(dancer);
+        }).join('');
+        
+        console.log('📝 Total HTML length:', cardsHTML.length, 'characters');
+        grid.innerHTML = cardsHTML;
+        console.log('✅ Premium dancers rendered to DOM');
+        console.log('✅ Grid children count:', grid.children.length);
     },
     
     // Create dancer card HTML
@@ -1024,7 +1045,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         EventModule.init();
         
         // 4. Load premium dancers
+        console.log('🎭 Starting premium dancers load...');
         await DancerModule.fetchPremiumDancers();
+        console.log('🎭 Premium dancers load completed');
         
         // 5. Expose global functions for backward compatibility
         window.selectUserType = (type) => UIModule.selectUserType(type);
