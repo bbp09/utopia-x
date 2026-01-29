@@ -1526,6 +1526,7 @@ function initUserMenu() {
         btnDashboard.addEventListener('click', (e) => {
             e.preventDefault();
             console.log('🎯 Dashboard button clicked!');
+            userMenuDropdown?.classList.remove('show');
             navigateToDashboard();
         });
         console.log('✅ Dashboard button click handler attached');
@@ -1533,18 +1534,81 @@ function initUserMenu() {
         console.warn('⚠️ Dashboard button NOT FOUND');
     }
     
+    // My Profile button
+    const btnMyProfile = document.getElementById('btnMyProfile');
+    if (btnMyProfile) {
+        btnMyProfile.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log('👤 My Profile clicked!');
+            userMenuDropdown?.classList.remove('show');
+            showToast('내 정보 페이지는 준비 중입니다', 'info');
+        });
+        console.log('✅ My Profile button handler attached');
+    }
+    
+    // Purchase History button
+    const btnPurchaseHistory = document.getElementById('btnPurchaseHistory');
+    if (btnPurchaseHistory) {
+        btnPurchaseHistory.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log('📜 Purchase History clicked!');
+            userMenuDropdown?.classList.remove('show');
+            showToast('구매 내역 페이지는 준비 중입니다', 'info');
+        });
+        console.log('✅ Purchase History button handler attached');
+    }
+    
+    // Unlocked Dancers button
+    const btnUnlockedDancers = document.getElementById('btnUnlockedDancers');
+    if (btnUnlockedDancers) {
+        btnUnlockedDancers.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log('🔓 Unlocked Dancers clicked!');
+            userMenuDropdown?.classList.remove('show');
+            showToast('잠금 해제 댄서 페이지는 준비 중입니다', 'info');
+        });
+        console.log('✅ Unlocked Dancers button handler attached');
+    }
+    
+    // Credit Charge button
+    const btnCreditCharge = document.getElementById('btnCreditCharge');
+    if (btnCreditCharge) {
+        btnCreditCharge.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log('💳 Credit Charge clicked!');
+            userMenuDropdown?.classList.remove('show');
+            showToast('크레딧 충전 기능은 준비 중입니다', 'info');
+        });
+        console.log('✅ Credit Charge button handler attached');
+    }
+    
     // Logout button
     if (btnLogout) {
         btnLogout.addEventListener('click', async (e) => {
             e.preventDefault();
             console.log('🚪 Logout button clicked!');
+            
+            // Close dropdown immediately
+            if (userMenuDropdown) {
+                userMenuDropdown.classList.remove('show');
+                userMenuDropdown.style.display = '';
+                userMenuDropdown.style.opacity = '';
+                userMenuDropdown.style.visibility = '';
+                userMenuDropdown.style.transform = '';
+                userMenuDropdown.style.pointerEvents = '';
+            }
+            
+            // Perform logout
             if (typeof signOut === 'function') {
                 await signOut();
             } else {
                 // Fallback logout
                 sessionStorage.clear();
                 localStorage.clear();
-                location.reload();
+                showToast('로그아웃되었습니다', 'success');
+                setTimeout(() => {
+                    location.reload();
+                }, 500);
             }
         });
         console.log('✅ Logout button click handler attached');
