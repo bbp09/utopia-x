@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>채팅 테스트 - UTOPIA X</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/chat.css">
+    <style>
+        .test-container {
+            max-width: 800px;
+            margin: 100px auto;
+            padding: 40px;
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--bg-primary);
+            border-radius: 12px;
+        }
+        
+        .test-section h2 {
+            color: var(--primary-purple);
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .test-button {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        .status-box {
+            padding: 15px;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-purple);
+            margin-top: 10px;
+        }
+        
+        .status-box pre {
+            margin: 0;
+            font-size: 13px;
+            color: var(--text-secondary);
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <a href="index.html" class="logo">
+                    <img src="https://www.genspark.ai/api/files/s/qeJgU55W" alt="UTOPIA X" style="height: 40px;">
+                </a>
+                <div class="nav-links">
+                    <a href="index.html">홈</a>
+                    <a href="client-dashboard.html">클라이언트</a>
+                    <a href="artist-dashboard.html">아티스트</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="test-container">
+        <h1 style="text-align: center; margin-bottom: 10px;">
+            <i class="fas fa-vial"></i> 채팅 시스템 테스트
+        </h1>
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 40px;">
+            UTOPIA X 1:1 실시간 채팅 기능 테스트 페이지
+        </p>
+
+        <!-- Status Section -->
+        <div class="test-section">
+            <h2><i class="fas fa-info-circle"></i> 시스템 상태</h2>
+            <div class="status-box" id="statusBox">
+                <pre>로딩 중...</pre>
+            </div>
+        </div>
+
+        <!-- Login Test -->
+        <div class="test-section">
+            <h2><i class="fas fa-user"></i> 로그인 확인</h2>
+            <button class="btn btn-gradient test-button" onclick="checkLogin()">
+                <i class="fas fa-check"></i> 로그인 상태 확인
+            </button>
+            <div id="loginStatus" class="status-box" style="display: none;">
+                <pre></pre>
+            </div>
+        </div>
+
+        <!-- ChatModule Test -->
+        <div class="test-section">
+            <h2><i class="fas fa-comments"></i> ChatModule 테스트</h2>
+            <button class="btn btn-gradient test-button" onclick="initChatModule()">
+                <i class="fas fa-play"></i> ChatModule 초기화
+            </button>
+            <button class="btn btn-outline test-button" onclick="loadConversations()">
+                <i class="fas fa-list"></i> 대화 목록 불러오기
+            </button>
+            <div id="chatStatus" class="status-box" style="display: none;">
+                <pre></pre>
+            </div>
+        </div>
+
+        <!-- Chat Window Test -->
+        <div class="test-section">
+            <h2><i class="fas fa-window-maximize"></i> 채팅창 테스트</h2>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; color: var(--text-primary);">
+                    상대방 ID (테스트용):
+                </label>
+                <input 
+                    type="text" 
+                    id="testPartnerId" 
+                    placeholder="예: test-user-123"
+                    style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary);"
+                >
+            </div>
+            <button class="btn btn-gradient test-button" onclick="openTestChat()">
+                <i class="fas fa-comment"></i> 채팅창 열기
+            </button>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="test-section">
+            <h2><i class="fas fa-bolt"></i> 빠른 테스트</h2>
+            <button class="btn btn-gradient test-button" onclick="openChatListModal()">
+                <i class="fas fa-list-ul"></i> 채팅 목록 모달 열기
+            </button>
+            <button class="btn btn-outline test-button" onclick="openDancerChat()">
+                <i class="fas fa-user-friends"></i> 댄서와 채팅 (데모)
+            </button>
+        </div>
+    </div>
+
+    <!-- Chat Modals -->
+    <div id="chatListModal" class="modal" style="display: none;">
+        <div class="modal-content modal-md">
+            <button class="modal-close" onclick="closeChatListModal()">&times;</button>
+            <div class="modal-header">
+                <h2><i class="fas fa-comments"></i> 채팅 목록</h2>
+                <p>대화 내역</p>
+            </div>
+            <div id="chatListContainer" class="chat-list-container">
+                <p class="text-center text-muted">채팅 내역을 불러오는 중...</p>
+            </div>
+        </div>
+    </div>
+    
+    <div id="chatModal" class="modal" style="display: none;">
+        <div class="modal-content modal-md chat-modal">
+            <div class="chat-header">
+                <button class="modal-close" onclick="ChatModule.closeChatModal()">&times;</button>
+                <div class="chat-partner-info">
+                    <i class="fas fa-user-circle" style="font-size: 24px; margin-right: 10px;"></i>
+                    <div>
+                        <h3 id="chatPartnerName">상대방</h3>
+                        <span class="chat-status" id="chatStatus">
+                            <i class="fas fa-circle"></i> 온라인
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="chatMessages" class="chat-messages">
+                <!-- Messages will be rendered here -->
+            </div>
+            
+            <div class="chat-input-container">
+                <input 
+                    type="text" 
+                    id="chatInput" 
+                    class="chat-input" 
+                    placeholder="메시지를 입력하세요..."
+                    onkeypress="if(event.key === 'Enter') sendChatMessage()"
+                >
+                <button class="btn-send" onclick="sendChatMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Scripts -->
+    <script src="js/supabase-config.js"></script>
+    <script src="js/supabase-auth.js"></script>
+    <script src="js/chat.js"></script>
+
+    <script>
+        // Update status on load
+        window.addEventListener('DOMContentLoaded', async () => {
+            updateStatus();
+        });
+
+        function updateStatus() {
+            const statusBox = document.getElementById('statusBox');
+            const status = {
+                'Supabase': typeof window.supabase !== 'undefined' ? '✅ Loaded' : '❌ Not Found',
+                'ChatModule': typeof ChatModule !== 'undefined' ? '✅ Loaded' : '❌ Not Found',
+                'User Email': sessionStorage.getItem('userEmail') || '❌ Not Logged In',
+                'Timestamp': new Date().toLocaleString('ko-KR')
+            };
+            
+            statusBox.querySelector('pre').textContent = JSON.stringify(status, null, 2);
+        }
+
+        async function checkLogin() {
+            const box = document.getElementById('loginStatus');
+            box.style.display = 'block';
+            
+            const userEmail = sessionStorage.getItem('userEmail');
+            const result = {
+                isLoggedIn: userEmail && userEmail !== 'Login',
+                email: userEmail,
+                sessionStorage: {
+                    userEmail: sessionStorage.getItem('userEmail'),
+                    userRole: sessionStorage.getItem('userRole'),
+                    userType: sessionStorage.getItem('userType')
+                }
+            };
+            
+            if (typeof window.supabase !== 'undefined') {
+                try {
+                    const { data: { user } } = await window.supabase.auth.getUser();
+                    result.supabaseUser = user ? {
+                        id: user.id,
+                        email: user.email
+                    } : null;
+                } catch (error) {
+                    result.supabaseError = error.message;
+                }
+            }
+            
+            box.querySelector('pre').textContent = JSON.stringify(result, null, 2);
+        }
+
+        async function initChatModule() {
+            const box = document.getElementById('chatStatus');
+            box.style.display = 'block';
+            box.querySelector('pre').textContent = 'Initializing...';
+            
+            try {
+                const success = await ChatModule.init();
+                const result = {
+                    success: success,
+                    currentUserId: ChatModule.currentUserId,
+                    conversationsCount: ChatModule.state.conversations.length,
+                    unreadCount: ChatModule.state.unreadCount
+                };
+                box.querySelector('pre').textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                box.querySelector('pre').textContent = 'Error: ' + error.message;
+            }
+        }
+
+        async function loadConversations() {
+            const box = document.getElementById('chatStatus');
+            box.style.display = 'block';
+            box.querySelector('pre').textContent = 'Loading conversations...';
+            
+            try {
+                if (!ChatModule.currentUserId) {
+                    await ChatModule.init();
+                }
+                
+                const conversations = await ChatModule.loadConversations();
+                const result = {
+                    count: conversations.length,
+                    conversations: conversations.map(c => ({
+                        partnerId: c.partnerId,
+                        lastMessage: c.lastMessage.substring(0, 30) + '...',
+                        unreadCount: c.unreadCount
+                    }))
+                };
+                box.querySelector('pre').textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                box.querySelector('pre').textContent = 'Error: ' + error.message;
+            }
+        }
+
+        async function openTestChat() {
+            const partnerId = document.getElementById('testPartnerId').value.trim();
+            
+            if (!partnerId) {
+                showToast('상대방 ID를 입력해주세요', 'error');
+                return;
+            }
+            
+            if (!ChatModule.currentUserId) {
+                await ChatModule.init();
+            }
+            
+            await ChatModule.openChatWith(partnerId, 'Test Partner', null);
+        }
+
+        async function openChatListModal() {
+            const modal = document.getElementById('chatListModal');
+            if (modal) {
+                modal.style.display = 'flex';
+            }
+            
+            await loadChatList();
+        }
+        
+        function closeChatListModal() {
+            const modal = document.getElementById('chatListModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        async function loadChatList() {
+            const container = document.getElementById('chatListContainer');
+            if (!container) return;
+            
+            container.innerHTML = '<p class="text-center text-muted">채팅 내역을 불러오는 중...</p>';
+            
+            if (!ChatModule.currentUserId) {
+                const success = await ChatModule.init();
+                if (!success) {
+                    container.innerHTML = '<p class="text-center text-danger">채팅 시스템을 초기화할 수 없습니다.</p>';
+                    return;
+                }
+            }
+            
+            await ChatModule.loadConversations();
+            
+            if (ChatModule.state.conversations.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-comments" style="font-size: 64px; color: var(--text-muted); margin-bottom: 20px;"></i>
+                        <p class="text-muted">아직 채팅 내역이 없습니다.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = ChatModule.state.conversations.map(conv => `
+                <div class="chat-list-item" onclick="openChatWithPartner('${conv.partnerId}')">
+                    <div class="chat-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="chat-info">
+                        <div class="chat-name">Partner: ${conv.partnerId.substring(0, 8)}...</div>
+                        <div class="chat-preview">${conv.lastMessage}</div>
+                    </div>
+                    <div class="chat-meta">
+                        <div class="chat-time">${ChatModule.formatTime(conv.lastMessageTime)}</div>
+                        ${conv.unreadCount > 0 ? `<span class="badge-notification">${conv.unreadCount}</span>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        async function openChatWithPartner(partnerId) {
+            closeChatListModal();
+            await ChatModule.openChatWith(partnerId, 'Partner', null);
+        }
+        
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            if (!input) return;
+            
+            const message = input.value.trim();
+            if (!message) return;
+            
+            const result = await ChatModule.sendMessage(
+                ChatModule.state.currentChatPartnerId,
+                message
+            );
+            
+            if (result.success) {
+                input.value = '';
+                ChatModule.renderNewMessage(result.data);
+            } else {
+                showToast('메시지 전송 실패', 'error');
+            }
+        }
+        
+        function openDancerChat() {
+            // Demo: Open chat with a test dancer
+            if (typeof openChatWithDancer === 'function') {
+                openChatWithDancer('test-dancer-id', 'Test Dancer', 'dancer@test.com');
+            } else {
+                showToast('openChatWithDancer 함수를 찾을 수 없습니다', 'error');
+            }
+        }
+        
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.textContent = message;
+                toast.className = `toast ${type} show`;
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/chat.css">
     <style>
         .dashboard-container {
             max-width: 1200px;
@@ -309,10 +310,17 @@
                 <h1>아티스트 대시보드</h1>
                 <p id="welcomeMessage">환영합니다! 프로필을 관리하세요.</p>
             </div>
-            <button class="btn btn-gradient" id="btnEditProfile">
-                <i class="fas fa-edit"></i>
-                프로필 수정
-            </button>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="openChatListModal()" class="btn btn-gradient" style="position: relative;">
+                    <i class="fas fa-comments"></i>
+                    💬 메시지함
+                    <span id="chatUnreadBadge" class="badge-notification" style="display: none;">0</span>
+                </button>
+                <button class="btn btn-gradient" id="btnEditProfile">
+                    <i class="fas fa-edit"></i>
+                    프로필 수정
+                </button>
+            </div>
         </div>
 
         <!-- Stats -->
@@ -597,6 +605,150 @@
                 }, 3000);
             } else {
                 console.log(`[${type.toUpperCase()}] ${message}`);
+            }
+        }
+    </script>
+    
+    <!-- Chat Module -->
+    <script src="js/chat.js"></script>
+    
+    <!-- Chat Modals -->
+    <div id="chatListModal" class="modal" style="display: none;">
+        <div class="modal-content modal-md">
+            <button class="modal-close" onclick="closeChatListModal()">&times;</button>
+            <div class="modal-header">
+                <h2><i class="fas fa-comments"></i> 메시지 목록</h2>
+                <p>클라이언트들과의 대화 내역</p>
+            </div>
+            <div id="chatListContainer" class="chat-list-container">
+                <p class="text-center text-muted">채팅 내역을 불러오는 중...</p>
+            </div>
+        </div>
+    </div>
+    
+    <div id="chatModal" class="modal" style="display: none;">
+        <div class="modal-content modal-md chat-modal">
+            <div class="chat-header">
+                <button class="modal-close" onclick="ChatModule.closeChatModal()">&times;</button>
+                <div class="chat-partner-info">
+                    <i class="fas fa-user-circle" style="font-size: 24px; margin-right: 10px;"></i>
+                    <div>
+                        <h3 id="chatPartnerName">상대방</h3>
+                        <span class="chat-status" id="chatStatus">
+                            <i class="fas fa-circle"></i> 온라인
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="chatMessages" class="chat-messages">
+                <!-- Messages will be rendered here -->
+            </div>
+            
+            <div class="chat-input-container">
+                <input 
+                    type="text" 
+                    id="chatInput" 
+                    class="chat-input" 
+                    placeholder="메시지를 입력하세요..."
+                    onkeypress="if(event.key === 'Enter') sendChatMessage()"
+                >
+                <button class="btn-send" onclick="sendChatMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Chat Functions -->
+    <script>
+        async function openChatListModal() {
+            console.log('💬 Opening chat list...');
+            
+            const modal = document.getElementById('chatListModal');
+            if (modal) {
+                modal.style.display = 'flex';
+            }
+            
+            await loadChatList();
+        }
+        
+        function closeChatListModal() {
+            const modal = document.getElementById('chatListModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        async function loadChatList() {
+            const container = document.getElementById('chatListContainer');
+            if (!container) return;
+            
+            container.innerHTML = '<p class="text-center text-muted">채팅 내역을 불러오는 중...</p>';
+            
+            if (!ChatModule.currentUserId) {
+                const success = await ChatModule.init();
+                if (!success) {
+                    container.innerHTML = '<p class="text-center text-danger">채팅 시스템을 초기화할 수 없습니다.</p>';
+                    return;
+                }
+            }
+            
+            await ChatModule.loadConversations();
+            
+            if (ChatModule.state.conversations.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-comments" style="font-size: 64px; color: var(--text-muted); margin-bottom: 20px;"></i>
+                        <p class="text-muted">아직 채팅 내역이 없습니다.</p>
+                        <p class="text-muted" style="font-size: 14px;">클라이언트의 문의를 기다려주세요!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = ChatModule.state.conversations.map(conv => `
+                <div class="chat-list-item" onclick="openChatWithPartner('${conv.partnerId}')">
+                    <div class="chat-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="chat-info">
+                        <div class="chat-name">Partner ID: ${conv.partnerId.substring(0, 8)}...</div>
+                        <div class="chat-preview">${conv.lastMessage}</div>
+                    </div>
+                    <div class="chat-meta">
+                        <div class="chat-time">${ChatModule.formatTime(conv.lastMessageTime)}</div>
+                        ${conv.unreadCount > 0 ? `<span class="badge-notification">${conv.unreadCount}</span>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        async function openChatWithPartner(partnerId) {
+            console.log('💬 Opening chat with:', partnerId);
+            closeChatListModal();
+            await ChatModule.openChatWith(partnerId, 'Partner', null);
+        }
+        
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            if (!input) return;
+            
+            const message = input.value.trim();
+            if (!message) return;
+            
+            console.log('📤 Sending message:', message);
+            
+            const result = await ChatModule.sendMessage(
+                ChatModule.state.currentChatPartnerId,
+                message
+            );
+            
+            if (result.success) {
+                input.value = '';
+                ChatModule.renderNewMessage(result.data);
+            } else {
+                showToast('메시지 전송 실패', 'error');
             }
         }
     </script>
