@@ -1479,8 +1479,33 @@ function initUserMenu() {
 }
 
 // Navigate to appropriate dashboard based on user role
-function navigateToDashboard() {
+async function navigateToDashboard() {
+    // First, try to get user from Supabase
+    if (typeof window.supabase !== 'undefined') {
+        try {
+            const { data: { user } } = await window.supabase.auth.getUser();
+            
+            if (user && user.user_metadata) {
+                const userType = user.user_metadata.user_type || user.user_metadata.userRole;
+                
+                console.log('🎯 Navigating to dashboard for user type:', userType);
+                
+                if (userType === 'artist' || userType === 'dancer') {
+                    window.location.href = 'artist-dashboard.html';
+                    return;
+                } else if (userType === 'client' || userType === 'host') {
+                    window.location.href = 'client-dashboard.html';
+                    return;
+                }
+            }
+        } catch (error) {
+            console.error('Error getting user from Supabase:', error);
+        }
+    }
+    
+    // Fallback to sessionStorage
     const userRole = sessionStorage.getItem('userRole');
+    const userType = sessionStorage.getItem('userType');
     const userEmail = sessionStorage.getItem('userEmail');
     
     if (!userEmail) {
@@ -1488,9 +1513,9 @@ function navigateToDashboard() {
         return;
     }
     
-    console.log('🎯 Navigating to dashboard for role:', userRole);
+    console.log('🎯 Navigating to dashboard (fallback) - role:', userRole, 'type:', userType);
     
-    if (userRole === 'artist') {
+    if (userRole === 'artist' || userType === 'artist' || userType === 'dancer') {
         window.location.href = 'artist-dashboard.html';
     } else {
         // Default to client dashboard
