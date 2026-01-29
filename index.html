@@ -648,7 +648,7 @@
                     >
                 </div>
                 
-                <!-- 클라이언트 전용 필드 -->
+                <!-- 클라이언트 전용 필드 (필수만) -->
                 <div id="clientFields" style="display: none;">
                     <div class="form-group">
                         <label for="clientName">담당자 이름 *</label>
@@ -657,6 +657,7 @@
                             id="clientName" 
                             name="name" 
                             placeholder="홍길동"
+                            required
                         >
                     </div>
                     <div class="form-group">
@@ -666,29 +667,12 @@
                             id="clientPhone" 
                             name="phone" 
                             placeholder="010-1234-5678"
-                        >
-                    </div>
-                    <div class="form-group">
-                        <label for="clientCompany">회사/단체명 (선택)</label>
-                        <input 
-                            type="text" 
-                            id="clientCompany" 
-                            name="company" 
-                            placeholder="주식회사 유토피아"
-                        >
-                    </div>
-                    <div class="form-group">
-                        <label for="clientPosition">직책 (선택)</label>
-                        <input 
-                            type="text" 
-                            id="clientPosition" 
-                            name="position" 
-                            placeholder="프로듀서, 매니저 등"
+                            required
                         >
                     </div>
                 </div>
                 
-                <!-- 아티스트 전용 필드 -->
+                <!-- 아티스트 전용 필드 (필수만) -->
                 <div id="artistFields" style="display: none;">
                     <div class="form-group">
                         <label for="artistStageName">활동명 *</label>
@@ -697,15 +681,7 @@
                             id="artistStageName" 
                             name="stageName" 
                             placeholder="예) DJ Koo, B-boy Storm"
-                        >
-                    </div>
-                    <div class="form-group">
-                        <label for="artistRealName">본명 *</label>
-                        <input 
-                            type="text" 
-                            id="artistRealName" 
-                            name="realName" 
-                            placeholder="홍길동"
+                            required
                         >
                     </div>
                     <div class="form-group">
@@ -715,27 +691,13 @@
                             id="artistPhone" 
                             name="phone" 
                             placeholder="010-1234-5678"
+                            required
                         >
                     </div>
-                    <div class="form-group">
-                        <label for="artistGenre">전문 장르 (선택)</label>
-                        <input 
-                            type="text" 
-                            id="artistGenre" 
-                            name="genre" 
-                            placeholder="예) K-pop, Hip-hop, Contemporary"
-                        >
-                    </div>
-                    <div class="form-group">
-                        <label for="artistExperience">경력 (선택)</label>
-                        <select id="artistExperience" name="experience">
-                            <option value="">선택하세요</option>
-                            <option value="beginner">1년 미만</option>
-                            <option value="intermediate">1-3년</option>
-                            <option value="advanced">3-5년</option>
-                            <option value="expert">5년 이상</option>
-                        </select>
-                    </div>
+                    <p style="font-size: 13px; color: var(--text-secondary); margin-top: 10px;">
+                        <i class="fas fa-info-circle"></i> 
+                        본명, 장르, 경력 등 추가 정보는 마이페이지에서 입력하실 수 있습니다.
+                    </p>
                 </div>
                 
                 <button type="submit" class="btn btn-large btn-gradient" style="width: 100%; margin-top: 10px;">
@@ -1577,31 +1539,26 @@
                 
                 console.log('✅ Switched to Sign In tab');
             } else if (tab === 'signup') {
-                // Switch to Sign Up
-                if (signInTab) signInTab.classList.remove('active');
-                if (signUpTab) signUpTab.classList.add('active');
-                if (signInForm) signInForm.classList.remove('active');
-                if (signUpForm) signUpForm.classList.add('active');
-                
-                if (modalTitle) modalTitle.textContent = '회원가입';
-                if (modalSubtitle) modalSubtitle.textContent = '프로젝트를 시작하거나 댄서로 활동하세요';
-                
-                // CRITICAL: Initialize signup steps
-                // Always show Step 1 (user type selection) first
-                const signUpStep1 = document.getElementById('signUpStep1');
-                const signUpStep2 = document.getElementById('signUpStep2');
-                
-                if (signUpStep1) {
-                    signUpStep1.style.display = 'block';
-                    console.log('✅ Step 1 (User Type Selection) visible');
+                // Use dedicated signup function for proper initialization
+                console.log('🔄 Calling openSignupModal() for proper step initialization');
+                if (typeof window.openSignupModal === 'function') {
+                    window.openSignupModal();
+                } else {
+                    // Fallback if function not loaded yet
+                    if (signInTab) signInTab.classList.remove('active');
+                    if (signUpTab) signUpTab.classList.add('active');
+                    if (signInForm) signInForm.classList.remove('active');
+                    if (signUpForm) signUpForm.classList.add('active');
+                    
+                    if (modalTitle) modalTitle.textContent = '회원가입';
+                    if (modalSubtitle) modalSubtitle.textContent = '유형을 선택해주세요';
+                    
+                    const signUpStep1 = document.getElementById('signUpStep1');
+                    const signUpStep2 = document.getElementById('signUpStep2');
+                    
+                    if (signUpStep1) signUpStep1.style.display = 'block';
+                    if (signUpStep2) signUpStep2.style.display = 'none';
                 }
-                
-                if (signUpStep2) {
-                    signUpStep2.style.display = 'none';
-                    console.log('✅ Step 2 (Form) hidden');
-                }
-                
-                console.log('✅ Switched to Sign Up tab with Step 1 initialized');
             }
         };
         

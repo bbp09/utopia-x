@@ -247,7 +247,7 @@ function handleModalOpen(modalType) {
                 console.log('⚠️ User not logged in, showing login modal');
                 showToast('먼저 로그인해주세요 🔐', 'info');
                 setTimeout(() => {
-                    openModalDirect('loginModal');
+                    openLoginModal(); // Use dedicated login function
                 }, 500);
                 return;
             }
@@ -363,6 +363,92 @@ function openModal(type) {
 
 // Make openModal globally accessible
 window.openModal = openModal;
+
+// ===== 🔑 Open Login Modal (Sign In Only) =====
+function openLoginModal() {
+    console.log('🔑 openLoginModal called - Opening LOGIN view');
+    
+    const modal = document.getElementById('loginModal');
+    if (!modal) {
+        console.error('❌ Login modal not found!');
+        return;
+    }
+    
+    // Close all other modals
+    closeAllModals();
+    
+    // Show modal
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Switch to Sign In tab
+    const signInTab = document.querySelector('.auth-tab[data-tab="signin"]');
+    const signUpTab = document.querySelector('.auth-tab[data-tab="signup"]');
+    const signInForm = document.getElementById('signInForm');
+    const signUpForm = document.getElementById('signUpForm');
+    
+    if (signInTab) signInTab.classList.add('active');
+    if (signUpTab) signUpTab.classList.remove('active');
+    if (signInForm) signInForm.classList.add('active');
+    if (signUpForm) signUpForm.classList.remove('active');
+    
+    // Hide signup steps
+    const signUpStep1 = document.getElementById('signUpStep1');
+    const signUpStep2 = document.getElementById('signUpStep2');
+    if (signUpStep1) signUpStep1.style.display = 'none';
+    if (signUpStep2) signUpStep2.style.display = 'none';
+    
+    console.log('✅ Login modal opened - Sign In view only');
+}
+
+// ===== ✨ Open Signup Modal (User Type Selection) =====
+function openSignupModal() {
+    console.log('✨ openSignupModal called - Opening SIGNUP view');
+    
+    const modal = document.getElementById('loginModal');
+    if (!modal) {
+        console.error('❌ Login modal not found!');
+        return;
+    }
+    
+    // Close all other modals
+    closeAllModals();
+    
+    // Show modal
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Switch to Sign Up tab
+    const signInTab = document.querySelector('.auth-tab[data-tab="signin"]');
+    const signUpTab = document.querySelector('.auth-tab[data-tab="signup"]');
+    const signInForm = document.getElementById('signInForm');
+    const signUpForm = document.getElementById('signUpForm');
+    
+    if (signInTab) signInTab.classList.remove('active');
+    if (signUpTab) signUpTab.classList.add('active');
+    if (signInForm) signInForm.classList.remove('active');
+    if (signUpForm) signUpForm.classList.add('active');
+    
+    // CRITICAL: Show Step 1 (User Type Selection), Hide Step 2
+    const signUpStep1 = document.getElementById('signUpStep1');
+    const signUpStep2 = document.getElementById('signUpStep2');
+    
+    if (signUpStep1) {
+        signUpStep1.style.display = 'block';
+        console.log('  ✅ Step 1 (User Type Selection) visible');
+    }
+    
+    if (signUpStep2) {
+        signUpStep2.style.display = 'none';
+        console.log('  ✅ Step 2 (Form) hidden');
+    }
+    
+    console.log('✅ Signup modal opened - User Type Selection view');
+}
+
+// Make new functions globally accessible
+window.openLoginModal = openLoginModal;
+window.openSignupModal = openSignupModal;
 
 // Prefill casting form with user profile data (synchronous)
 function prefillCastingForm() {
@@ -1750,11 +1836,10 @@ function selectUserType(type) {
         
         // Remove artist fields required
         document.getElementById('artistStageName').required = false;
-        document.getElementById('artistRealName').required = false;
         document.getElementById('artistPhone').required = false;
         
         step2Title.textContent = '클라이언트 정보 입력';
-        step2Subtitle.textContent = '섭외 요청 시 자동으로 입력됩니다';
+        step2Subtitle.textContent = '필수 정보만 입력해주세요 (빠른 가입)';
     } else {
         clientFields.style.display = 'none';
         artistFields.style.display = 'block';
@@ -1765,11 +1850,10 @@ function selectUserType(type) {
         
         // Make artist fields required
         document.getElementById('artistStageName').required = true;
-        document.getElementById('artistRealName').required = true;
         document.getElementById('artistPhone').required = true;
         
         step2Title.textContent = '아티스트 정보 입력';
-        step2Subtitle.textContent = '프로필에 표시될 정보입니다';
+        step2Subtitle.textContent = '필수 정보만 입력해주세요 (빠른 가입)';
     }
     
     // Switch to step 2
@@ -1835,7 +1919,7 @@ function initUserMenu() {
             // If not logged in, show login modal immediately
             if (!isLoggedIn) {
                 console.log('❌ User not logged in, showing login modal');
-                openModalDirect('loginModal');
+                openLoginModal(); // Use dedicated login function
                 return;
             }
             
