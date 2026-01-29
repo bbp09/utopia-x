@@ -9,6 +9,39 @@ const authState = {
     role: null // 'client' or 'artist'
 };
 
+// ===== Toast Notification Helper =====
+function showToast(message, type = 'success') {
+    console.log('📢 Toast:', message, type);
+    
+    let toast = document.getElementById('toast');
+    
+    // Create toast if it doesn't exist
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast';
+        toast.className = 'toast';
+        document.body.appendChild(toast);
+    }
+    
+    toast.textContent = message;
+    toast.className = `toast ${type} show`;
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
+
+// ===== Initialize Supabase Client =====
+function initSupabase() {
+    if (typeof window.supabase !== 'undefined') {
+        console.log('✅ Supabase client available');
+        return window.supabase;
+    }
+    
+    console.warn('⚠️ Supabase client not found');
+    return null;
+}
+
 // ===== Initialize Auth System =====
 async function initAuth() {
     console.log('🔐 Initializing authentication...');
@@ -184,7 +217,41 @@ async function signUp(email, password, userType, profileData = {}) {
             user_metadata: data.user.user_metadata
         });
         
-        // ✅ STEP 6: Store in sessionStorage for immediate access
+        // ✅ STEP 6: 🚨 CRITICAL - Insert into public.users table
+        console.log('📝 Inserting user data into public.users table...');
+        
+        try {
+            const userRecord = {
+                id: data.user.id,
+                email: email,
+                name: userType === 'client' ? profileData.name : profileData.stageName,
+                phone: profileData.phone,
+                role: userType,
+                credits: 10,
+                created_at: new Date().toISOString()
+            };
+            
+            console.log('📤 User record to insert:', userRecord);
+            
+            const { data: insertData, error: insertError } = await client
+                .from('users')
+                .insert([userRecord])
+                .select();
+            
+            if (insertError) {
+                console.error('❌ Failed to insert into users table:', insertError);
+                console.error('  - Error message:', insertError.message);
+                console.error('  - Error code:', insertError.code);
+                // Don't fail signup, just log the error
+            } else {
+                console.log('✅ User data inserted into public.users:', insertData);
+            }
+        } catch (insertException) {
+            console.error('❌ Exception while inserting to users table:', insertException);
+            // Don't fail signup, just log the error
+        }
+        
+        // ✅ STEP 7: Store in sessionStorage for immediate access
         sessionStorage.setItem('userEmail', email);
         sessionStorage.setItem('userType', userType);
         sessionStorage.setItem('userRole', userType);
@@ -297,6 +364,42 @@ async function signIn(email, password) {
         }
         
         console.log('✅ Sign in successful');
+        console.log('👤 User ID:', data.user.id);
+        
+        // ✅ Query public.users table for role
+        try {
+            console.log('🔍 Querying public.users table for role...');
+            
+            const { data: userData, error: userError } = await client
+                .from('users')
+                .select('role, name, phone, credits')
+                .eq('id', data.user.id)
+                .single();
+            
+            if (userError) {
+                console.error('❌ Failed to query users table:', userError);
+                // Use metadata role as fallback
+                const role = data.user.user_metadata?.role || 'client';
+                sessionStorage.setItem('userRole', role);
+                console.log('⚠️ Using fallback role from metadata:', role);
+            } else {
+                console.log('✅ User data from public.users:', userData);
+                
+                // Store role and other data
+                sessionStorage.setItem('userRole', userData.role);
+                sessionStorage.setItem('userName', userData.name);
+                sessionStorage.setItem('userPhone', userData.phone);
+                sessionStorage.setItem('userCredits', userData.credits);
+                
+                console.log('📋 Role from database:', userData.role);
+            }
+        } catch (queryException) {
+            console.error('❌ Exception while querying users table:', queryException);
+            // Use metadata role as fallback
+            const role = data.user.user_metadata?.role || 'client';
+            sessionStorage.setItem('userRole', role);
+        }
+        
         showToast('로그인 성공!', 'success');
         
         // Stay on home page - just refresh
@@ -452,3 +555,21 @@ function getCurrentUser() {
     
     return null;
 }
+
+// ===== Expose Functions to Window =====
+// Make functions globally accessible for use in other scripts
+window.signUp = signUp;
+window.signIn = signIn;
+window.signOut = signOut;
+window.getCurrentUser = getCurrentUser;
+window.requireAuth = requireAuth;
+window.initAuth = initAuth;
+
+console.log('✅ Auth functions exposed to window:', {
+    signUp: typeof window.signUp,
+    signIn: typeof window.signIn,
+    signOut: typeof window.signOut,
+    getCurrentUser: typeof window.getCurrentUser,
+    requireAuth: typeof window.requireAuth,
+    initAuth: typeof window.initAuth
+});
