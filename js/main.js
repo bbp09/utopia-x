@@ -55,12 +55,65 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log('✅ Initializing auth forms...');
         initAuthForms();
         
+        console.log('✅ Setting up fallback handlers...');
+        setupFallbackHandlers();
+        
         console.log('🎉 All initialization complete!');
     } catch (error) {
         console.error('❌ Initialization error:', error);
         console.error('Stack trace:', error.stack);
     }
 });
+
+// ===== Fallback Handlers (Emergency Safety Net) =====
+function setupFallbackHandlers() {
+    console.log('🛡️ Setting up emergency fallback handlers...');
+    
+    // CRITICAL: Emergency login button handler
+    // This runs AFTER all other initialization
+    // If userMenuBtn somehow doesn't have a handler, this catches it
+    setTimeout(() => {
+        const userMenuBtn = document.getElementById('userMenuBtn');
+        if (userMenuBtn) {
+            // Check if handler is already attached by counting listeners
+            const listenerCount = window.getEventListeners ? 
+                window.getEventListeners(userMenuBtn).click?.length : 0;
+            
+            console.log(`🔍 userMenuBtn listener check: ${listenerCount > 0 ? 'OK' : 'ADDING FALLBACK'}`);
+            
+            // Add one more guaranteed handler as fallback
+            userMenuBtn.addEventListener('click', (e) => {
+                console.log('🚨 FALLBACK handler triggered for userMenuBtn');
+                const userEmail = sessionStorage.getItem('userEmail');
+                const isLoggedIn = !!(userEmail && userEmail !== 'Login');
+                
+                if (!isLoggedIn) {
+                    console.log('↪️ Redirecting to login...');
+                    openModalDirect('loginModal');
+                }
+            }, { once: false, capture: false });
+        }
+        
+        // CRITICAL: Emergency CTA card handlers
+        const ctaCards = document.querySelectorAll('.cta-card');
+        console.log(`🔍 CTA cards found: ${ctaCards.length}`);
+        
+        ctaCards.forEach((card, index) => {
+            const modalType = card.dataset.modal;
+            if (!modalType) return;
+            
+            // Add fallback handler
+            card.addEventListener('click', (e) => {
+                console.log(`🚨 FALLBACK CTA handler: ${modalType}`);
+                handleModalOpen(modalType);
+            }, { once: false, capture: true }); // Use capture phase
+            
+            console.log(`✅ Fallback added for CTA card ${index + 1}: ${modalType}`);
+        });
+        
+        console.log('✅ Emergency fallback handlers installed');
+    }, 500); // Run after initial setup
+}
 
 // ===== Navigation =====
 function initNavigation() {
@@ -1805,37 +1858,23 @@ function initUserMenu() {
     
     // Toggle dropdown on button click
     if (userMenuBtn) {
-        userMenuBtn.addEventListener('click', async (e) => {
+        userMenuBtn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
             
             console.log('🖱️ User menu button clicked!');
             
-            // Check if user is logged in
-            let isLoggedIn = false;
+            // CRITICAL: Use synchronous sessionStorage check only (FAST!)
+            // No await, no async delay - instant response
+            const userEmail = sessionStorage.getItem('userEmail');
+            const isLoggedIn = !!(userEmail && userEmail !== 'Login');
             
-            // Check Supabase auth first
-            if (typeof window.supabase !== 'undefined') {
-                try {
-                    const { data: { user } } = await window.supabase.auth.getUser();
-                    isLoggedIn = !!user;
-                } catch (error) {
-                    console.error('Error checking Supabase auth:', error);
-                }
-            }
+            console.log('✅ User logged in:', isLoggedIn, '| Email:', userEmail);
             
-            // Fallback to sessionStorage
-            if (!isLoggedIn) {
-                const userEmail = sessionStorage.getItem('userEmail');
-                isLoggedIn = !!userEmail;
-            }
-            
-            console.log('✅ User logged in:', isLoggedIn);
-            
-            // If not logged in, show login modal
+            // If not logged in, show login modal immediately
             if (!isLoggedIn) {
                 console.log('❌ User not logged in, showing login modal');
-                openModal('loginModal');
+                openModalDirect('loginModal');
                 return;
             }
             
@@ -1850,7 +1889,7 @@ function initUserMenu() {
             
             console.log('🎉 Dropdown toggled:', isShown ? 'hidden' : 'shown');
         });
-        console.log('✅ User menu button click handler attached');
+        console.log('✅ User menu button click handler attached (SYNC MODE)');
     } else {
         console.error('❌ User menu button NOT FOUND!');
     }
