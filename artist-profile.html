@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTOPIA X - 내 프로필</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    
+    <!-- Supabase JS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Supabase Initialization -->
+    <script>
+        const SUPABASE_URL = 'https://idfpmynjfkvtcsqcjgnm.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlkZnBteW5qZmt2dGNzcWNqZ25tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2NzQ2NTgsImV4cCI6MjA4NTI1MDY1OH0.KFmClnG-XuW818uUIMlPW0yQ7UswXvIWh-ipv6z5p4I';
+        if (typeof supabase !== 'undefined') {
+            window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log("✅ Supabase Connected!");
+        }
+    </script>
+    
+    <!-- Auth Guard (권한 체크 및 리다이렉트) -->
+    <script src="js/auth-guard.js"></script>
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/artist-register.css">
+</head>
+<body class="artist-register-page">
+    <!-- Header -->
+    <header class="register-header">
+        <div class="header-container">
+            <div class="header-left">
+                <a href="index.html" class="logo-link">
+                    <img src="https://idfpmynjfkvtcsqcjgnm.supabase.co/storage/v1/object/public/assets/UtopiaX_logo_white_centered_512.png" alt="UTOPIA X Logo" class="logo-img">
+                </a>
+            </div>
+            <div class="header-center">
+                <h1 class="header-title">
+                    <i class="fas fa-user-edit"></i>
+                    내 프로필 수정
+                </h1>
+                <p class="header-subtitle">프로필 정보를 최신 상태로 유지하세요</p>
+            </div>
+            <div class="header-right">
+                <a href="artist-dashboard.html" class="btn-back">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>대시보드</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="register-main">
+        <div class="container">
+            <form id="artistProfileForm" class="register-form">
+                
+                <!-- Section: 프로필 사진 -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <i class="fas fa-camera"></i>
+                        <h2>프로필 사진</h2>
+                    </div>
+                    <p class="section-description">최대 5장까지 업로드 가능합니다</p>
+                    
+                    <div class="photo-upload-grid" id="photoUploadGrid">
+                        <!-- Photo slots will be generated here -->
+                    </div>
+                </div>
+
+                <!-- Section: 기본 정보 -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <i class="fas fa-user"></i>
+                        <h2>기본 정보</h2>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="stageName">활동명 *</label>
+                            <input type="text" id="stageName" name="stageName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">연락처 *</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="region">지역 *</label>
+                            <select id="region" name="region" required>
+                                <option value="">선택하세요</option>
+                                <option value="서울">서울</option>
+                                <option value="경기">경기</option>
+                                <option value="인천">인천</option>
+                                <option value="부산">부산</option>
+                                <option value="대구">대구</option>
+                                <option value="광주">광주</option>
+                                <option value="대전">대전</option>
+                                <option value="울산">울산</option>
+                                <option value="세종">세종</option>
+                                <option value="강원">강원</option>
+                                <option value="충북">충북</option>
+                                <option value="충남">충남</option>
+                                <option value="전북">전북</option>
+                                <option value="전남">전남</option>
+                                <option value="경북">경북</option>
+                                <option value="경남">경남</option>
+                                <option value="제주">제주</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: 사이즈 정보 -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <i class="fas fa-ruler"></i>
+                        <h2>사이즈 정보</h2>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="clothingSize">의상 사이즈</label>
+                            <select id="clothingSize" name="clothingSize">
+                                <option value="">선택하세요</option>
+                                <option value="85">85 (XS)</option>
+                                <option value="90">90 (S)</option>
+                                <option value="95">95 (M)</option>
+                                <option value="100">100 (L)</option>
+                                <option value="105">105 (XL)</option>
+                                <option value="110">110 (XXL)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="shoeSize">신발 사이즈</label>
+                            <select id="shoeSize" name="shoeSize">
+                                <option value="">선택하세요</option>
+                                <option value="230">230</option>
+                                <option value="235">235</option>
+                                <option value="240">240</option>
+                                <option value="245">245</option>
+                                <option value="250">250</option>
+                                <option value="255">255</option>
+                                <option value="260">260</option>
+                                <option value="265">265</option>
+                                <option value="270">270</option>
+                                <option value="275">275</option>
+                                <option value="280">280</option>
+                                <option value="285">285</option>
+                                <option value="290">290</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: 댄스 장르 -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <i class="fas fa-music"></i>
+                        <h2>댄스 장르</h2>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="mainGenre">Main 장르 *</label>
+                            <select id="mainGenre" name="mainGenre" required>
+                                <option value="">선택하세요</option>
+                                <option value="Hip-hop">Hip-hop</option>
+                                <option value="Popping">Popping</option>
+                                <option value="Locking">Locking</option>
+                                <option value="House">House</option>
+                                <option value="Waacking">Waacking</option>
+                                <option value="Krump">Krump</option>
+                                <option value="Breaking">Breaking</option>
+                                <option value="Choreography">Choreography</option>
+                                <option value="K-pop">K-pop</option>
+                                <option value="Girl's Hip-hop">Girl's Hip-hop</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="subGenre">Sub 장르</label>
+                            <select id="subGenre" name="subGenre">
+                                <option value="">선택하세요</option>
+                                <option value="Hip-hop">Hip-hop</option>
+                                <option value="Popping">Popping</option>
+                                <option value="Locking">Locking</option>
+                                <option value="House">House</option>
+                                <option value="Waacking">Waacking</option>
+                                <option value="Krump">Krump</option>
+                                <option value="Breaking">Breaking</option>
+                                <option value="Choreography">Choreography</option>
+                                <option value="K-pop">K-pop</option>
+                                <option value="Girl's Hip-hop">Girl's Hip-hop</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Vibe 키워드 -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <i class="fas fa-tags"></i>
+                        <h2>Vibe 키워드</h2>
+                    </div>
+                    <p class="section-description">최대 5개까지 선택 가능합니다</p>
+                    <div class="tags-selection" id="vibeTagsSelection">
+                        <div class="tag-chip" data-tag="Dark">🌙 Dark</div>
+                        <div class="tag-chip" data-tag="Fresh">✨ Fresh</div>
+                        <div class="tag-chip" data-tag="Powerful">💪 Powerful</div>
+                        <div class="tag-chip" data-tag="Sexy">🔥 Sexy</div>
+                        <div class="tag-chip" data-tag="Cute">🌸 Cute</div>
+                        <div class="tag-chip" data-tag="Groovy">🎵 Groovy</div>
+                        <div class="tag-chip" data-tag="Elegant">👑 Elegant</div>
+                        <div class="tag-chip" data-tag="Energetic">⚡ Energetic</div>
+                        <div class="tag-chip" data-tag="Smooth">💫 Smooth</div>
+                        <div class="tag-chip" data-tag="Urban">🏙️ Urban</div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-large btn-gradient" id="submitBtn">
+                    <i class="fas fa-save"></i>
+                    저장하기
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 9999; align-items: center; justify-content: center;">
+        <div style="text-align: center; color: white;">
+            <i class="fas fa-spinner fa-spin" style="font-size: 48px;"></i>
+            <p style="margin-top: 20px; font-size: 18px;">저장 중...</p>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" style="position: fixed; top: 20px; right: 20px; z-index: 10000;"></div>
+
+    <script src="js/artist-profile.js"></script>
+</body>
+</html>
