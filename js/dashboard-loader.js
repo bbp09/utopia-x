@@ -71,8 +71,9 @@
         sessionStorage.setItem('userName', userData.name || '');
         sessionStorage.setItem('userRole', userRole);
         
-        // Remove loading state immediately
+        // Remove loading state and show UI
         document.body.classList.remove('loading');
+        document.body.classList.add('loaded');  // [핵심] body visibility 해제
         
         const overlay = document.getElementById('globalLoadingOverlay');
         if (overlay) {

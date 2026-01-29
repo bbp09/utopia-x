@@ -12,6 +12,18 @@
     <link rel="stylesheet" href="css/auth.css">
     <link rel="stylesheet" href="css/chat.css">
     <style>
+        /* [핵심] CSS 원천 차단 - 권한 확인 전까지 화면 숨김 */
+        body {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        body.loaded {
+            visibility: visible;
+            opacity: 1;
+        }
+        
         /* Global Loading Overlay */
         #globalLoadingOverlay {
             position: fixed;
@@ -25,7 +37,8 @@
             align-items: center;
             justify-content: center;
             z-index: 99999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            visibility: visible;
+            opacity: 1;
         }
         
         #globalLoadingOverlay.hidden {
