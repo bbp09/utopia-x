@@ -97,31 +97,51 @@
                         </div>
                     </div>
                     
-                    <!-- Logo Upload -->
+                    <!-- Profile Image Upload -->
                     <div class="form-group">
-                        <label for="logoUpload">
-                            <i class="fas fa-image"></i>
-                            회사 로고 업로드
+                        <label for="profileUpload">
+                            <i class="fas fa-user-circle"></i>
+                            담당자 프로필 사진
                         </label>
-                        <div class="logo-upload-container">
-                            <div class="logo-preview" id="logoPreview">
-                                <img id="logoPreviewImg" src="" alt="로고 미리보기" style="display: none;">
-                                <div id="logoPlaceholder" class="logo-placeholder">
-                                    <i class="fas fa-building"></i>
-                                    <p>로고를 업로드해주세요</p>
+                        <div class="profile-upload-container">
+                            <div class="profile-preview" id="profilePreview">
+                                <img id="profilePreviewImg" src="" alt="프로필 미리보기" style="display: none;">
+                                <div id="profilePlaceholder" class="profile-placeholder">
+                                    <i class="fas fa-user"></i>
+                                    <p>프로필 사진을<br>업로드해주세요</p>
                                 </div>
                             </div>
-                            <input type="file" id="logoUpload" accept="image/*" style="display: none;">
-                            <button type="button" class="btn btn-secondary" onclick="document.getElementById('logoUpload').click()">
-                                <i class="fas fa-upload"></i>
-                                파일 선택
-                            </button>
-                            <button type="button" class="btn btn-outline" id="removeLogo" style="display: none;">
-                                <i class="fas fa-trash"></i>
-                                로고 제거
-                            </button>
+                            <div class="profile-upload-actions">
+                                <input type="file" id="profileUpload" accept="image/*" style="display: none;">
+                                <button type="button" class="btn btn-secondary" onclick="document.getElementById('profileUpload').click()">
+                                    <i class="fas fa-upload"></i>
+                                    사진 업로드
+                                </button>
+                                <button type="button" class="btn btn-outline" id="removeProfile" style="display: none;">
+                                    <i class="fas fa-trash"></i>
+                                    사진 제거
+                                </button>
+                                <small>권장: 500x500px 이상, PNG/JPG 파일</small>
+                            </div>
                         </div>
-                        <small>권장: 500x500px 이상, PNG/JPG/SVG 파일</small>
+                    </div>
+                    
+                    <!-- Preview Business Card -->
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-id-card"></i>
+                            미리보기 명함
+                        </label>
+                        <div class="business-card-preview">
+                            <div class="card-profile">
+                                <img id="cardProfileImg" src="https://via.placeholder.com/80?text=Photo" alt="Profile">
+                            </div>
+                            <div class="card-info">
+                                <h3 id="cardName">홍길동</h3>
+                                <p id="cardCompany">회사명</p>
+                                <p id="cardPhone">010-0000-0000</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

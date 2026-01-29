@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load user info
     await loadUserInfo();
     
+    // Load credits on page load (for main stat display)
+    await loadUserCredits();
+    
     console.log('✅ Dashboard Common: Initialized');
 });
 
@@ -138,9 +141,11 @@ async function loadUserInfo() {
 async function loadUserCredits() {
     console.log('💰 Loading user credits...');
     
-    const creditDisplay = document.getElementById('creditDisplay');
-    if (!creditDisplay) {
-        console.error('❌ creditDisplay not found');
+    const dropdownCreditDisplay = document.getElementById('creditDisplay');
+    const mainCreditDisplay = document.getElementById('statCredits');
+    
+    if (!dropdownCreditDisplay) {
+        console.error('❌ creditDisplay (dropdown) not found');
         return;
     }
     
@@ -154,7 +159,8 @@ async function loadUserCredits() {
         
         if (authError || !user) {
             console.error('❌ Failed to get current user:', authError);
-            creditDisplay.textContent = '0';
+            dropdownCreditDisplay.textContent = '0';
+            if (mainCreditDisplay) mainCreditDisplay.textContent = '0';
             return;
         }
         
@@ -167,18 +173,26 @@ async function loadUserCredits() {
         
         if (dbError) {
             console.error('❌ Failed to fetch credits:', dbError);
-            creditDisplay.textContent = '0';
+            dropdownCreditDisplay.textContent = '0';
+            if (mainCreditDisplay) mainCreditDisplay.textContent = '0';
             return;
         }
         
         const credits = userData?.credits || 0;
-        creditDisplay.textContent = credits;
+        
+        // Update both dropdown and main stat display
+        dropdownCreditDisplay.textContent = credits;
+        if (mainCreditDisplay) {
+            mainCreditDisplay.textContent = credits;
+            console.log('✅ Main credit display updated:', credits);
+        }
         
         console.log('✅ Credits loaded:', credits);
         
     } catch (error) {
         console.error('❌ Exception loading credits:', error);
-        creditDisplay.textContent = '0';
+        dropdownCreditDisplay.textContent = '0';
+        if (mainCreditDisplay) mainCreditDisplay.textContent = '0';
     }
 }
 

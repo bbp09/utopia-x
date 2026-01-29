@@ -4,7 +4,7 @@
 // =====================================
 
 let currentUser = null;
-let currentLogoUrl = null;
+let currentProfileImageUrl = null;
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', async () => {
@@ -81,7 +81,7 @@ async function loadUserData() {
         // Load from clients table
         const { data: clientData, error: clientError } = await window.supabase
             .from('clients')
-            .select('company_name, website_url, logo_url')
+            .select('company_name, website_url, profile_image')
             .eq('user_id', currentUser.id)
             .single();
         
@@ -98,14 +98,17 @@ async function loadUserData() {
             document.getElementById('companyName').value = clientData.company_name || '';
             document.getElementById('websiteUrl').value = clientData.website_url || '';
             
-            // Show logo if exists
-            if (clientData.logo_url) {
-                currentLogoUrl = clientData.logo_url;
-                showLogoPreview(clientData.logo_url);
+            // Show profile image if exists
+            if (clientData.profile_image) {
+                currentProfileImageUrl = clientData.profile_image;
+                showProfilePreview(clientData.profile_image);
             }
         } else {
             console.log('ℹ️ No client data found (new user)');
         }
+        
+        // Update business card preview
+        updateBusinessCardPreview();
         
     } catch (error) {
         console.error('❌ Exception loading user data:', error);
@@ -113,51 +116,79 @@ async function loadUserData() {
     }
 }
 
-// Show logo preview
-function showLogoPreview(url) {
-    const img = document.getElementById('logoPreviewImg');
-    const placeholder = document.getElementById('logoPlaceholder');
-    const removeBtn = document.getElementById('removeLogo');
+// Show profile preview
+function showProfilePreview(url) {
+    const img = document.getElementById('profilePreviewImg');
+    const placeholder = document.getElementById('profilePlaceholder');
+    const removeBtn = document.getElementById('removeProfile');
+    const cardImg = document.getElementById('cardProfileImg');
     
     img.src = url;
     img.style.display = 'block';
     placeholder.style.display = 'none';
     removeBtn.style.display = 'inline-flex';
+    
+    // Update business card preview
+    if (cardImg) cardImg.src = url;
 }
 
-// Hide logo preview
-function hideLogoPreview() {
-    const img = document.getElementById('logoPreviewImg');
-    const placeholder = document.getElementById('logoPlaceholder');
-    const removeBtn = document.getElementById('removeLogo');
+// Hide profile preview
+function hideProfilePreview() {
+    const img = document.getElementById('profilePreviewImg');
+    const placeholder = document.getElementById('profilePlaceholder');
+    const removeBtn = document.getElementById('removeProfile');
+    const cardImg = document.getElementById('cardProfileImg');
     
     img.style.display = 'none';
     placeholder.style.display = 'flex';
     removeBtn.style.display = 'none';
-    currentLogoUrl = null;
+    currentProfileImageUrl = null;
+    
+    // Reset business card preview
+    if (cardImg) cardImg.src = 'https://via.placeholder.com/80?text=Photo';
+}
+
+// Update business card preview
+function updateBusinessCardPreview() {
+    const cardName = document.getElementById('cardName');
+    const cardCompany = document.getElementById('cardCompany');
+    const cardPhone = document.getElementById('cardPhone');
+    
+    const name = document.getElementById('name').value || '홍길동';
+    const company = document.getElementById('companyName').value || '회사명';
+    const phone = document.getElementById('phone').value || '010-0000-0000';
+    
+    if (cardName) cardName.textContent = name;
+    if (cardCompany) cardCompany.textContent = company;
+    if (cardPhone) cardPhone.textContent = phone;
 }
 
 // Bind events
 function bindEvents() {
-    // Logo upload change
-    document.getElementById('logoUpload').addEventListener('change', handleLogoUpload);
+    // Profile upload change
+    document.getElementById('profileUpload').addEventListener('change', handleProfileUpload);
     
-    // Remove logo button
-    document.getElementById('removeLogo').addEventListener('click', () => {
-        hideLogoPreview();
-        document.getElementById('logoUpload').value = '';
+    // Remove profile button
+    document.getElementById('removeProfile').addEventListener('click', () => {
+        hideProfilePreview();
+        document.getElementById('profileUpload').value = '';
     });
+    
+    // Update business card preview on input change
+    document.getElementById('name').addEventListener('input', updateBusinessCardPreview);
+    document.getElementById('companyName').addEventListener('input', updateBusinessCardPreview);
+    document.getElementById('phone').addEventListener('input', updateBusinessCardPreview);
     
     // Form submit
     document.getElementById('profileForm').addEventListener('submit', handleSubmit);
 }
 
-// Handle logo upload
-async function handleLogoUpload(e) {
+// Handle profile upload
+async function handleProfileUpload(e) {
     const file = e.target.files[0];
     if (!file) return;
     
-    console.log('📤 Uploading logo:', file.name);
+    console.log('📤 Uploading profile image:', file.name);
     
     // Validate file
     if (!file.type.startsWith('image/')) {
@@ -173,7 +204,7 @@ async function handleLogoUpload(e) {
     // Show preview
     const reader = new FileReader();
     reader.onload = (e) => {
-        showLogoPreview(e.target.result);
+        showProfilePreview(e.target.result);
     };
     reader.readAsDataURL(file);
 }
@@ -198,35 +229,35 @@ async function handleSubmit(e) {
         const companyName = document.getElementById('companyName').value.trim();
         const websiteUrl = document.getElementById('websiteUrl').value.trim();
         
-        // Upload logo if changed
-        let logoUrl = currentLogoUrl;
-        const logoFile = document.getElementById('logoUpload').files[0];
+        // Upload profile image if changed
+        let profileImageUrl = currentProfileImageUrl;
+        const profileFile = document.getElementById('profileUpload').files[0];
         
-        if (logoFile) {
-            console.log('📤 Uploading new logo to Supabase Storage...');
+        if (profileFile) {
+            console.log('📤 Uploading new profile image to Supabase Storage...');
             
-            const fileExt = logoFile.name.split('.').pop();
+            const fileExt = profileFile.name.split('.').pop();
             const fileName = `${currentUser.id}_${Date.now()}.${fileExt}`;
-            const filePath = `logos/${fileName}`;
+            const filePath = `profiles/${fileName}`;
             
             const { data: uploadData, error: uploadError } = await window.supabase.storage
                 .from('assets')
-                .upload(filePath, logoFile, {
+                .upload(filePath, profileFile, {
                     cacheControl: '3600',
                     upsert: false
                 });
             
             if (uploadError) {
-                console.error('❌ Logo upload failed:', uploadError);
-                showToast('로고 업로드에 실패했습니다', 'error');
+                console.error('❌ Profile image upload failed:', uploadError);
+                showToast('프로필 사진 업로드에 실패했습니다', 'error');
             } else {
                 // Get public URL
                 const { data: urlData } = window.supabase.storage
                     .from('assets')
                     .getPublicUrl(filePath);
                 
-                logoUrl = urlData.publicUrl;
-                console.log('✅ Logo uploaded:', logoUrl);
+                profileImageUrl = urlData.publicUrl;
+                console.log('✅ Profile image uploaded:', profileImageUrl);
             }
         }
         
@@ -254,7 +285,7 @@ async function handleSubmit(e) {
                 user_id: currentUser.id,
                 company_name: companyName,
                 website_url: websiteUrl,
-                logo_url: logoUrl
+                profile_image: profileImageUrl
             }, {
                 onConflict: 'user_id'
             });
@@ -363,48 +394,97 @@ style.textContent = `
         }
     }
     
-    .logo-upload-container {
+    .profile-upload-container {
         display: flex;
-        align-items: center;
-        gap: 15px;
-        flex-wrap: wrap;
+        gap: 20px;
+        align-items: flex-start;
     }
     
-    .logo-preview {
+    .profile-preview {
         width: 150px;
         height: 150px;
-        border: 2px dashed #e5e7eb;
-        border-radius: 15px;
+        border: 3px solid #e5e7eb;
+        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         overflow: hidden;
-        background: #f9fafb;
+        background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%);
+        flex-shrink: 0;
     }
     
-    .logo-preview img {
+    .profile-preview img {
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
     
-    .logo-placeholder {
+    .profile-placeholder {
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         gap: 10px;
         color: #9ca3af;
         text-align: center;
         padding: 20px;
     }
     
-    .logo-placeholder i {
+    .profile-placeholder i {
         font-size: 48px;
     }
     
-    .logo-placeholder p {
-        font-size: 13px;
+    .profile-placeholder p {
+        font-size: 12px;
         margin: 0;
+        line-height: 1.4;
+    }
+    
+    .profile-upload-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .business-card-preview {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 16px;
+        padding: 30px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    
+    .card-profile {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid white;
+        flex-shrink: 0;
+    }
+    
+    .card-profile img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .card-info {
+        color: white;
+    }
+    
+    .card-info h3 {
+        font-size: 24px;
+        font-weight: 700;
+        margin: 0 0 8px 0;
+    }
+    
+    .card-info p {
+        font-size: 14px;
+        margin: 4px 0;
+        opacity: 0.9;
     }
 `;
 document.head.appendChild(style);
