@@ -1541,7 +1541,13 @@ function initUserMenu() {
             e.preventDefault();
             console.log('👤 My Profile clicked!');
             userMenuDropdown?.classList.remove('show');
-            showToast('내 정보 페이지는 준비 중입니다', 'info');
+            
+            // Call function from credit-system.js
+            if (typeof showMyProfile === 'function') {
+                showMyProfile();
+            } else {
+                showToast('내 정보 페이지는 준비 중입니다', 'info');
+            }
         });
         console.log('✅ My Profile button handler attached');
     }
@@ -1553,7 +1559,13 @@ function initUserMenu() {
             e.preventDefault();
             console.log('📜 Purchase History clicked!');
             userMenuDropdown?.classList.remove('show');
-            showToast('구매 내역 페이지는 준비 중입니다', 'info');
+            
+            // Call function from credit-system.js
+            if (typeof showPurchaseHistory === 'function') {
+                showPurchaseHistory();
+            } else {
+                showToast('구매 내역 페이지는 준비 중입니다', 'info');
+            }
         });
         console.log('✅ Purchase History button handler attached');
     }
@@ -1565,7 +1577,13 @@ function initUserMenu() {
             e.preventDefault();
             console.log('🔓 Unlocked Dancers clicked!');
             userMenuDropdown?.classList.remove('show');
-            showToast('잠금 해제 댄서 페이지는 준비 중입니다', 'info');
+            
+            // Call function from credit-system.js
+            if (typeof showUnlockedDancers === 'function') {
+                showUnlockedDancers();
+            } else {
+                showToast('잠금 해제 댄서 페이지는 준비 중입니다', 'info');
+            }
         });
         console.log('✅ Unlocked Dancers button handler attached');
     }
@@ -1577,7 +1595,9 @@ function initUserMenu() {
             e.preventDefault();
             console.log('💳 Credit Charge clicked!');
             userMenuDropdown?.classList.remove('show');
-            showToast('크레딧 충전 기능은 준비 중입니다', 'info');
+            
+            // Open credit charge modal
+            openModal('creditChargeModal');
         });
         console.log('✅ Credit Charge button handler attached');
     }
