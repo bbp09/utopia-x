@@ -81,8 +81,9 @@ function updateUserUI() {
 }
 
 // ===== Sign Up =====
-async function signUp(email, password, role) {
-    console.log('📝 Signing up:', email, 'as', role);
+async function signUp(email, password, userType, profileData = {}) {
+    console.log('📝 Signing up:', email, 'as', userType);
+    console.log('📋 Profile data:', profileData);
     
     // Validate inputs
     if (!email || !email.includes('@')) {
@@ -95,25 +96,45 @@ async function signUp(email, password, role) {
         return { success: false };
     }
     
-    if (!role) {
+    if (!userType) {
         showToast('회원 유형을 선택해주세요', 'error');
         return { success: false };
+    }
+    
+    // Validate required fields based on user type
+    if (userType === 'client') {
+        if (!profileData.name || !profileData.phone) {
+            showToast('담당자 이름과 연락처를 입력해주세요', 'error');
+            return { success: false };
+        }
+    } else if (userType === 'artist') {
+        if (!profileData.stageName || !profileData.realName || !profileData.phone) {
+            showToast('활동명, 본명, 연락처를 입력해주세요', 'error');
+            return { success: false };
+        }
     }
     
     const client = initSupabase();
     if (!client) {
         // No Supabase configured - use mock database
-        return fallbackSignUp(email, password, role);
+        return fallbackSignUp(email, password, userType, profileData);
     }
     
     try {
+        // Prepare user metadata
+        const userMetadata = {
+            user_type: userType,
+            userRole: userType,
+            ...profileData,
+            credits: 10, // Initial credits
+            createdAt: new Date().toISOString()
+        };
+        
         const { data, error } = await client.auth.signUp({
             email: email,
             password: password,
             options: {
-                data: {
-                    role: role // Store role in user metadata
-                }
+                data: userMetadata
             }
         });
         
@@ -131,9 +152,16 @@ async function signUp(email, password, role) {
         }
         
         console.log('✅ Sign up successful');
-        showToast('회원가입 성공! 이메일을 확인해주세요.', 'success');
         
-        return { success: true, data };
+        // Store in sessionStorage for immediate access
+        sessionStorage.setItem('userEmail', email);
+        sessionStorage.setItem('userType', userType);
+        sessionStorage.setItem('userRole', userType);
+        sessionStorage.setItem('userProfile', JSON.stringify(profileData));
+        
+        showToast('🎉 회원가입 성공! 10 크레딧이 지급되었습니다.', 'success');
+        
+        return { success: true, data, userType };
     } catch (error) {
         console.error('❌ Sign up exception:', error);
         showToast('회원가입 중 오류가 발생했습니다', 'error');
@@ -142,7 +170,7 @@ async function signUp(email, password, role) {
 }
 
 // ===== Fallback Sign Up (Without Supabase) =====
-function fallbackSignUp(email, password, role) {
+function fallbackSignUp(email, password, userType, profileData = {}) {
     console.log('⚠️ Using fallback sign up (Demo mode)');
     
     // Get mock users from localStorage
@@ -155,21 +183,32 @@ function fallbackSignUp(email, password, role) {
         return { success: false };
     }
     
-    // Add new user
-    mockUsers.push({
+    // Add new user with full profile
+    const newUser = {
         email: email,
         password: password,
-        role: role,
+        user_type: userType,
+        userRole: userType,
+        ...profileData,
+        credits: 10,
         createdAt: new Date().toISOString()
-    });
+    };
+    
+    mockUsers.push(newUser);
     
     // Save to localStorage
     localStorage.setItem('mockUsers', JSON.stringify(mockUsers));
     
-    console.log('✅ Mock user created:', email);
-    showToast('회원가입 성공! 로그인해주세요. (데모 모드)', 'success');
+    // Store in sessionStorage for immediate access
+    sessionStorage.setItem('userEmail', email);
+    sessionStorage.setItem('userType', userType);
+    sessionStorage.setItem('userRole', userType);
+    sessionStorage.setItem('userProfile', JSON.stringify(profileData));
     
-    return { success: true };
+    console.log('✅ Mock user created:', email);
+    showToast('🎉 회원가입 성공! 10 크레딧이 지급되었습니다. (데모 모드)', 'success');
+    
+    return { success: true, userType };
 }
 
 // ===== Sign In =====

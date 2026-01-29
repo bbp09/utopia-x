@@ -570,31 +570,51 @@
                 </button>
             </form>
             
-            <!-- Sign Up Form -->
-            <form id="signUpForm" class="modal-form auth-form">
-                <!-- User Type Selection (맨 위로 이동) -->
-                <div class="form-group">
-                    <label>회원 유형 선택 *</label>
-                    <div class="radio-group">
-                        <label class="radio-label">
-                            <input type="radio" name="userRole" value="client" checked>
-                            <span class="radio-custom"></span>
-                            <span class="radio-text">
-                                <strong>클라이언트</strong>
-                                <small>댄서를 섭외하고 싶어요</small>
-                            </span>
-                        </label>
-                        <label class="radio-label">
-                            <input type="radio" name="userRole" value="artist">
-                            <span class="radio-custom"></span>
-                            <span class="radio-text">
-                                <strong>아티스트</strong>
-                                <small>댄서로 활동하고 싶어요</small>
-                            </span>
-                        </label>
-                    </div>
+            <!-- Sign Up Form - Step 1: User Type Selection -->
+            <div id="signUpStep1" class="modal-form auth-form">
+                <div class="signup-step-header" style="text-align: center; margin-bottom: 30px;">
+                    <h3 style="font-size: 20px; margin-bottom: 10px;">회원 유형을 선택해주세요</h3>
+                    <p style="color: var(--text-secondary); font-size: 14px;">맞춤형 서비스를 제공해드립니다</p>
                 </div>
                 
+                <div class="user-type-cards" style="display: grid; gap: 20px;">
+                    <div class="user-type-card" data-type="client" onclick="selectUserType('client')" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(157, 78, 221, 0.1)); border: 2px solid var(--border-color); border-radius: 16px; padding: 30px; cursor: pointer; transition: all 0.3s ease;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">🎬</div>
+                        <h4 style="font-size: 20px; font-weight: 700; margin-bottom: 10px; color: var(--text-primary);">클라이언트 (섭외 요청)</h4>
+                        <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 15px;">댄서를 섭외하고 싶으신가요?</p>
+                        <ul style="text-align: left; font-size: 13px; color: var(--text-secondary); line-height: 1.8;">
+                            <li>✓ AI 기반 댄서 매칭</li>
+                            <li>✓ 빠른 섭외 요청</li>
+                            <li>✓ 프로젝트 관리</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="user-type-card" data-type="artist" onclick="selectUserType('artist')" style="background: linear-gradient(135deg, rgba(233, 30, 132, 0.1), rgba(255, 107, 107, 0.1)); border: 2px solid var(--border-color); border-radius: 16px; padding: 30px; cursor: pointer; transition: all 0.3s ease;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">💃</div>
+                        <h4 style="font-size: 20px; font-weight: 700; margin-bottom: 10px; color: var(--text-primary);">아티스트 (활동 등록)</h4>
+                        <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 15px;">댄서로 활동하고 싶으신가요?</p>
+                        <ul style="text-align: left; font-size: 13px; color: var(--text-secondary); line-height: 1.8;">
+                            <li>✓ 프로필 등록 및 홍보</li>
+                            <li>✓ 섭외 제안 받기</li>
+                            <li>✓ 포트폴리오 관리</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sign Up Form - Step 2: Details -->
+            <form id="signUpStep2" class="modal-form auth-form" style="display: none;">
+                <div class="signup-step-header" style="text-align: center; margin-bottom: 20px;">
+                    <button type="button" onclick="backToStep1()" style="background: none; border: none; color: var(--primary-purple); cursor: pointer; font-size: 14px; margin-bottom: 10px;">
+                        <i class="fas fa-arrow-left"></i> 유형 다시 선택
+                    </button>
+                    <h3 style="font-size: 18px; margin-bottom: 5px;" id="step2Title">회원정보 입력</h3>
+                    <p style="color: var(--text-secondary); font-size: 13px;" id="step2Subtitle">기본 정보를 입력해주세요</p>
+                </div>
+                
+                <input type="hidden" id="selectedUserType" name="userType" value="">
+                
+                <!-- 공통 필드 -->
                 <div class="form-group">
                     <label for="signUpEmail">이메일 주소 *</label>
                     <input 
@@ -628,9 +648,99 @@
                     >
                 </div>
                 
-                <button type="submit" class="btn btn-large btn-gradient" style="width: 100%;">
+                <!-- 클라이언트 전용 필드 -->
+                <div id="clientFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="clientName">담당자 이름 *</label>
+                        <input 
+                            type="text" 
+                            id="clientName" 
+                            name="name" 
+                            placeholder="홍길동"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="clientPhone">연락처 *</label>
+                        <input 
+                            type="tel" 
+                            id="clientPhone" 
+                            name="phone" 
+                            placeholder="010-1234-5678"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="clientCompany">회사/단체명 (선택)</label>
+                        <input 
+                            type="text" 
+                            id="clientCompany" 
+                            name="company" 
+                            placeholder="주식회사 유토피아"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="clientPosition">직책 (선택)</label>
+                        <input 
+                            type="text" 
+                            id="clientPosition" 
+                            name="position" 
+                            placeholder="프로듀서, 매니저 등"
+                        >
+                    </div>
+                </div>
+                
+                <!-- 아티스트 전용 필드 -->
+                <div id="artistFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="artistStageName">활동명 *</label>
+                        <input 
+                            type="text" 
+                            id="artistStageName" 
+                            name="stageName" 
+                            placeholder="예) DJ Koo, B-boy Storm"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="artistRealName">본명 *</label>
+                        <input 
+                            type="text" 
+                            id="artistRealName" 
+                            name="realName" 
+                            placeholder="홍길동"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="artistPhone">연락처 *</label>
+                        <input 
+                            type="tel" 
+                            id="artistPhone" 
+                            name="phone" 
+                            placeholder="010-1234-5678"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="artistGenre">전문 장르 (선택)</label>
+                        <input 
+                            type="text" 
+                            id="artistGenre" 
+                            name="genre" 
+                            placeholder="예) K-pop, Hip-hop, Contemporary"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="artistExperience">경력 (선택)</label>
+                        <select id="artistExperience" name="experience">
+                            <option value="">선택하세요</option>
+                            <option value="beginner">1년 미만</option>
+                            <option value="intermediate">1-3년</option>
+                            <option value="advanced">3-5년</option>
+                            <option value="expert">5년 이상</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-large btn-gradient" style="width: 100%; margin-top: 10px;">
                     <i class="fas fa-user-plus"></i>
-                    회원가입
+                    회원가입 완료
                 </button>
                 
                 <small class="form-hint" style="text-align: center; display: block; margin-top: 15px;">
@@ -1407,66 +1517,17 @@
             const signUpForm = document.getElementById('signUpForm');
             console.log('📝 SignUp form found:', !!signUpForm);
             
-            if (signUpForm) {
-                const handleSignUp = async function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('📝 Sign up form submitted');
-                    
-                    const email = document.getElementById('signUpEmail').value;
-                    const password = document.getElementById('signUpPassword').value;
-                    const passwordConfirm = document.getElementById('signUpPasswordConfirm').value;
-                    const role = document.querySelector('input[name="userRole"]:checked')?.value || 'client';
-                    
-                    console.log('📝 Signup attempt:', email, 'as', role);
-                    console.log('  - Password length:', password.length);
-                    console.log('  - Passwords match:', password === passwordConfirm);
-                    
-                    // Validate passwords match
-                    if (password !== passwordConfirm) {
-                        showToast('비밀번호가 일치하지 않습니다', 'error');
-                        return;
+            // Signup form will be handled by main.js initSignUpForm()
+            if (typeof window.initSignUpForm === 'function') {
+                window.initSignUpForm();
+            } else {
+                console.warn('⚠️ initSignUpForm not yet loaded, will retry...');
+                setTimeout(() => {
+                    if (typeof window.initSignUpForm === 'function') {
+                        window.initSignUpForm();
                     }
-                    
-                    // Check if auth functions are available
-                    if (typeof signUp === 'function') {
-                        console.log('✅ signUp function available, calling...');
-                        try {
-                            const result = await signUp(email, password, role);
-                            console.log('📝 Signup result:', result);
-                            
-                            if (result.success && typeof switchAuthTab === 'function') {
-                                console.log('✅ Signup successful, switching to signin tab');
-                                switchAuthTab('signin');
-                            } else {
-                                console.error('❌ Signup failed:', result);
-                            }
-                        } catch (error) {
-                            console.error('❌ Signup exception:', error);
-                            showToast('회원가입 중 오류가 발생했습니다', 'error');
-                        }
-                    } else {
-                        console.error('❌ signUp function not available');
-                        showToast('인증 시스템을 사용할 수 없습니다', 'error');
-                    }
-                };
-                
-                // Remove old event listeners
-                const newSignUpForm = signUpForm.cloneNode(true);
-                signUpForm.parentNode.replaceChild(newSignUpForm, signUpForm);
-                
-                // Add event listener
-                newSignUpForm.addEventListener('submit', handleSignUp, false);
-                
-                // Button click handler
-                const signUpButton = newSignUpForm.querySelector('button[type="submit"]');
-                if (signUpButton) {
-                    console.log('🔘 Binding click event to signup button');
-                    signUpButton.addEventListener('click', function(e) {
-                        console.log('🖱️ Signup button clicked directly');
-                    }, false);
-                }
-                
+                }, 1000);
+            }
                 console.log('✅ Sign up form handler attached');
             }
             

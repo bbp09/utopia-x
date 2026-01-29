@@ -168,3 +168,86 @@
         font-size: 12px;
     }
 }
+
+/* ===== Sign Up Steps ===== */
+.signup-step-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.user-type-cards {
+    display: grid;
+    gap: 20px;
+}
+
+.user-type-card {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(157, 78, 221, 0.1));
+    border: 2px solid var(--border-color);
+    border-radius: 16px;
+    padding: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.user-type-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary-purple);
+    box-shadow: 0 10px 30px rgba(157, 78, 221, 0.3);
+}
+
+.user-type-card[data-type="artist"] {
+    background: linear-gradient(135deg, rgba(233, 30, 132, 0.1), rgba(255, 107, 107, 0.1));
+}
+
+.user-type-card[data-type="artist"]:hover {
+    border-color: var(--primary-pink);
+    box-shadow: 0 10px 30px rgba(233, 30, 132, 0.3);
+}
+
+.user-type-card h4 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+}
+
+.user-type-card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+}
+
+.user-type-card ul {
+    text-align: left;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    list-style: none;
+    padding-left: 0;
+}
+
+.user-type-card ul li {
+    padding: 5px 0;
+}
+
+/* Form groups spacing */
+.form-group + .form-group {
+    margin-top: 20px;
+}
+
+/* Back button style */
+button[onclick="backToStep1()"] {
+    background: none;
+    border: none;
+    color: var(--primary-purple);
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    transition: opacity 0.3s ease;
+}
+
+button[onclick="backToStep1()"]:hover {
+    opacity: 0.8;
+}

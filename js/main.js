@@ -922,9 +922,98 @@ function initForms() {
         artistForm.addEventListener('submit', handleArtistSubmit);
     }
     
+    // Initialize signup form
+    initSignUpForm();
+    
     // Initialize range sliders with live value display
     initRangeSliders();
 }
+
+// Initialize Sign Up Form with role-based fields
+function initSignUpForm() {
+    const signUpForm = document.getElementById('signUpStep2');
+    if (!signUpForm) {
+        console.warn('⚠️ Sign up form (step 2) not found');
+        return;
+    }
+    
+    console.log('✅ Initializing sign up form');
+    
+    signUpForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        console.log('📝 Sign up form submitted');
+        
+        const email = document.getElementById('signUpEmail').value;
+        const password = document.getElementById('signUpPassword').value;
+        const passwordConfirm = document.getElementById('signUpPasswordConfirm').value;
+        const userType = document.getElementById('selectedUserType').value;
+        
+        // Validate passwords match
+        if (password !== passwordConfirm) {
+            showToast('비밀번호가 일치하지 않습니다', 'error');
+            return;
+        }
+        
+        // Collect profile data based on user type
+        let profileData = {};
+        
+        if (userType === 'client') {
+            profileData = {
+                name: document.getElementById('clientName').value,
+                phone: document.getElementById('clientPhone').value,
+                company: document.getElementById('clientCompany').value || '',
+                position: document.getElementById('clientPosition').value || ''
+            };
+        } else if (userType === 'artist') {
+            profileData = {
+                stageName: document.getElementById('artistStageName').value,
+                realName: document.getElementById('artistRealName').value,
+                phone: document.getElementById('artistPhone').value,
+                genre: document.getElementById('artistGenre').value || '',
+                experience: document.getElementById('artistExperience').value || ''
+            };
+        }
+        
+        console.log('📝 Signup data:', { email, userType, profileData });
+        
+        // Call signUp function
+        if (typeof signUp === 'function') {
+            try {
+                const result = await signUp(email, password, userType, profileData);
+                console.log('📝 Signup result:', result);
+                
+                if (result.success) {
+                    console.log('✅ Signup successful');
+                    
+                    // Close modal
+                    closeModal('loginModal');
+                    
+                    // Redirect to appropriate dashboard
+                    setTimeout(() => {
+                        if (result.userType === 'artist') {
+                            window.location.href = 'artist-dashboard.html';
+                        } else {
+                            window.location.href = 'client-dashboard.html';
+                        }
+                    }, 1000);
+                } else {
+                    console.error('❌ Signup failed:', result);
+                }
+            } catch (error) {
+                console.error('❌ Signup exception:', error);
+                showToast('회원가입 중 오류가 발생했습니다', 'error');
+            }
+        } else {
+            console.error('❌ signUp function not available');
+            showToast('인증 시스템을 사용할 수 없습니다', 'error');
+        }
+    });
+}
+
+// Make initSignUpForm globally accessible
+window.initSignUpForm = initSignUpForm;
 
 /**
  * Initialize range sliders to display live values
@@ -1405,7 +1494,8 @@ function switchAuthTab(tab) {
     const signInTab = document.querySelector('.auth-tab[data-tab="signin"]');
     const signUpTab = document.querySelector('.auth-tab[data-tab="signup"]');
     const signInForm = document.getElementById('signInForm');
-    const signUpForm = document.getElementById('signUpForm');
+    const signUpStep1 = document.getElementById('signUpStep1');
+    const signUpStep2 = document.getElementById('signUpStep2');
     const modalTitle = document.getElementById('authModalTitle');
     const modalSubtitle = document.getElementById('authModalSubtitle');
     
@@ -1413,7 +1503,8 @@ function switchAuthTab(tab) {
         signInTab?.classList.add('active');
         signUpTab?.classList.remove('active');
         signInForm?.classList.add('active');
-        signUpForm?.classList.remove('active');
+        if (signUpStep1) signUpStep1.style.display = 'none';
+        if (signUpStep2) signUpStep2.style.display = 'none';
         
         if (modalTitle) modalTitle.textContent = 'UTOPIA X 로그인';
         if (modalSubtitle) modalSubtitle.textContent = '이메일로 간편하게 시작하세요';
@@ -1421,15 +1512,96 @@ function switchAuthTab(tab) {
         signInTab?.classList.remove('active');
         signUpTab?.classList.add('active');
         signInForm?.classList.remove('active');
-        signUpForm?.classList.add('active');
+        if (signUpStep1) signUpStep1.style.display = 'block';
+        if (signUpStep2) signUpStep2.style.display = 'none';
         
         if (modalTitle) modalTitle.textContent = '회원가입';
-        if (modalSubtitle) modalSubtitle.textContent = '프로젝트를 시작하거나 댄서로 활동하세요';
+        if (modalSubtitle) modalSubtitle.textContent = '유형을 선택하고 시작하세요';
     }
 }
 
-// Make switchAuthTab globally accessible
+// User type selection for signup
+function selectUserType(type) {
+    console.log('🎯 Selected user type:', type);
+    
+    const step1 = document.getElementById('signUpStep1');
+    const step2 = document.getElementById('signUpStep2');
+    const selectedUserType = document.getElementById('selectedUserType');
+    const clientFields = document.getElementById('clientFields');
+    const artistFields = document.getElementById('artistFields');
+    const step2Title = document.getElementById('step2Title');
+    const step2Subtitle = document.getElementById('step2Subtitle');
+    
+    // Update hidden field
+    if (selectedUserType) {
+        selectedUserType.value = type;
+    }
+    
+    // Show/hide appropriate fields
+    if (type === 'client') {
+        clientFields.style.display = 'block';
+        artistFields.style.display = 'none';
+        
+        // Make client fields required
+        document.getElementById('clientName').required = true;
+        document.getElementById('clientPhone').required = true;
+        
+        // Remove artist fields required
+        document.getElementById('artistStageName').required = false;
+        document.getElementById('artistRealName').required = false;
+        document.getElementById('artistPhone').required = false;
+        
+        step2Title.textContent = '클라이언트 정보 입력';
+        step2Subtitle.textContent = '섭외 요청 시 자동으로 입력됩니다';
+    } else {
+        clientFields.style.display = 'none';
+        artistFields.style.display = 'block';
+        
+        // Remove client fields required
+        document.getElementById('clientName').required = false;
+        document.getElementById('clientPhone').required = false;
+        
+        // Make artist fields required
+        document.getElementById('artistStageName').required = true;
+        document.getElementById('artistRealName').required = true;
+        document.getElementById('artistPhone').required = true;
+        
+        step2Title.textContent = '아티스트 정보 입력';
+        step2Subtitle.textContent = '프로필에 표시될 정보입니다';
+    }
+    
+    // Switch to step 2
+    step1.style.display = 'none';
+    step2.style.display = 'block';
+    
+    // Add visual feedback to selected card
+    document.querySelectorAll('.user-type-card').forEach(card => {
+        if (card.dataset.type === type) {
+            card.style.borderColor = 'var(--primary-purple)';
+            card.style.transform = 'scale(1.02)';
+        } else {
+            card.style.borderColor = 'var(--border-color)';
+            card.style.transform = 'scale(1)';
+        }
+    });
+}
+
+// Back to step 1
+function backToStep1() {
+    const step1 = document.getElementById('signUpStep1');
+    const step2 = document.getElementById('signUpStep2');
+    
+    step1.style.display = 'block';
+    step2.style.display = 'none';
+    
+    // Reset form
+    document.getElementById('signUpStep2').reset();
+}
+
+// Make functions globally accessible
 window.switchAuthTab = switchAuthTab;
+window.selectUserType = selectUserType;
+window.backToStep1 = backToStep1;
 
 // ===== User Menu =====
 function initUserMenu() {
