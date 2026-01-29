@@ -294,22 +294,22 @@
                 <h3 class="clients-title">협력 브랜드</h3>
                 <div class="clients-grid">
                     <div class="client-logo">
-                        <img src="https://via.placeholder.com/150x60/333333/9D4EDD?text=HYBE" alt="HYBE">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='60'%3E%3Crect fill='%23333' width='150' height='60'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%239D4EDD' font-family='Arial' font-size='14' font-weight='bold'%3EHYBE%3C/text%3E%3C/svg%3E" alt="HYBE" onerror="this.style.display='none'">
                     </div>
                     <div class="client-logo">
-                        <img src="https://via.placeholder.com/150x60/333333/9D4EDD?text=SM+ENT" alt="SM Entertainment">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='60'%3E%3Crect fill='%23333' width='150' height='60'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%239D4EDD' font-family='Arial' font-size='14' font-weight='bold'%3ESM ENT%3C/text%3E%3C/svg%3E" alt="SM Entertainment" onerror="this.style.display='none'">
                     </div>
                     <div class="client-logo">
-                        <img src="https://via.placeholder.com/150x60/333333/9D4EDD?text=YG+ENT" alt="YG Entertainment">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='60'%3E%3Crect fill='%23333' width='150' height='60'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%239D4EDD' font-family='Arial' font-size='14' font-weight='bold'%3EYG ENT%3C/text%3E%3C/svg%3E" alt="YG Entertainment" onerror="this.style.display='none'">
                     </div>
                     <div class="client-logo">
-                        <img src="https://via.placeholder.com/150x60/333333/9D4EDD?text=NIKE" alt="Nike">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='60'%3E%3Crect fill='%23333' width='150' height='60'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%239D4EDD' font-family='Arial' font-size='14' font-weight='bold'%3ENIKE%3C/text%3E%3C/svg%3E" alt="Nike" onerror="this.style.display='none'">
                     </div>
                     <div class="client-logo">
-                        <img src="https://via.placeholder.com/150x60/333333/9D4EDD?text=ADIDAS" alt="Adidas">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='60'%3E%3Crect fill='%23333' width='150' height='60'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%239D4EDD' font-family='Arial' font-size='14' font-weight='bold'%3EADIDAS%3C/text%3E%3C/svg%3E" alt="Adidas" onerror="this.style.display='none'">
                     </div>
                     <div class="client-logo">
-                        <img src="https://via.placeholder.com/150x60/333333/9D4EDD?text=SAMSUNG" alt="Samsung">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='60'%3E%3Crect fill='%23333' width='150' height='60'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%239D4EDD' font-family='Arial' font-size='14' font-weight='bold'%3ESAMSUNG%3C/text%3E%3C/svg%3E" alt="Samsung" onerror="this.style.display='none'">
                     </div>
                 </div>
             </div>
@@ -924,18 +924,18 @@
                 <div class="form-section-title">📋 기본 정보 & 검증 / Basic Information</div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="artistName">이름 / Name *</label>
-                        <input type="text" id="artistName" name="artistName" required>
+                        <label for="artistFormName">이름 / Name *</label>
+                        <input type="text" id="artistFormName" name="artistName" required>
                     </div>
                     <div class="form-group">
-                        <label for="artistEmail">이메일 / Email *</label>
-                        <input type="email" id="artistEmail" name="artistEmail" required>
+                        <label for="artistFormEmail">이메일 / Email *</label>
+                        <input type="email" id="artistFormEmail" name="artistEmail" required>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="artistPhone">연락처 / Phone *</label>
-                        <input type="tel" id="artistPhone" name="artistPhone" required>
+                        <label for="artistFormPhone">연락처 / Phone *</label>
+                        <input type="tel" id="artistFormPhone" name="artistPhone" required>
                     </div>
                     <div class="form-group">
                         <label for="activityRegion">활동 지역 / Activity Region *</label>
@@ -1549,8 +1549,6 @@
                         window.initSignUpForm();
                     }
                 }, 1000);
-            }
-                console.log('✅ Sign up form handler attached');
             }
             
             console.log('✅ Auth forms bound');
