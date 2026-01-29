@@ -1232,6 +1232,10 @@
         function handleCTAClick(modalType) {
             // Check if user is logged in
             const isLoggedIn = checkLoginStatus();
+            const userType = sessionStorage.getItem('userType');
+            const userRole = sessionStorage.getItem('userRole');
+            
+            console.log('🎯 CTA Click:', { modalType, isLoggedIn, userType, userRole });
             
             if (!isLoggedIn && (modalType === 'casting' || modalType === 'artist')) {
                 console.log('⚠️ User not logged in, showing login prompt');
@@ -1239,9 +1243,27 @@
                 setTimeout(() => {
                     openModalDirect('login');
                 }, 500);
-            } else {
-                openModalDirect(modalType);
+                return;
             }
+            
+            // Role-based access control
+            if (modalType === 'casting') {
+                if (userType === 'artist' || userRole === 'artist') {
+                    console.log('❌ Artist trying to access casting');
+                    showToast('❌ 댄서 섭외는 클라이언트 계정만 가능합니다', 'error');
+                    return;
+                }
+            }
+            
+            if (modalType === 'artist') {
+                if (userType === 'client' || userRole === 'client') {
+                    console.log('❌ Client trying to access artist registration');
+                    showToast('❌ 아티스트 프로필 등록은 아티스트 계정만 가능합니다', 'error');
+                    return;
+                }
+            }
+            
+            openModalDirect(modalType);
         }
         
         function checkLoginStatus() {

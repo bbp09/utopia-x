@@ -114,16 +114,44 @@ function initModals() {
     console.log('✅ Modals initialized');
 }
 
-function openModal(type) {
-    // TEMPORARY: Disable login check for testing
-    // Uncomment below to enable login requirement
-    /*
-    if ((type === 'casting' || type === 'artist') && !state.currentUser) {
-        showToast('먼저 로그인해주세요', 'info');
-        setTimeout(() => showLoginModal(), 300);
-        return;
+async function openModal(type) {
+    console.log(`🎯 Opening modal: ${type}`);
+    
+    // Check user role and permissions
+    const userType = sessionStorage.getItem('userType');
+    const userRole = sessionStorage.getItem('userRole');
+    const isLoggedIn = !!(sessionStorage.getItem('userEmail'));
+    
+    console.log('👤 User info:', { isLoggedIn, userType, userRole });
+    
+    // Role-based access control
+    if (type === 'casting') {
+        if (!isLoggedIn) {
+            showToast('댄서 섭외는 로그인이 필요합니다', 'info');
+            setTimeout(() => openModal('loginModal'), 300);
+            return;
+        }
+        
+        // Only clients can make casting requests
+        if (userType === 'artist' || userRole === 'artist') {
+            showToast('❌ 댄서 섭외는 클라이언트 계정만 가능합니다', 'error');
+            return;
+        }
     }
-    */
+    
+    if (type === 'artist') {
+        if (!isLoggedIn) {
+            showToast('아티스트 등록은 로그인이 필요합니다', 'info');
+            setTimeout(() => openModal('loginModal'), 300);
+            return;
+        }
+        
+        // Only artists can register profiles
+        if (userType === 'client' || userRole === 'client') {
+            showToast('❌ 아티스트 프로필 등록은 아티스트 계정만 가능합니다', 'error');
+            return;
+        }
+    }
     
     closeAllModals();
     
@@ -142,9 +170,79 @@ function openModal(type) {
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
         console.log(`✅ Modal opened: ${modalId}`);
+        
+        // Auto-fill form for casting modal
+        if (type === 'casting' && isLoggedIn) {
+            await prefillCastingForm();
+        }
     } else {
         console.error(`❌ Modal not found: ${modalId}`);
     }
+}
+
+// Prefill casting form with user profile data
+async function prefillCastingForm() {
+    console.log('📝 Prefilling casting form...');
+    
+    const userEmail = sessionStorage.getItem('userEmail');
+    const userProfile = sessionStorage.getItem('userProfile');
+    
+    if (!userEmail) {
+        console.warn('⚠️ No user email found');
+        return;
+    }
+    
+    // Try to get user data from Supabase first
+    let userData = null;
+    
+    if (typeof window.supabase !== 'undefined') {
+        try {
+            const { data: { user } } = await window.supabase.auth.getUser();
+            if (user && user.user_metadata) {
+                userData = user.user_metadata;
+                console.log('✅ Got user data from Supabase:', userData);
+            }
+        } catch (error) {
+            console.error('Error getting Supabase user:', error);
+        }
+    }
+    
+    // Fallback to sessionStorage profile
+    if (!userData && userProfile) {
+        try {
+            userData = JSON.parse(userProfile);
+            console.log('✅ Got user data from sessionStorage:', userData);
+        } catch (error) {
+            console.error('Error parsing user profile:', error);
+        }
+    }
+    
+    // Prefill fields
+    const clientNameField = document.getElementById('clientName');
+    const clientEmailField = document.getElementById('clientEmail');
+    const clientPhoneField = document.getElementById('clientPhone');
+    
+    if (clientEmailField) {
+        clientEmailField.value = userEmail;
+        clientEmailField.style.backgroundColor = 'rgba(157, 78, 221, 0.1)';
+        console.log('✅ Prefilled email:', userEmail);
+    }
+    
+    if (userData) {
+        if (clientNameField && userData.name) {
+            clientNameField.value = userData.name;
+            clientNameField.style.backgroundColor = 'rgba(157, 78, 221, 0.1)';
+            console.log('✅ Prefilled name:', userData.name);
+        }
+        
+        if (clientPhoneField && userData.phone) {
+            clientPhoneField.value = userData.phone;
+            clientPhoneField.style.backgroundColor = 'rgba(157, 78, 221, 0.1)';
+            console.log('✅ Prefilled phone:', userData.phone);
+        }
+    }
+    
+    console.log('✅ Casting form prefilled successfully');
 }
 
 function closeModal(modalId) {
