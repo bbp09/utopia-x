@@ -3,7 +3,7 @@
 // ===================================
 
 // Admin Config
-const ADMIN_PASSWORD = 'Utopia2024!@#$'; // ⚠️ 배포 전 반드시 변경하세요!
+const ADMIN_PASSWORD = 'admin123'; // ⚠️ 개발용 비밀번호 (배포 전 변경 필요)
 const ADMIN_SESSION_KEY = 'utopiax_admin_session';
 
 // Global State
