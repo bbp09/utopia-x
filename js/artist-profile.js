@@ -1,386 +1,472 @@
-// =====================================
-//  UTOPIA X - Artist Profile Management
-//  아티스트 프로필 수정 페이지
-// =====================================
+// ===================================
+// 🎭 UTOPIA X - Artist Profile Editor
+// ===================================
 
+console.log('🎭 Artist Profile Editor Loading...');
+
+// Global state
 let currentUser = null;
-let selectedPhotos = [];
+let selectedPhotos = []; // Array of {file: File, preview: URL, index: number}
 let selectedTags = [];
+const MAX_PHOTOS = 5;
+const MAX_TAGS = 5;
 
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', async () => {
-    console.log('📝 Initializing Artist Profile Page...');
-    
-    // Check authentication
-    await checkAuth();
-    
-    // Initialize photo upload grid
-    initPhotoUploadGrid();
-    
-    // Load user data
-    await loadArtistData();
-    
-    // Bind events
-    bindEvents();
-    
-    console.log('✅ Artist Profile Page initialized');
-});
-
-// Check authentication
+// ===================================
+// 🔐 Authentication Check
+// ===================================
 async function checkAuth() {
     console.log('🔐 Checking authentication...');
     
-    if (typeof window.supabase === 'undefined') {
-        console.error('❌ Supabase not available');
-        alert('데이터베이스 연결에 실패했습니다');
-        window.location.replace('index.html');
-        return;
+    if (!window.supabase) {
+        console.error('❌ Supabase not initialized!');
+        alert('시스템 오류가 발생했습니다.');
+        window.location.replace('/');
+        return false;
     }
+
+    const { data: { user }, error } = await window.supabase.auth.getUser();
     
-    try {
-        const { data: { user }, error } = await window.supabase.auth.getUser();
-        
-        if (error || !user) {
-            console.error('❌ Not logged in:', error);
-            alert('로그인이 필요합니다');
-            window.location.replace('index.html');
-            return;
-        }
-        
-        currentUser = user;
-        console.log('✅ User authenticated:', user.id);
-        
-    } catch (error) {
-        console.error('❌ Auth check failed:', error);
-        window.location.replace('index.html');
+    if (error || !user) {
+        console.error('❌ Not authenticated:', error);
+        alert('로그인이 필요합니다.');
+        window.location.replace('/');
+        return false;
     }
+
+    // Get user role
+    const { data: userData } = await window.supabase
+        .from('users')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+    if (userData?.role !== 'dancer') {
+        console.error('❌ Not an artist!');
+        alert('댄서 계정만 접근 가능합니다.');
+        window.location.replace('/client-dashboard.html');
+        return false;
+    }
+
+    currentUser = user;
+    console.log('✅ Artist authenticated:', user.id);
+    return true;
 }
 
-// Initialize photo upload grid
-function initPhotoUploadGrid() {
+// ===================================
+// 📸 Photo Upload Grid Initialization
+// ===================================
+function initPhotoGrid() {
+    console.log('📸 Initializing photo grid...');
     const grid = document.getElementById('photoUploadGrid');
     
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < MAX_PHOTOS; i++) {
         const slot = document.createElement('div');
         slot.className = 'photo-slot';
+        slot.dataset.index = i;
+        
         slot.innerHTML = `
-            <input type="file" id="photoInput${i}" accept="image/*" style="display: none;">
+            <input type="file" 
+                   id="photoInput${i}" 
+                   accept="image/*" 
+                   style="display: none;">
             <div class="photo-preview" id="photoPreview${i}">
-                <i class="fas fa-camera"></i>
-                <p>사진 업로드</p>
+                <i class="fas fa-plus"></i>
+                <span>사진 추가</span>
             </div>
-            <button type="button" class="btn-remove-photo" id="removePhoto${i}" style="display: none;">
+            <button type="button" 
+                    class="btn-remove-photo" 
+                    id="btnRemove${i}" 
+                    style="display: none;">
                 <i class="fas fa-times"></i>
             </button>
         `;
         
         grid.appendChild(slot);
         
-        // Bind upload event
-        const input = slot.querySelector(`#photoInput${i}`);
-        const preview = slot.querySelector(`#photoPreview${i}`);
-        const removeBtn = slot.querySelector(`#removePhoto${i}`);
+        // Bind events
+        const input = document.getElementById(`photoInput${i}`);
+        const preview = document.getElementById(`photoPreview${i}`);
+        const btnRemove = document.getElementById(`btnRemove${i}`);
         
+        // Click to upload
         preview.addEventListener('click', () => input.click());
         
-        input.addEventListener('change', (e) => handlePhotoUpload(e, i));
-        removeBtn.addEventListener('click', () => removePhoto(i));
+        // Handle file selection
+        input.addEventListener('change', (e) => handlePhotoSelect(e, i));
+        
+        // Handle remove
+        btnRemove.addEventListener('click', () => removePhoto(i));
     }
+    
+    console.log('✅ Photo grid initialized');
 }
 
-// Handle photo upload
-async function handlePhotoUpload(e, index) {
-    const file = e.target.files[0];
+// ===================================
+// 📷 Handle Photo Selection
+// ===================================
+function handlePhotoSelect(event, index) {
+    const file = event.target.files[0];
     if (!file) return;
     
-    console.log('📤 Uploading photo:', file.name);
-    
-    // Validate file
+    // Validate file type
     if (!file.type.startsWith('image/')) {
-        showToast('이미지 파일만 업로드 가능합니다', 'error');
+        alert('이미지 파일만 업로드 가능합니다.');
         return;
     }
     
+    // Validate file size (5MB)
     if (file.size > 5 * 1024 * 1024) {
-        showToast('파일 크기는 5MB 이하여야 합니다', 'error');
+        alert('파일 크기는 5MB 이하여야 합니다.');
         return;
     }
     
-    // Show preview
+    // Create preview
     const reader = new FileReader();
     reader.onload = (e) => {
         const preview = document.getElementById(`photoPreview${index}`);
-        const removeBtn = document.getElementById(`removePhoto${index}`);
+        const btnRemove = document.getElementById(`btnRemove${index}`);
         
         preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
-        removeBtn.style.display = 'block';
+        preview.classList.add('has-image');
+        btnRemove.style.display = 'block';
         
-        selectedPhotos[index] = file;
+        // Store in state
+        selectedPhotos[index] = {
+            file: file,
+            preview: e.target.result,
+            index: index
+        };
+        
+        console.log(`✅ Photo ${index + 1} selected:`, file.name);
     };
+    
     reader.readAsDataURL(file);
 }
 
-// Remove photo
+// ===================================
+// 🗑️ Remove Photo
+// ===================================
 function removePhoto(index) {
     const preview = document.getElementById(`photoPreview${index}`);
-    const removeBtn = document.getElementById(`removePhoto${index}`);
+    const btnRemove = document.getElementById(`btnRemove${index}`);
     const input = document.getElementById(`photoInput${index}`);
     
     preview.innerHTML = `
-        <i class="fas fa-camera"></i>
-        <p>사진 업로드</p>
+        <i class="fas fa-plus"></i>
+        <span>사진 추가</span>
     `;
-    removeBtn.style.display = 'none';
+    preview.classList.remove('has-image');
+    btnRemove.style.display = 'none';
     input.value = '';
+    
     selectedPhotos[index] = null;
+    console.log(`🗑️ Photo ${index + 1} removed`);
 }
 
-// Load artist data from Supabase
-async function loadArtistData() {
-    console.log('📦 Loading artist data...');
+// ===================================
+// 🏷️ Vibe Tags Initialization
+// ===================================
+function initVibeTagsSelection() {
+    console.log('🏷️ Initializing vibe tags...');
     
-    if (!currentUser) return;
+    const tagsContainer = document.getElementById('vibeTagsSelection');
+    const chips = tagsContainer.querySelectorAll('.tag-chip');
+    
+    chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            const tag = chip.dataset.tag;
+            
+            if (chip.classList.contains('selected')) {
+                // Deselect
+                chip.classList.remove('selected');
+                selectedTags = selectedTags.filter(t => t !== tag);
+                console.log(`❌ Tag removed: ${tag}`);
+            } else {
+                // Select (max 5)
+                if (selectedTags.length >= MAX_TAGS) {
+                    alert(`최대 ${MAX_TAGS}개까지만 선택 가능합니다.`);
+                    return;
+                }
+                chip.classList.add('selected');
+                selectedTags.push(tag);
+                console.log(`✅ Tag selected: ${tag}`);
+            }
+            
+            console.log('Current tags:', selectedTags);
+        });
+    });
+    
+    console.log('✅ Vibe tags initialized');
+}
+
+// ===================================
+// 📥 Load Existing Profile Data
+// ===================================
+async function loadProfileData() {
+    console.log('📥 Loading profile data...');
     
     try {
-        // Load from dancers table
-        const { data: dancerData, error } = await window.supabase
+        // Query dancers table
+        const { data, error } = await window.supabase
             .from('dancers')
             .select('*')
             .eq('user_id', currentUser.id)
             .single();
         
-        if (error && error.code !== 'PGRST116') {
-            console.error('❌ Failed to load dancer data:', error);
-            return;
+        if (error) {
+            if (error.code === 'PGRST116') {
+                console.log('ℹ️ No profile found, creating new profile...');
+                return; // New profile
+            }
+            throw error;
         }
         
-        if (dancerData) {
-            console.log('✅ Dancer data loaded:', dancerData);
-            
-            // Fill form fields
-            document.getElementById('stageName').value = dancerData.stage_name || '';
-            document.getElementById('phone').value = dancerData.phone || '';
-            document.getElementById('region').value = dancerData.region || '';
-            document.getElementById('clothingSize').value = dancerData.clothing_size || '';
-            document.getElementById('shoeSize').value = dancerData.shoe_size || '';
-            document.getElementById('mainGenre').value = dancerData.main_genre || '';
-            document.getElementById('subGenre').value = dancerData.sub_genre || '';
-            
-            // Load photos
-            if (dancerData.photos && Array.isArray(dancerData.photos)) {
-                dancerData.photos.forEach((photoUrl, index) => {
-                    if (index < 5 && photoUrl) {
-                        const preview = document.getElementById(`photoPreview${index}`);
-                        const removeBtn = document.getElementById(`removePhoto${index}`);
-                        
-                        preview.innerHTML = `<img src="${photoUrl}" alt="Photo ${index + 1}">`;
-                        removeBtn.style.display = 'block';
-                    }
-                });
-            }
-            
-            // Load tags
-            if (dancerData.vibe_tags && Array.isArray(dancerData.vibe_tags)) {
-                selectedTags = dancerData.vibe_tags;
-                dancerData.vibe_tags.forEach(tag => {
-                    const chip = document.querySelector(`.tag-chip[data-tag="${tag}"]`);
-                    if (chip) chip.classList.add('active');
-                });
-            }
-        } else {
-            console.log('ℹ️ No dancer data found (new artist)');
+        console.log('✅ Profile data loaded:', data);
+        
+        // Fill form
+        document.getElementById('stageName').value = data.stage_name || '';
+        document.getElementById('phone').value = data.phone || '';
+        document.getElementById('region').value = data.region || '';
+        document.getElementById('clothingSize').value = data.clothing_size || '';
+        document.getElementById('shoeSize').value = data.shoe_size || '';
+        document.getElementById('mainGenre').value = data.main_genre || '';
+        document.getElementById('subGenre').value = data.sub_genre || '';
+        
+        // Load photos
+        if (data.photos && Array.isArray(data.photos)) {
+            data.photos.forEach((url, index) => {
+                if (index < MAX_PHOTOS && url) {
+                    loadExistingPhoto(url, index);
+                }
+            });
         }
+        
+        // Load tags
+        if (data.vibe_tags && Array.isArray(data.vibe_tags)) {
+            selectedTags = [...data.vibe_tags];
+            selectedTags.forEach(tag => {
+                const chip = document.querySelector(`.tag-chip[data-tag="${tag}"]`);
+                if (chip) chip.classList.add('selected');
+            });
+        }
+        
+        console.log('✅ Profile data populated');
         
     } catch (error) {
-        console.error('❌ Exception loading artist data:', error);
-        showToast('데이터를 불러오는데 실패했습니다', 'error');
+        console.error('❌ Error loading profile:', error);
+        showToast('프로필 로딩 중 오류가 발생했습니다.', 'error');
     }
 }
 
-// Bind events
-function bindEvents() {
-    // Tag selection
-    const tagChips = document.querySelectorAll('.tag-chip');
-    tagChips.forEach(chip => {
-        chip.addEventListener('click', () => {
-            const tag = chip.dataset.tag;
-            
-            if (chip.classList.contains('active')) {
-                chip.classList.remove('active');
-                selectedTags = selectedTags.filter(t => t !== tag);
-            } else {
-                if (selectedTags.length >= 5) {
-                    showToast('최대 5개까지 선택 가능합니다', 'warning');
-                    return;
-                }
-                chip.classList.add('active');
-                selectedTags.push(tag);
-            }
-        });
-    });
+// ===================================
+// 🖼️ Load Existing Photo from URL
+// ===================================
+function loadExistingPhoto(url, index) {
+    const preview = document.getElementById(`photoPreview${index}`);
+    const btnRemove = document.getElementById(`btnRemove${index}`);
     
-    // Form submit
-    document.getElementById('artistProfileForm').addEventListener('submit', handleSubmit);
+    preview.innerHTML = `<img src="${url}" alt="Profile Photo ${index + 1}">`;
+    preview.classList.add('has-image');
+    btnRemove.style.display = 'block';
+    
+    // Mark as existing (not new upload)
+    selectedPhotos[index] = {
+        url: url,
+        existing: true,
+        index: index
+    };
+    
+    console.log(`🖼️ Existing photo ${index + 1} loaded`);
 }
 
-// Handle form submit
-async function handleSubmit(e) {
-    e.preventDefault();
-    console.log('💾 Saving profile...');
+// ===================================
+// 💾 Form Submission
+// ===================================
+async function handleFormSubmit(event) {
+    event.preventDefault();
+    console.log('💾 Submitting profile...');
     
-    const submitBtn = document.getElementById('submitBtn');
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    
-    // Disable button
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 저장 중...';
-    loadingOverlay.style.display = 'flex';
+    // Show loading
+    document.getElementById('loadingOverlay').style.display = 'flex';
     
     try {
-        // Get form data
-        const stageName = document.getElementById('stageName').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const region = document.getElementById('region').value;
-        const clothingSize = document.getElementById('clothingSize').value;
-        const shoeSize = document.getElementById('shoeSize').value;
-        const mainGenre = document.getElementById('mainGenre').value;
-        const subGenre = document.getElementById('subGenre').value;
+        // 1. Collect form data
+        const formData = {
+            stage_name: document.getElementById('stageName').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
+            region: document.getElementById('region').value,
+            clothing_size: document.getElementById('clothingSize').value,
+            shoe_size: document.getElementById('shoeSize').value,
+            main_genre: document.getElementById('mainGenre').value,
+            sub_genre: document.getElementById('subGenre').value,
+            vibe_tags: selectedTags
+        };
         
-        // Upload photos
+        // Validate required fields
+        if (!formData.stage_name || !formData.phone || !formData.region || !formData.main_genre) {
+            throw new Error('필수 항목을 모두 입력해주세요.');
+        }
+        
+        console.log('📝 Form data:', formData);
+        
+        // 2. Upload new photos to Supabase Storage
         const photoUrls = [];
-        for (let i = 0; i < 5; i++) {
-            const file = selectedPhotos[i];
-            if (file) {
-                const fileExt = file.name.split('.').pop();
-                const fileName = `${currentUser.id}_photo${i + 1}_${Date.now()}.${fileExt}`;
-                const filePath = `dancer_photos/${fileName}`;
+        
+        for (let i = 0; i < MAX_PHOTOS; i++) {
+            const photo = selectedPhotos[i];
+            
+            if (!photo) {
+                photoUrls.push(null);
+                continue;
+            }
+            
+            if (photo.existing) {
+                // Keep existing URL
+                photoUrls.push(photo.url);
+                console.log(`✅ Keeping existing photo ${i + 1}`);
+            } else {
+                // Upload new photo
+                console.log(`📤 Uploading photo ${i + 1}...`);
+                const fileName = `${currentUser.id}_${Date.now()}_${i}.jpg`;
+                const filePath = `dancers/${fileName}`;
                 
                 const { data: uploadData, error: uploadError } = await window.supabase.storage
-                    .from('assets')
-                    .upload(filePath, file, {
+                    .from('profile-photos')
+                    .upload(filePath, photo.file, {
                         cacheControl: '3600',
                         upsert: false
                     });
                 
                 if (uploadError) {
-                    console.error('❌ Photo upload failed:', uploadError);
-                } else {
-                    const { data: urlData } = window.supabase.storage
-                        .from('assets')
-                        .getPublicUrl(filePath);
-                    
-                    photoUrls[i] = urlData.publicUrl;
-                    console.log('✅ Photo uploaded:', photoUrls[i]);
+                    console.error('❌ Upload error:', uploadError);
+                    throw uploadError;
                 }
-            } else {
-                // Keep existing photo if not changed
-                const preview = document.getElementById(`photoPreview${i}`);
-                const img = preview.querySelector('img');
-                if (img) {
-                    photoUrls[i] = img.src;
-                }
+                
+                // Get public URL
+                const { data: urlData } = window.supabase.storage
+                    .from('profile-photos')
+                    .getPublicUrl(filePath);
+                
+                photoUrls.push(urlData.publicUrl);
+                console.log(`✅ Photo ${i + 1} uploaded:`, urlData.publicUrl);
             }
         }
         
-        // Upsert dancers table
-        const { error: dancerError } = await window.supabase
+        formData.photos = photoUrls.filter(url => url !== null);
+        console.log('📸 Final photo URLs:', formData.photos);
+        
+        // 3. Save to database (upsert)
+        const { data: savedData, error: dbError } = await window.supabase
             .from('dancers')
             .upsert({
                 user_id: currentUser.id,
-                stage_name: stageName,
-                phone: phone,
-                region: region,
-                clothing_size: clothingSize,
-                shoe_size: shoeSize,
-                main_genre: mainGenre,
-                sub_genre: subGenre,
-                vibe_tags: selectedTags,
-                photos: photoUrls.filter(url => url)
+                ...formData,
+                updated_at: new Date().toISOString()
             }, {
                 onConflict: 'user_id'
-            });
+            })
+            .select()
+            .single();
         
-        if (dancerError) {
-            console.error('❌ Failed to update dancer:', dancerError);
-            showToast('프로필 저장에 실패했습니다', 'error');
-            return;
+        if (dbError) {
+            console.error('❌ Database error:', dbError);
+            throw dbError;
         }
         
-        console.log('✅ Dancer data updated');
+        console.log('✅ Profile saved:', savedData);
         
-        // Show success
-        showToast('프로필이 성공적으로 저장되었습니다! 🎉', 'success');
+        // Success!
+        showToast('프로필이 저장되었습니다!', 'success');
         
-        // Reload data
-        setTimeout(async () => {
-            await loadArtistData();
+        // Reload data after delay
+        setTimeout(() => {
+            loadProfileData();
         }, 1500);
         
     } catch (error) {
-        console.error('❌ Exception saving profile:', error);
-        showToast('저장 중 오류가 발생했습니다', 'error');
+        console.error('❌ Error saving profile:', error);
+        showToast(error.message || '저장 중 오류가 발생했습니다.', 'error');
     } finally {
-        // Restore button
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fas fa-save"></i> 저장하기';
-        loadingOverlay.style.display = 'none';
+        // Hide loading
+        document.getElementById('loadingOverlay').style.display = 'none';
     }
 }
 
-// Show toast notification
+// ===================================
+// 🍞 Toast Notification
+// ===================================
 function showToast(message, type = 'info') {
     const container = document.getElementById('toastContainer');
     const toast = document.createElement('div');
     
-    const colors = {
-        success: '#10b981',
-        error: '#ef4444',
-        info: '#3b82f6',
-        warning: '#f59e0b'
-    };
-    
     const icons = {
         success: 'fa-check-circle',
         error: 'fa-exclamation-circle',
-        info: 'fa-info-circle',
-        warning: 'fa-exclamation-triangle'
+        info: 'fa-info-circle'
+    };
+    
+    const colors = {
+        success: '#10b981',
+        error: '#ef4444',
+        info: '#3b82f6'
     };
     
     toast.style.cssText = `
-        background: white;
-        border-left: 4px solid ${colors[type]};
-        padding: 16px 20px;
+        background: ${colors[type]};
+        color: white;
+        padding: 16px 24px;
         border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         margin-bottom: 10px;
         display: flex;
         align-items: center;
         gap: 12px;
-        min-width: 300px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         animation: slideIn 0.3s ease;
     `;
     
     toast.innerHTML = `
-        <i class="fas ${icons[type]}" style="color: ${colors[type]}; font-size: 20px;"></i>
-        <span style="color: #1a1a1a; font-weight: 500;">${message}</span>
+        <i class="fas ${icons[type]}"></i>
+        <span>${message}</span>
     `;
     
     container.appendChild(toast);
     
+    // Auto remove
     setTimeout(() => {
         toast.style.animation = 'slideOut 0.3s ease';
-        setTimeout(() => {
-            container.removeChild(toast);
-        }, 300);
+        setTimeout(() => toast.remove(), 300);
     }, 3000);
 }
 
-// Add CSS animations
+// ===================================
+// 🎬 Initialize on Page Load
+// ===================================
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log('🎬 Artist Profile Page Loaded');
+    
+    // 1. Check authentication
+    const isAuthenticated = await checkAuth();
+    if (!isAuthenticated) return;
+    
+    // 2. Initialize UI
+    initPhotoGrid();
+    initVibeTagsSelection();
+    
+    // 3. Load existing data
+    await loadProfileData();
+    
+    // 4. Bind form submit
+    document.getElementById('artistProfileForm').addEventListener('submit', handleFormSubmit);
+    
+    console.log('✅ Artist Profile Editor Ready!');
+});
+
+// Add animation CSS
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideIn {
         from {
-            transform: translateX(100%);
+            transform: translateX(400px);
             opacity: 0;
         }
         to {
@@ -395,49 +481,60 @@ style.textContent = `
             opacity: 1;
         }
         to {
-            transform: translateX(100%);
+            transform: translateX(400px);
             opacity: 0;
         }
     }
     
     .photo-slot {
         position: relative;
-        width: 100%;
-        padding-bottom: 100%;
-        background: #f9fafb;
-        border: 2px dashed #e5e7eb;
-        border-radius: 15px;
+        aspect-ratio: 1;
+        border: 2px dashed rgba(139, 92, 246, 0.5);
+        border-radius: 12px;
         overflow: hidden;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .photo-slot:hover {
+        border-color: rgba(139, 92, 246, 1);
+        transform: scale(1.02);
     }
     
     .photo-preview {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        width: 100%;
+        height: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        background: rgba(0, 0, 0, 0.05);
         cursor: pointer;
-        transition: all 0.3s;
+        transition: background 0.3s ease;
     }
     
     .photo-preview:hover {
-        background: rgba(157, 78, 221, 0.05);
-        border-color: #9d4edd;
+        background: rgba(139, 92, 246, 0.1);
     }
     
     .photo-preview i {
-        font-size: 48px;
-        color: #9ca3af;
-        margin-bottom: 10px;
+        font-size: 32px;
+        color: rgba(139, 92, 246, 0.5);
+        margin-bottom: 8px;
     }
     
-    .photo-preview p {
+    .photo-preview span {
         font-size: 14px;
-        color: #6b7280;
+        color: #666;
+    }
+    
+    .photo-preview.has-image {
+        background: none;
+        cursor: default;
+    }
+    
+    .photo-preview.has-image:hover {
+        background: none;
     }
     
     .photo-preview img {
@@ -448,39 +545,65 @@ style.textContent = `
     
     .btn-remove-photo {
         position: absolute;
-        top: 10px;
-        right: 10px;
-        background: rgba(239, 68, 68, 0.9);
-        border: none;
-        color: white;
+        top: 8px;
+        right: 8px;
         width: 32px;
         height: 32px;
         border-radius: 50%;
+        background: rgba(239, 68, 68, 0.9);
+        color: white;
+        border: none;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s;
         z-index: 10;
+        transition: all 0.3s ease;
     }
     
     .btn-remove-photo:hover {
-        background: #dc2626;
+        background: rgba(239, 68, 68, 1);
         transform: scale(1.1);
     }
     
     .photo-upload-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 16px;
+        margin-top: 16px;
     }
     
-    .tag-chip.active {
-        background: linear-gradient(135deg, #9d4edd, #e91e84);
+    .tags-selection {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 16px;
+    }
+    
+    .tag-chip {
+        padding: 10px 20px;
+        border: 2px solid rgba(139, 92, 246, 0.3);
+        border-radius: 25px;
+        background: rgba(139, 92, 246, 0.05);
+        color: #8b5cf6;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+    
+    .tag-chip:hover {
+        border-color: rgba(139, 92, 246, 0.6);
+        background: rgba(139, 92, 246, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    .tag-chip.selected {
+        border-color: #8b5cf6;
+        background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
         color: white;
-        border-color: transparent;
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
     }
 `;
 document.head.appendChild(style);
 
-console.log('✅ Artist Profile JS loaded');
+console.log('✅ Artist Profile JS Loaded');
