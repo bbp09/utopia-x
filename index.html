@@ -1182,17 +1182,11 @@
                 const modalType = card.getAttribute('data-modal');
                 console.log(`🎯 Card ${index + 1}: ${modalType}`);
                 
-                // Add click event to card
-                card.addEventListener('click', function(e) {
-                    console.log('🖱️ Card clicked:', modalType);
-                    handleCTAClick(modalType);
-                });
-                
-                // Add click event to button inside card
+                // ONLY add click event to button inside card (NOT the card itself)
                 const button = card.querySelector('button');
                 if (button) {
                     button.addEventListener('click', function(e) {
-                        e.stopPropagation();
+                        e.stopPropagation(); // Prevent event bubbling
                         console.log('🔘 Button clicked:', modalType);
                         handleCTAClick(modalType);
                     });
