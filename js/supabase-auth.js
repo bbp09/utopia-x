@@ -256,10 +256,13 @@ async function signIn(email, password) {
         console.log('✅ Sign in successful');
         showToast('로그인 성공!', 'success');
         
-        // Redirect based on role
+        // Stay on home page - just refresh
+        if (typeof closeModal === 'function') {
+            closeModal('loginModal');
+        }
         setTimeout(() => {
-            redirectToDashboard();
-        }, 1000);
+            location.reload();
+        }, 500);
         
         return { success: true, data };
     } catch (error) {

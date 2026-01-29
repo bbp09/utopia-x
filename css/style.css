@@ -126,6 +126,7 @@ button {
 .nav-links a {
     font-weight: 500;
     font-size: 14px;
+    color: #FFFFFF; /* 흰색으로 변경 - 가독성 확보 */
     transition: var(--transition-base);
     position: relative;
 }

@@ -579,7 +579,10 @@
                 
                 <div class="user-type-cards" style="display: grid; gap: 20px;">
                     <div class="user-type-card" data-type="client" onclick="selectUserType('client')" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(157, 78, 221, 0.1)); border: 2px solid var(--border-color); border-radius: 16px; padding: 30px; cursor: pointer; transition: all 0.3s ease;">
-                        <div style="font-size: 48px; margin-bottom: 15px;">🎬</div>
+                        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" style="margin-bottom: 15px;">
+                            <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19Z" fill="#6366F1"/>
+                            <path d="M7 10H9V17H7V10ZM11 7H13V17H11V7ZM15 13H17V17H15V13Z" fill="#9D4EDD"/>
+                        </svg>
                         <h4 style="font-size: 20px; font-weight: 700; margin-bottom: 10px; color: var(--text-primary);">클라이언트 (섭외 요청)</h4>
                         <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 15px;">댄서를 섭외하고 싶으신가요?</p>
                         <ul style="text-align: left; font-size: 13px; color: var(--text-secondary); line-height: 1.8;">
@@ -590,7 +593,10 @@
                     </div>
                     
                     <div class="user-type-card" data-type="artist" onclick="selectUserType('artist')" style="background: linear-gradient(135deg, rgba(233, 30, 132, 0.1), rgba(255, 107, 107, 0.1)); border: 2px solid var(--border-color); border-radius: 16px; padding: 30px; cursor: pointer; transition: all 0.3s ease;">
-                        <div style="font-size: 48px; margin-bottom: 15px;">💃</div>
+                        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" style="margin-bottom: 15px;">
+                            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" fill="#E91E84"/>
+                            <path d="M12 6C8.69 6 6 8.69 6 12C6 15.31 8.69 18 12 18C15.31 18 18 15.31 18 12C18 8.69 15.31 6 12 6ZM12 16C9.79 16 8 14.21 8 12C8 9.79 9.79 8 12 8C14.21 8 16 9.79 16 12C16 14.21 14.21 16 12 16Z" fill="#FF6B6B"/>
+                        </svg>
                         <h4 style="font-size: 20px; font-weight: 700; margin-bottom: 10px; color: var(--text-primary);">아티스트 (활동 등록)</h4>
                         <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 15px;">댄서로 활동하고 싶으신가요?</p>
                         <ul style="text-align: left; font-size: 13px; color: var(--text-secondary); line-height: 1.8;">
@@ -661,13 +667,16 @@
                         >
                     </div>
                     <div class="form-group">
-                        <label for="clientPhone">연락처 *</label>
+                        <label for="clientPhone">연락처 * (숫자만 입력)</label>
                         <input 
                             type="tel" 
                             id="clientPhone" 
                             name="phone" 
-                            placeholder="010-1234-5678"
+                            placeholder="01012345678"
+                            pattern="[0-9]{10,11}"
+                            maxlength="11"
                             required
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                         >
                     </div>
                 </div>
@@ -685,13 +694,16 @@
                         >
                     </div>
                     <div class="form-group">
-                        <label for="artistPhone">연락처 *</label>
+                        <label for="artistPhone">연락처 * (숫자만 입력)</label>
                         <input 
                             type="tel" 
                             id="artistPhone" 
                             name="phone" 
-                            placeholder="010-1234-5678"
+                            placeholder="01012345678"
+                            pattern="[0-9]{10,11}"
+                            maxlength="11"
                             required
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                         >
                     </div>
                     <p style="font-size: 13px; color: var(--text-secondary); margin-top: 10px;">
@@ -1528,11 +1540,17 @@
             const modalSubtitle = document.getElementById('authModalSubtitle');
             
             if (tab === 'signin') {
-                // Switch to Sign In
+                // Switch to Sign In - ALWAYS show login form
                 if (signInTab) signInTab.classList.add('active');
                 if (signUpTab) signUpTab.classList.remove('active');
                 if (signInForm) signInForm.classList.add('active');
                 if (signUpForm) signUpForm.classList.remove('active');
+                
+                // CRITICAL: Hide signup steps
+                const step1 = document.getElementById('signUpStep1');
+                const step2 = document.getElementById('signUpStep2');
+                if (step1) step1.style.display = 'none';
+                if (step2) step2.style.display = 'none';
                 
                 if (modalTitle) modalTitle.textContent = 'UTOPIA X 로그인';
                 if (modalSubtitle) modalSubtitle.textContent = '이메일로 간편하게 시작하세요';

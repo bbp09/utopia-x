@@ -11,19 +11,53 @@ const state = {
     currentUser: null // { email, credits, usedDancers: [] }
 };
 
+// ===== Check User Session (PRIORITY) =====
+async function checkUserSession() {
+    console.log('🔍 Checking user session...');
+    
+    // CRITICAL: Update UI immediately using sessionStorage (synchronous, fast)
+    const userEmail = sessionStorage.getItem('userEmail');
+    const userEmailDisplay = document.getElementById('userEmailDisplay');
+    
+    if (userEmail && userEmail !== 'Login') {
+        if (userEmailDisplay) {
+            userEmailDisplay.textContent = userEmail;
+            console.log('✅ UI updated immediately:', userEmail);
+        }
+    } else {
+        if (userEmailDisplay) {
+            userEmailDisplay.textContent = 'Login';
+        }
+    }
+    
+    // Then check Supabase auth (async, slower)
+    if (typeof window.supabase !== 'undefined') {
+        try {
+            const { data: { user } } = await window.supabase.auth.getUser();
+            if (user) {
+                state.currentUser = user;
+                console.log('✅ Supabase user verified:', user.email);
+            }
+        } catch (error) {
+            console.warn('⚠️ Error checking Supabase session:', error);
+        }
+    }
+}
+
 // ===== Initialize App =====
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('🚀 UTOPIA X - Starting initialization...');
     
     try {
+        // CRITICAL: Check user session FIRST (prevents FOUC)
+        console.log('✅ Checking user session (PRIORITY)...');
+        await checkUserSession();
+        
         // Initialize authentication system
         if (typeof initAuth === 'function') {
             console.log('✅ Initializing auth...');
             await initAuth();
         }
-        
-        console.log('✅ Checking user session...');
-        await checkUserSession();
         
         console.log('✅ Initializing navigation...');
         initNavigation();
@@ -536,10 +570,25 @@ async function loadDancers() {
         state.dancers = data.data || [];
         console.log('Loaded dancers:', state.dancers.length);
     } catch (error) {
-        console.error('Error loading dancers:', error);
-        showToast('댄서 데이터를 불러오는데 실패했습니다.', 'error');
+        console.warn('⚠️ Error loading dancers (silent):', error);
+        // 조용히 처리: 에러 토스트 표시 안 함
+        state.dancers = []; // 빈 배열로 초기화
     } finally {
         state.isLoading = false;
+    }
+}
+
+// ===== Load Featured Dancers =====
+async function loadFeaturedDancers() {
+    try {
+        const response = await fetch('tables/featured-dancers?limit=20');
+        const data = await response.json();
+        state.featuredDancers = data.data || [];
+        console.log('Loaded featured dancers:', state.featuredDancers.length);
+    } catch (error) {
+        console.warn('⚠️ Error loading featured dancers (silent):', error);
+        // 조용히 처리: 에러 토스트 표시 안 함
+        state.featuredDancers = []; // 빈 배열로 초기화
     }
 }
 
@@ -1244,23 +1293,36 @@ function initSignUpForm() {
             return;
         }
         
-        // Collect profile data based on user type
+        // Collect profile data based on user type (필수 필드만)
         let profileData = {};
         
         if (userType === 'client') {
+            const nameField = document.getElementById('clientName');
+            const phoneField = document.getElementById('clientPhone');
+            
+            if (!nameField || !phoneField) {
+                showToast('필수 정보를 입력해주세요', 'error');
+                return;
+            }
+            
             profileData = {
-                name: document.getElementById('clientName').value,
-                phone: document.getElementById('clientPhone').value,
-                company: document.getElementById('clientCompany').value || '',
-                position: document.getElementById('clientPosition').value || ''
+                name: nameField.value.trim(),
+                phone: phoneField.value.trim(),
+                role: 'client'
             };
         } else if (userType === 'artist') {
+            const stageNameField = document.getElementById('artistStageName');
+            const phoneField = document.getElementById('artistPhone');
+            
+            if (!stageNameField || !phoneField) {
+                showToast('필수 정보를 입력해주세요', 'error');
+                return;
+            }
+            
             profileData = {
-                stageName: document.getElementById('artistStageName').value,
-                realName: document.getElementById('artistRealName').value,
-                phone: document.getElementById('artistPhone').value,
-                genre: document.getElementById('artistGenre').value || '',
-                experience: document.getElementById('artistExperience').value || ''
+                stageName: stageNameField.value.trim(),
+                phone: phoneField.value.trim(),
+                role: 'artist'
             };
         }
         
@@ -2013,6 +2075,51 @@ function initUserMenu() {
         console.log('✅ Unlocked Dancers button handler attached');
     }
     
+    // My Profile button
+    const btnMyProfile = document.getElementById('btnMyProfile');
+    if (btnMyProfile) {
+        btnMyProfile.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log('👤 My Profile clicked!');
+            userMenuDropdown?.classList.remove('show');
+            
+            showToast('내 정보 페이지는 준비 중입니다', 'info');
+            // TODO: Open profile modal or navigate to profile page
+            // openModal('profileModal');
+        });
+        console.log('✅ My Profile button handler attached');
+    }
+    
+    // Purchase History button
+    const btnPurchaseHistory = document.getElementById('btnPurchaseHistory');
+    if (btnPurchaseHistory) {
+        btnPurchaseHistory.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log('📜 Purchase History clicked!');
+            userMenuDropdown?.classList.remove('show');
+            
+            showToast('구매 내역 페이지는 준비 중입니다', 'info');
+            // TODO: Open purchase history modal
+            // openModal('purchaseHistoryModal');
+        });
+        console.log('✅ Purchase History button handler attached');
+    }
+    
+    // Unlocked Dancers button
+    const btnUnlockedDancers = document.getElementById('btnUnlockedDancers');
+    if (btnUnlockedDancers) {
+        btnUnlockedDancers.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log('🔓 Unlocked Dancers clicked!');
+            userMenuDropdown?.classList.remove('show');
+            
+            showToast('잠금 해제 댄서 페이지는 준비 중입니다', 'info');
+            // TODO: Open unlocked dancers modal
+            // openModal('unlockedDancersModal');
+        });
+        console.log('✅ Unlocked Dancers button handler attached');
+    }
+    
     // Credit Charge button
     const btnCreditCharge = document.getElementById('btnCreditCharge');
     if (btnCreditCharge) {
@@ -2022,7 +2129,7 @@ function initUserMenu() {
             userMenuDropdown?.classList.remove('show');
             
             // Open credit charge modal
-            openModal('creditChargeModal');
+            openModal('creditCharge');
         });
         console.log('✅ Credit Charge button handler attached');
     }
