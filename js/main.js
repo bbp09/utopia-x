@@ -1450,12 +1450,32 @@ function initUserMenu() {
             e.stopPropagation();
             console.log('🖱️ User menu button clicked!');
             
-            const isShown = userMenuDropdown?.classList.contains('show');
-            console.log('  - Current state:', isShown ? 'shown' : 'hidden');
-            
             if (userMenuDropdown) {
+                const isShown = userMenuDropdown.classList.contains('show');
+                console.log('  - Current state:', isShown ? 'shown' : 'hidden');
+                console.log('  - Current classes:', userMenuDropdown.className);
+                
                 userMenuDropdown.classList.toggle('show');
+                
                 console.log('  - New state:', userMenuDropdown.classList.contains('show') ? 'shown' : 'hidden');
+                console.log('  - New classes:', userMenuDropdown.className);
+                
+                // Force style update for debugging
+                if (userMenuDropdown.classList.contains('show')) {
+                    userMenuDropdown.style.display = 'block';
+                    userMenuDropdown.style.opacity = '1';
+                    userMenuDropdown.style.visibility = 'visible';
+                    userMenuDropdown.style.transform = 'translateY(0)';
+                    console.log('✅ Forced dropdown to show');
+                } else {
+                    userMenuDropdown.style.display = '';
+                    userMenuDropdown.style.opacity = '';
+                    userMenuDropdown.style.visibility = '';
+                    userMenuDropdown.style.transform = '';
+                    console.log('✅ Reset dropdown styles');
+                }
+            } else {
+                console.error('❌ userMenuDropdown is null!');
             }
         });
         console.log('✅ User menu button click handler attached');
