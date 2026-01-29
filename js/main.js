@@ -1872,7 +1872,7 @@ function switchAuthTab(tab) {
 
 // User type selection for signup
 function selectUserType(type) {
-    console.log('🎯 Selected user type:', type);
+    console.log('🎯 selectUserType called with:', type);
     
     const step1 = document.getElementById('signUpStep1');
     const step2 = document.getElementById('signUpStep2');
@@ -1882,9 +1882,27 @@ function selectUserType(type) {
     const step2Title = document.getElementById('step2Title');
     const step2Subtitle = document.getElementById('step2Subtitle');
     
+    // Debug: Log element status
+    console.log('Step1:', step1 ? 'found' : 'NOT FOUND');
+    console.log('Step2:', step2 ? 'found' : 'NOT FOUND');
+    console.log('ClientFields:', clientFields ? 'found' : 'NOT FOUND');
+    console.log('ArtistFields:', artistFields ? 'found' : 'NOT FOUND');
+    
+    // Validate required elements
+    if (!step1 || !step2) {
+        console.error('❌ Required signup steps not found!');
+        return;
+    }
+    
+    if (!clientFields || !artistFields) {
+        console.error('❌ Required field containers not found!');
+        return;
+    }
+    
     // Update hidden field
     if (selectedUserType) {
         selectedUserType.value = type;
+        console.log('✅ Set selectedUserType to:', type);
     }
     
     // Show/hide appropriate fields
@@ -1919,19 +1937,24 @@ function selectUserType(type) {
     }
     
     // Switch to step 2
+    console.log('🔄 Switching to Step 2...');
     step1.style.display = 'none';
     step2.style.display = 'block';
+    console.log('✅ Step 1 hidden, Step 2 visible');
     
     // Add visual feedback to selected card
     document.querySelectorAll('.user-type-card').forEach(card => {
         if (card.dataset.type === type) {
             card.style.borderColor = 'var(--primary-purple)';
             card.style.transform = 'scale(1.02)';
+            console.log('✅ Highlighted card:', type);
         } else {
             card.style.borderColor = 'var(--border-color)';
             card.style.transform = 'scale(1)';
         }
     });
+    
+    console.log('✅ User type selection complete');
 }
 
 // Back to step 1

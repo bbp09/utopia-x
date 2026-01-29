@@ -126,13 +126,13 @@ button {
 .nav-links a {
     font-weight: 500;
     font-size: 14px;
-    color: #FFFFFF; /* 흰색으로 변경 - 가독성 확보 */
+    color: #333333; /* 기본: 진한 검정색 - 흰 배경에서 가독성 확보 */
     transition: var(--transition-base);
     position: relative;
 }
 
 .nav-links a:not(.btn):hover {
-    color: var(--primary-purple);
+    color: var(--primary-purple); /* 호버: 네온 퍼플 유지 */
 }
 
 .nav-links a:not(.btn)::after {
@@ -217,13 +217,16 @@ button {
     visibility: hidden;
     transform: translateY(-10px);
     transition: all 0.3s ease;
-    z-index: 1001;
+    z-index: 9999; /* 매우 높은 z-index */
+    pointer-events: none; /* 숨겨졌을 때 클릭 방지 */
 }
 
 .user-menu-dropdown.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important; /* 표시될 때 클릭 가능 */
+    display: block !important;
 }
 
 .user-menu-header {

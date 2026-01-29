@@ -318,12 +318,14 @@ function fallbackSignIn(email, password) {
     showToast('로그인 성공! (데모 모드)', 'success');
     
     // Close modal
-    closeAllModals();
+    if (typeof closeModal === 'function') {
+        closeModal('loginModal');
+    }
     
-    // Redirect to dashboard
+    // Stay on home page - just refresh
     setTimeout(() => {
-        redirectToDashboard();
-    }, 1000);
+        location.reload();
+    }, 500);
     
     return { success: true };
 }
