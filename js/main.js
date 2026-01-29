@@ -217,11 +217,11 @@ const DancerModule = {
     
     // Render premium dancers to grid
     renderPremiumDancers(dancers) {
-        console.log('🎨 Rendering premium dancers...', dancers.length, 'cards');
+        console.log('✅ 렌더링 시작:', dancers.length, '명');
         
-        const grid = document.getElementById('featuredDancersGrid');
+        const grid = document.getElementById('featured-dancers-grid');
         if (!grid) {
-            console.error('❌ featuredDancersGrid element not found in DOM');
+            console.error('❌ 컨테이너를 찾을 수 없음: #featured-dancers-grid');
             console.error('❌ Available IDs:', Array.from(document.querySelectorAll('[id]')).map(el => el.id));
             return;
         }
@@ -275,8 +275,11 @@ const DancerModule = {
     
     // Render empty state
     renderEmptyState() {
-        const grid = document.getElementById('featuredDancersGrid');
-        if (!grid) return;
+        const grid = document.getElementById('featured-dancers-grid');
+        if (!grid) {
+            console.error('❌ 컨테이너를 찾을 수 없음: #featured-dancers-grid');
+            return;
+        }
         
         grid.innerHTML = `
             <div class="empty-state">
@@ -285,6 +288,7 @@ const DancerModule = {
                 <p>곧 멋진 댄서들을 만나보실 수 있습니다!</p>
             </div>
         `;
+        console.log('📭 Empty state rendered');
     },
     
     // Render fallback dancers (for demo)
