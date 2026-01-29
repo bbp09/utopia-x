@@ -1801,6 +1801,9 @@ input[type="range"]::-moz-range-thumb:hover {
     z-index: 10000;
     overflow-y: auto;
     padding: 40px 20px;
+    /* ✅ FIX: Center modal content */
+    justify-content: center;
+    align-items: center;
 }
 
 .modal.active {

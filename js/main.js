@@ -265,15 +265,30 @@ const UIModule = {
         const signInForm = document.getElementById('signInForm');
         const signUpStep1 = document.getElementById('signUpStep1');
         const signUpStep2 = document.getElementById('signUpStep2');
+        const authModalTitle = document.getElementById('authModalTitle');
+        const authModalSubtitle = document.getElementById('authModalSubtitle');
         
         // Activate Sign In tab
         if (signInTab) signInTab.classList.add('active');
         if (signUpTab) signUpTab.classList.remove('active');
         
+        // Update title
+        if (authModalTitle) authModalTitle.textContent = 'UTOPIA X 로그인';
+        if (authModalSubtitle) authModalSubtitle.textContent = '이메일로 간편하게 시작하세요';
+        
         // Show Sign In form only
-        if (signInForm) signInForm.style.display = 'block';
-        if (signUpStep1) signUpStep1.style.display = 'none';
-        if (signUpStep2) signUpStep2.style.display = 'none';
+        if (signInForm) {
+            signInForm.style.display = 'block';
+            signInForm.classList.add('active');
+        }
+        if (signUpStep1) {
+            signUpStep1.style.display = 'none';
+            signUpStep1.classList.remove('active');
+        }
+        if (signUpStep2) {
+            signUpStep2.style.display = 'none';
+            signUpStep2.classList.remove('active');
+        }
         
         console.log('✅ Login modal initialized to Sign In tab');
     },
@@ -287,18 +302,30 @@ const UIModule = {
         const signInForm = document.getElementById('signInForm');
         const signUpStep1 = document.getElementById('signUpStep1');
         const signUpStep2 = document.getElementById('signUpStep2');
+        const authModalTitle = document.getElementById('authModalTitle');
+        const authModalSubtitle = document.getElementById('authModalSubtitle');
         
         // Activate Sign Up tab
         if (signInTab) signInTab.classList.remove('active');
         if (signUpTab) signUpTab.classList.add('active');
         
-        // Show Step 1 (type selection) only
-        if (signInForm) signInForm.style.display = 'none';
-        if (signUpStep1) signUpStep1.style.display = 'block';
-        if (signUpStep2) signUpStep2.style.display = 'none';
+        // Update title
+        if (authModalTitle) authModalTitle.textContent = '회원가입';
+        if (authModalSubtitle) authModalSubtitle.textContent = '맞춤형 서비스를 위한 유형 선택';
         
-        // Open the modal
-        this.openModal('loginModal');
+        // Show Step 1 (type selection) only
+        if (signInForm) {
+            signInForm.style.display = 'none';
+            signInForm.classList.remove('active');
+        }
+        if (signUpStep1) {
+            signUpStep1.style.display = 'block';
+            signUpStep1.classList.add('active');
+        }
+        if (signUpStep2) {
+            signUpStep2.style.display = 'none';
+            signUpStep2.classList.remove('active');
+        }
         
         console.log('✅ Signup modal opened with type selection');
     },
@@ -495,11 +522,17 @@ const EventModule = {
             console.log('✅ Sign In form event bound');
         }
         
-        // Auth tab switching
+        // Auth tab switching - Remove inline onclick and use proper event listener
         const authTabs = document.querySelectorAll('.auth-tab');
         authTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
+            // Remove inline onclick handler
+            tab.removeAttribute('onclick');
+            
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
                 const tabType = tab.getAttribute('data-tab');
+                
+                console.log('🔄 Auth tab clicked:', tabType);
                 
                 if (tabType === 'signin') {
                     UIModule.initLoginModal();
@@ -509,7 +542,7 @@ const EventModule = {
             });
         });
         
-        console.log('✅ Auth tab events bound');
+        console.log('✅ Auth tab events bound to', authTabs.length, 'tabs');
         
         // ✅ CRITICAL FIX #1: Bind user type selection buttons
         const userTypeCards = document.querySelectorAll('.user-type-card');
