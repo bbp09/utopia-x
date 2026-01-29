@@ -613,7 +613,7 @@ const UIModule = {
     },
     
     // Toggle dropdown
-    toggleDropdown() {
+    async toggleDropdown() {
         if (!this.elements.userMenuDropdown) return;
         
         const isOpen = this.elements.userMenuDropdown.classList.contains('show');
@@ -624,6 +624,55 @@ const UIModule = {
             this.elements.userMenuDropdown.classList.add('show');
             AppState.dropdownOpen = true;
             console.log('✅ Dropdown opened');
+            
+            // Load credits when dropdown opens
+            await this.loadUserCredits();
+        }
+    },
+    
+    // Load user credits from Supabase
+    async loadUserCredits() {
+        console.log('💰 Loading user credits...');
+        
+        const creditDisplay = document.getElementById('creditDisplay');
+        if (!creditDisplay) return;
+        
+        try {
+            // Get current user
+            if (typeof window.supabase === 'undefined') {
+                console.error('❌ Supabase not available');
+                return;
+            }
+            
+            const { data: { user }, error: authError } = await window.supabase.auth.getUser();
+            
+            if (authError || !user) {
+                console.error('❌ Failed to get current user:', authError);
+                return;
+            }
+            
+            // Query users table for credits
+            const { data: userData, error: dbError } = await window.supabase
+                .from('users')
+                .select('credits')
+                .eq('id', user.id)
+                .single();
+            
+            if (dbError) {
+                console.error('❌ Failed to fetch credits:', dbError);
+                creditDisplay.textContent = '0';
+                return;
+            }
+            
+            const credits = userData?.credits || 0;
+            creditDisplay.textContent = credits;
+            AppState.credits = credits;
+            
+            console.log('✅ Credits loaded:', credits);
+            
+        } catch (error) {
+            console.error('❌ Exception loading credits:', error);
+            creditDisplay.textContent = '0';
         }
     },
     
@@ -1035,27 +1084,9 @@ const EventModule = {
             btnMyProfile.addEventListener('click', (e) => {
                 e.preventDefault();
                 UIModule.closeAllDropdowns();
-                UIModule.showToast('내 정보 페이지는 준비 중입니다', 'info');
-            });
-        }
-        
-        // Purchase History button
-        const btnPurchaseHistory = document.getElementById('btnPurchaseHistory');
-        if (btnPurchaseHistory) {
-            btnPurchaseHistory.addEventListener('click', (e) => {
-                e.preventDefault();
-                UIModule.closeAllDropdowns();
-                UIModule.showToast('구매 내역 페이지는 준비 중입니다', 'info');
-            });
-        }
-        
-        // Unlocked Dancers button
-        const btnUnlockedDancers = document.getElementById('btnUnlockedDancers');
-        if (btnUnlockedDancers) {
-            btnUnlockedDancers.addEventListener('click', (e) => {
-                e.preventDefault();
-                UIModule.closeAllDropdowns();
-                UIModule.showToast('잠금 해제 댄서 페이지는 준비 중입니다', 'info');
+                
+                // Redirect to client profile page
+                window.location.href = 'client-profile.html';
             });
         }
         

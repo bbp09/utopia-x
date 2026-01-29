@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTOPIA X - 내 정보</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    
+    <!-- Supabase JS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Supabase Direct Initialization -->
+    <script>
+        const SUPABASE_URL = 'https://idfpmynjfkvtcsqcjgnm.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlkZnBteW5qZmt2dGNzcWNqZ25tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2NzQ2NTgsImV4cCI6MjA4NTI1MDY1OH0.KFmClnG-XuW818uUIMlPW0yQ7UswXvIWh-ipv6z5p4I';
+
+        if (typeof supabase !== 'undefined') {
+            window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log("✅ Supabase Connected!");
+        } else {
+            console.error("❌ Supabase library not loaded!");
+        }
+    </script>
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/artist-register.css">
+</head>
+<body class="artist-register-page">
+    <!-- Header -->
+    <header class="register-header">
+        <div class="header-container">
+            <div class="header-left">
+                <a href="index.html" class="logo-link">
+                    <img src="https://idfpmynjfkvtcsqcjgnm.supabase.co/storage/v1/object/public/assets/UtopiaX_logo_white_centered_512.png" alt="UTOPIA X Logo" class="logo-img">
+                </a>
+            </div>
+            <div class="header-center">
+                <h1 class="header-title">
+                    <i class="fas fa-user-circle"></i>
+                    내 정보
+                </h1>
+                <p class="header-subtitle">개인 정보 및 회사 정보를 관리하세요</p>
+            </div>
+            <div class="header-right">
+                <a href="client-dashboard.html" class="btn-back">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>대시보드</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="register-main">
+        <div class="container">
+            <form id="profileForm" class="register-form">
+                
+                <!-- Section: Personal Information -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <i class="fas fa-user"></i>
+                        <h2>개인 정보</h2>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">이름 *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">연락처 *</label>
+                            <input type="tel" id="phone" name="phone" pattern="[0-9]{10,11}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">이메일 (읽기 전용)</label>
+                            <input type="email" id="email" name="email" readonly style="background: #f3f4f6; cursor: not-allowed;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Company Information -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <i class="fas fa-building"></i>
+                        <h2>회사/단체 정보</h2>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="companyName">회사/팀 명</label>
+                            <input type="text" id="companyName" name="companyName" placeholder="예: UTOPIA Entertainment">
+                        </div>
+                        <div class="form-group">
+                            <label for="websiteUrl">웹사이트/SNS 링크</label>
+                            <input type="url" id="websiteUrl" name="websiteUrl" placeholder="https://www.example.com">
+                        </div>
+                    </div>
+                    
+                    <!-- Logo Upload -->
+                    <div class="form-group">
+                        <label for="logoUpload">
+                            <i class="fas fa-image"></i>
+                            회사 로고 업로드
+                        </label>
+                        <div class="logo-upload-container">
+                            <div class="logo-preview" id="logoPreview">
+                                <img id="logoPreviewImg" src="" alt="로고 미리보기" style="display: none;">
+                                <div id="logoPlaceholder" class="logo-placeholder">
+                                    <i class="fas fa-building"></i>
+                                    <p>로고를 업로드해주세요</p>
+                                </div>
+                            </div>
+                            <input type="file" id="logoUpload" accept="image/*" style="display: none;">
+                            <button type="button" class="btn btn-secondary" onclick="document.getElementById('logoUpload').click()">
+                                <i class="fas fa-upload"></i>
+                                파일 선택
+                            </button>
+                            <button type="button" class="btn btn-outline" id="removeLogo" style="display: none;">
+                                <i class="fas fa-trash"></i>
+                                로고 제거
+                            </button>
+                        </div>
+                        <small>권장: 500x500px 이상, PNG/JPG/SVG 파일</small>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-large btn-gradient" id="submitBtn">
+                    <i class="fas fa-save"></i>
+                    저장하기
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 9999; display: none; align-items: center; justify-content: center;">
+        <div style="text-align: center; color: white;">
+            <i class="fas fa-spinner fa-spin" style="font-size: 48px;"></i>
+            <p style="margin-top: 20px; font-size: 18px;">저장 중...</p>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" style="position: fixed; top: 20px; right: 20px; z-index: 10000;"></div>
+
+    <script src="js/client-profile.js"></script>
+</body>
+</html>
