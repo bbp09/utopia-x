@@ -2827,3 +2827,52 @@ input[type="range"]::-moz-range-thumb:hover {
     color: var(--text-secondary);
 }
 
+
+/* =====================================
+   CRITICAL FIX: Featured Dancers Grid ID
+   ===================================== */
+
+#featured-dancers-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    width: 100%;
+    min-height: 400px;
+    padding: 2rem 0;
+    visibility: visible !important;
+    opacity: 1 !important;
+    background: transparent;
+}
+
+/* Force dancer cards to display */
+.dancer-card {
+    background: #1a1a1a !important;
+    border: 2px solid #9d4edd !important;
+    border-radius: 15px !important;
+    overflow: hidden !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transition: all 0.3s ease;
+}
+
+.dancer-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(157, 78, 221, 0.4);
+}
+
+/* Ensure card content is visible */
+.dancer-card * {
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    #featured-dancers-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 1.5rem 0;
+    }
+}
+

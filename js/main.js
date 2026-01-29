@@ -193,6 +193,7 @@ const DancerModule = {
             if (error) {
                 console.error('❌ Error fetching premium dancers:', error);
                 console.error('❌ Error details:', JSON.stringify(error, null, 2));
+                console.error('❌ RLS 권한 문제일 수 있음 - Fallback 데이터로 전환');
                 this.renderFallbackDancers();
                 return;
             }
@@ -200,11 +201,24 @@ const DancerModule = {
             if (!data || data.length === 0) {
                 console.warn('⚠️ No premium dancers found in database');
                 console.warn('⚠️ Data:', data);
-                this.renderEmptyState();
+                console.warn('⚠️ Fallback 데이터로 전환');
+                this.renderFallbackDancers();
                 return;
             }
             
             console.log(`✅ Loaded ${data.length} premium dancers:`, data);
+            
+            // Check if real data or fallback
+            const isRealData = data.some(d => d.name && d.name !== 'DJ Koo' && d.name !== 'Luna Park' && d.name !== 'B-boy Storm');
+            if (isRealData) {
+                console.log('🎉 진짜 Supabase 데이터 로드 성공!');
+                data.forEach(dancer => {
+                    console.log(`   - ${dancer.name} (${dancer.genre || 'N/A'})`);
+                });
+            } else {
+                console.log('⚠️ Fallback 데이터가 표시되고 있습니다');
+            }
+            
             AppState.featuredDancers = data;
             this.renderPremiumDancers(data);
             
