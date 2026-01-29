@@ -12,6 +12,53 @@
     <link rel="stylesheet" href="css/auth.css">
     <link rel="stylesheet" href="css/chat.css">
     <style>
+        /* Global Loading Overlay */
+        #globalLoadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        #globalLoadingOverlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(157, 78, 221, 0.2);
+            border-top-color: #9d4edd;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            margin-top: 20px;
+            color: white;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        /* Hide dashboard content until loaded */
+        body.loading .dashboard-container,
+        body.loading nav {
+            display: none !important;
+        }
+        
         .dashboard-container {
             max-width: 1200px;
             margin: 100px auto 60px;
@@ -202,8 +249,30 @@
             }
         }
     </style>
+    
+    <!-- Supabase JS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Supabase Initialization -->
+    <script>
+        const SUPABASE_URL = 'https://idfpmynjfkvtcsqcjgnm.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlkZnBteW5qZmt2dGNzcWNqZ25tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2NzQ2NTgsImV4cCI6MjA4NTI1MDY1OH0.KFmClnG-XuW818uUIMlPW0yQ7UswXvIWh-ipv6z5p4I';
+        if (typeof supabase !== 'undefined') {
+            window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log("✅ Supabase Connected!");
+        }
+    </script>
+    
+    <!-- Dashboard Loader (MUST load first) -->
+    <script src="js/dashboard-loader.js"></script>
 </head>
-<body>
+<body class="loading">
+    <!-- Global Loading Overlay -->
+    <div id="globalLoadingOverlay">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">대시보드를 불러오는 중...</p>
+    </div>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
