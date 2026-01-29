@@ -896,22 +896,46 @@ const EventModule = {
     
     // Bind modal events
     bindModalEvents() {
-        // Close button events
+        // Close button events (prevent duplicate binding)
         const closeButtons = document.querySelectorAll('.modal-close, .close-modal');
+        console.log('🔍 Found', closeButtons.length, 'close buttons');
+        
         closeButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
+            // Check if already bound
+            if (btn.dataset.closeBound === 'true') {
+                console.log('⚠️ Close button already bound, skipping');
+                return;
+            }
+            
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('🖱️ Close button clicked');
                 UIModule.closeAllModals();
             });
+            
+            btn.dataset.closeBound = 'true';
         });
         
-        // Click outside modal to close
+        // Click outside modal to close (prevent duplicate binding)
         const modals = document.querySelectorAll('.modal');
+        console.log('🔍 Found', modals.length, 'modals');
+        
         modals.forEach(modal => {
+            // Check if already bound
+            if (modal.dataset.outsideClickBound === 'true') {
+                console.log('⚠️ Modal outside click already bound, skipping');
+                return;
+            }
+            
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
+                    console.log('🖱️ Clicked outside modal, closing');
                     UIModule.closeAllModals();
                 }
             });
+            
+            modal.dataset.outsideClickBound = 'true';
         });
         
         console.log('✅ Modal close events bound');
@@ -962,18 +986,22 @@ const EventModule = {
     // Handle CTA click logic
     handleCTAClick(modalType) {
         console.log('🖱️ CTA clicked:', modalType);
+        console.log('📊 Current state - isLoggedIn:', AuthModule.isLoggedIn(), '| activeModal:', AppState.activeModal);
         
         if (modalType === 'casting') {
             // Casting CTA: Login check -> castingModal
             if (!AuthModule.isLoggedIn()) {
+                console.log('⚠️ Not logged in - opening login modal');
                 UIModule.showToast('로그인이 필요한 서비스입니다', 'info');
                 UIModule.openModal('loginModal');
             } else {
+                console.log('✅ Logged in - opening casting modal');
                 UIModule.openModal('castingModal');
             }
         } else if (modalType === 'artist') {
             // Artist CTA: Login check -> Redirect to artist-register.html
             if (!AuthModule.isLoggedIn()) {
+                console.log('⚠️ Not logged in - opening login modal');
                 UIModule.showToast('로그인이 필요한 서비스입니다', 'info');
                 UIModule.openModal('loginModal');
             } else {
