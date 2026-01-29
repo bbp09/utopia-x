@@ -1431,6 +1431,76 @@ function switchAuthTab(tab) {
 // Make switchAuthTab globally accessible
 window.switchAuthTab = switchAuthTab;
 
+// ===== User Menu =====
+function initUserMenu() {
+    const userMenuBtn = document.getElementById('userMenuBtn');
+    const userMenuDropdown = document.getElementById('userMenuDropdown');
+    const btnDashboard = document.getElementById('btnDashboard');
+    const btnLogout = document.getElementById('btnLogout');
+    
+    // Toggle dropdown on button click
+    if (userMenuBtn) {
+        userMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userMenuDropdown?.classList.toggle('show');
+        });
+    }
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.user-menu')) {
+            userMenuDropdown?.classList.remove('show');
+        }
+    });
+    
+    // Dashboard button click handler
+    if (btnDashboard) {
+        btnDashboard.addEventListener('click', (e) => {
+            e.preventDefault();
+            navigateToDashboard();
+        });
+    }
+    
+    // Logout button
+    if (btnLogout) {
+        btnLogout.addEventListener('click', async (e) => {
+            e.preventDefault();
+            if (typeof signOut === 'function') {
+                await signOut();
+            } else {
+                // Fallback logout
+                sessionStorage.clear();
+                location.reload();
+            }
+        });
+    }
+    
+    console.log('✅ User menu initialized');
+}
+
+// Navigate to appropriate dashboard based on user role
+function navigateToDashboard() {
+    const userRole = sessionStorage.getItem('userRole');
+    const userEmail = sessionStorage.getItem('userEmail');
+    
+    if (!userEmail) {
+        showToast('로그인이 필요합니다', 'error');
+        return;
+    }
+    
+    console.log('🎯 Navigating to dashboard for role:', userRole);
+    
+    if (userRole === 'artist') {
+        window.location.href = 'artist-dashboard.html';
+    } else {
+        // Default to client dashboard
+        window.location.href = 'client-dashboard.html';
+    }
+}
+
+// Make navigateToDashboard globally accessible
+window.navigateToDashboard = navigateToDashboard;
+
 // ===== Console Art =====
 console.log('%c🎭 UTOPIA X with AI Matching', 'color: #9D4EDD; font-size: 24px; font-weight: bold;');
 console.log('%cAI 기반 댄서 캐스팅 플랫폼', 'color: #E91E84; font-size: 14px;');
