@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTOPIA X - Admin Dashboard</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    
+    <!-- Supabase JS Library (Must load before any Supabase code) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Supabase Direct Initialization -->
+    <script>
+        const SUPABASE_URL = 'https://idfpmynjfkvtcsqcjgnm.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlkZnBteW5qZmt2dGNzcWNqZ25tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2NzQ2NTgsImV4cCI6MjA4NTI1MDY1OH0.KFmClnG-XuW818uUIMlPW0yQ7UswXvIWh-ipv6z5p4I';
+
+        if (typeof supabase !== 'undefined') {
+            window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log("✅ Supabase Admin: Connected!");
+        } else {
+            console.error("❌ Supabase library not loaded!");
+        }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #1a1a2e;
+            --bg-input: #16162a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b8;
+            --neon-purple: #9d4edd;
+            --neon-pink: #e91e84;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --pending-bg: rgba(245, 158, 11, 0.15);
+            --pending-border: rgba(245, 158, 11, 0.5);
+        }
+
+        body {
+            font-family: 'Noto Sans KR', 'Montserrat', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .admin-header {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 40px rgba(157, 78, 221, 0.3);
+        }
+
+        .admin-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .admin-header p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .btn-home {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-home:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Add Section */
+        .add-section {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            border: 2px solid rgba(157, 78, 221, 0.3);
+        }
+
+        .add-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--neon-purple);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .form-group input,
+        .form-group select {
+            background: var(--bg-input);
+            border: 2px solid rgba(157, 78, 221, 0.2);
+            color: var(--text-primary);
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 20px rgba(157, 78, 221, 0.3);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            color: white;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(157, 78, 221, 0.4);
+        }
+
+        /* Tabs */
+        .tabs-container {
+            background: var(--bg-card);
+            padding: 0;
+            border-radius: 20px;
+            margin-bottom: 0;
+            border: 2px solid rgba(157, 78, 221, 0.3);
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            background: rgba(157, 78, 221, 0.1);
+            border-bottom: 2px solid rgba(157, 78, 221, 0.3);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-right: 1px solid rgba(157, 78, 221, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .tab:last-child {
+            border-right: none;
+        }
+
+        .tab:hover {
+            background: rgba(157, 78, 221, 0.2);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            color: white;
+        }
+
+        .tab-badge {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .tab.active .tab-badge {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--neon-purple);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* List Section */
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .list-header h2 {
+            font-size: 24px;
+            color: var(--neon-purple);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-secondary {
+            background: rgba(157, 78, 221, 0.2);
+            border: 2px solid var(--neon-purple);
+            color: var(--neon-purple);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(157, 78, 221, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* Table */
+        .dancers-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .dancers-table thead {
+            background: rgba(157, 78, 221, 0.2);
+        }
+
+        .dancers-table th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--neon-purple);
+            border-bottom: 2px solid var(--neon-purple);
+        }
+
+        .dancers-table td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dancers-table tbody tr {
+            transition: all 0.3s;
+        }
+
+        .dancers-table tbody tr:hover {
+            background: rgba(157, 78, 221, 0.1);
+        }
+
+        .dancers-table tbody tr.pending-row {
+            background: var(--pending-bg);
+            border-left: 4px solid var(--warning);
+        }
+
+        .dancers-table tbody tr.pending-row:hover {
+            background: rgba(245, 158, 11, 0.25);
+        }
+
+        .dancer-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid var(--neon-purple);
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-badge.approved {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .status-badge.pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .premium-badge {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-approve {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-approve:hover {
+            background: #059669;
+            transform: scale(1.05);
+        }
+
+        .btn-toggle-premium {
+            background: var(--neon-purple);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-toggle-premium:hover {
+            background: var(--neon-pink);
+            transform: scale(1.05);
+        }
+
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-delete:hover {
+            background: #dc2626;
+            transform: scale(1.05);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--bg-card);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            border: 2px solid var(--neon-purple);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            z-index: 9999;
+            max-width: 400px;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success {
+            border-color: var(--success);
+        }
+
+        .toast.error {
+            border-color: var(--danger);
+        }
+
+        .toast.warning {
+            border-color: var(--warning);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                border-right: none;
+                border-bottom: 1px solid rgba(157, 78, 221, 0.2);
+            }
+
+            .dancers-table {
+                font-size: 12px;
+            }
+
+            .dancers-table th,
+            .dancers-table td {
+                padding: 10px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="admin-header">
+            <div>
+                <h1>
+                    <i class="fas fa-shield-alt"></i>
+                    UTOPIA X Admin
+                </h1>
+                <p>댄서 승인 및 관리 시스템</p>
+            </div>
+            <a href="index.html" class="btn-home">
+                <i class="fas fa-home"></i>
+                메인으로 돌아가기
+            </a>
+        </div>
+
+        <!-- Add Dancer Section -->
+        <div class="add-section">
+            <h2>
+                <i class="fas fa-plus-circle"></i>
+                댄서 추가하기
+            </h2>
+            <form id="addDancerForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="dancerName">이름 *</label>
+                        <input type="text" id="dancerName" placeholder="예: 김댄서" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dancerGenre">장르 *</label>
+                        <input type="text" id="dancerGenre" placeholder="예: Hip-hop, K-pop" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dancerImage">이미지 URL (선택)</label>
+                        <input type="url" id="dancerImage" placeholder="https://...">
+                        <small style="color: var(--text-secondary); font-size: 12px;">
+                            비워두면 랜덤 이미지가 자동으로 들어갑니다
+                        </small>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="needsReview">
+                        <label for="needsReview" style="font-weight: 600; color: var(--warning);">
+                            <i class="fas fa-clock"></i> 검토 필요 (승인 대기 상태로 등록)
+                        </label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="isPremium">
+                        <label for="isPremium" style="font-weight: 600; color: var(--neon-purple);">
+                            <i class="fas fa-star"></i> 프리미엄 댄서로 등록
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-user-plus"></i>
+                    댄서 등록
+                </button>
+            </form>
+        </div>
+
+        <!-- Tabs Section -->
+        <div class="tabs-container">
+            <div class="tabs">
+                <div class="tab active" data-tab="all" onclick="switchTab('all')">
+                    <i class="fas fa-users"></i>
+                    전체 댄서
+                    <span class="tab-badge" id="allCount">0</span>
+                </div>
+                <div class="tab" data-tab="pending" onclick="switchTab('pending')">
+                    <i class="fas fa-clock"></i>
+                    승인 대기
+                    <span class="tab-badge" id="pendingCount">0</span>
+                </div>
+                <div class="tab" data-tab="premium" onclick="switchTab('premium')">
+                    <i class="fas fa-star"></i>
+                    프리미엄 관리
+                    <span class="tab-badge" id="premiumCount">0</span>
+                </div>
+            </div>
+
+            <!-- Tab Content: All Dancers -->
+            <div class="tab-content active" id="tab-all">
+                <div class="list-header">
+                    <h2>
+                        <i class="fas fa-list"></i>
+                        전체 댄서 목록
+                    </h2>
+                    <button class="btn-secondary" onclick="loadDancers()">
+                        <i class="fas fa-sync-alt"></i>
+                        새로고침
+                    </button>
+                </div>
+
+                <table class="dancers-table">
+                    <thead>
+                        <tr>
+                            <th>이미지</th>
+                            <th>이름</th>
+                            <th>장르</th>
+                            <th>상태</th>
+                            <th>프리미엄</th>
+                            <th>등록일</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody id="allDancersTableBody">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                                <i class="fas fa-spinner fa-spin"></i> 데이터 로딩 중...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Tab Content: Pending -->
+            <div class="tab-content" id="tab-pending">
+                <div class="list-header">
+                    <h2>
+                        <i class="fas fa-clock"></i>
+                        승인 대기 댄서
+                    </h2>
+                    <button class="btn-secondary" onclick="loadDancers()">
+                        <i class="fas fa-sync-alt"></i>
+                        새로고침
+                    </button>
+                </div>
+
+                <table class="dancers-table">
+                    <thead>
+                        <tr>
+                            <th>이미지</th>
+                            <th>이름</th>
+                            <th>장르</th>
+                            <th>등록일</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pendingDancersTableBody">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                                <i class="fas fa-spinner fa-spin"></i> 데이터 로딩 중...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Tab Content: Premium -->
+            <div class="tab-content" id="tab-premium">
+                <div class="list-header">
+                    <h2>
+                        <i class="fas fa-star"></i>
+                        프리미엄 댄서 관리
+                    </h2>
+                    <button class="btn-secondary" onclick="loadDancers()">
+                        <i class="fas fa-sync-alt"></i>
+                        새로고침
+                    </button>
+                </div>
+
+                <table class="dancers-table">
+                    <thead>
+                        <tr>
+                            <th>이미지</th>
+                            <th>이름</th>
+                            <th>장르</th>
+                            <th>등록일</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody id="premiumDancersTableBody">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                                <i class="fas fa-spinner fa-spin"></i> 데이터 로딩 중...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        console.log('🔧 Admin page loaded');
+
+        // Load dancers on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('📄 DOM ready, loading dancers...');
+            loadDancers();
+        });
+
+        // Tab switching
+        function switchTab(tabName) {
+            console.log('🔄 Switching to tab:', tabName);
+
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`.tab[data-tab="${tabName}"]`).classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+
+        // Add dancer form submission
+        document.getElementById('addDancerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            console.log('➕ Adding new dancer...');
+
+            const name = document.getElementById('dancerName').value.trim();
+            const genre = document.getElementById('dancerGenre').value.trim();
+            let imageUrl = document.getElementById('dancerImage').value.trim();
+            const needsReview = document.getElementById('needsReview').checked;
+            const isPremium = document.getElementById('isPremium').checked;
+
+            // Validation
+            if (!name || !genre) {
+                showToast('이름과 장르를 입력해주세요', 'error');
+                return;
+            }
+
+            // Generate random Unsplash image if not provided
+            if (!imageUrl) {
+                const randomId = Math.floor(Math.random() * 1000);
+                imageUrl = `https://images.unsplash.com/photo-${1500000000000 + randomId}?w=400&h=400&fit=crop`;
+                console.log('🎲 Generated random image:', imageUrl);
+            }
+
+            // Determine status
+            const status = needsReview ? 'pending' : 'approved';
+            console.log('📋 Status:', status, '| Premium:', isPremium);
+
+            try {
+                const { data, error } = await window.supabase
+                    .from('dancers')
+                    .insert([{
+                        name: name,
+                        genre: genre,
+                        image_url: imageUrl,
+                        is_premium: isPremium,
+                        status: status,
+                        rating: 0,
+                        bio: `${name} - ${genre} 댄서`
+                    }])
+                    .select();
+
+                if (error) {
+                    console.error('❌ Insert error:', error);
+                    showToast('등록 실패: ' + error.message, 'error');
+                    return;
+                }
+
+                console.log('✅ Dancer added:', data);
+                const statusText = needsReview ? '승인 대기 상태로' : '승인된 상태로';
+                showToast(`${name} 댄서가 ${statusText} 등록되었습니다!`, 'success');
+
+                // Reset form
+                document.getElementById('addDancerForm').reset();
+
+                // Reload list
+                setTimeout(() => loadDancers(), 500);
+            } catch (err) {
+                console.error('❌ Exception:', err);
+                showToast('등록 중 오류가 발생했습니다', 'error');
+            }
+        });
+
+        // Load dancers from database
+        async function loadDancers() {
+            console.log('📥 Loading dancers from database...');
+
+            try {
+                const { data, error } = await window.supabase
+                    .from('dancers')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    console.error('❌ Query error:', error);
+                    showToast('데이터 로드 실패: ' + error.message, 'error');
+                    return;
+                }
+
+                console.log('✅ Loaded dancers:', data.length);
+
+                // Filter data
+                const allDancers = data;
+                const pendingDancers = data.filter(d => d.status === 'pending');
+                const premiumDancers = data.filter(d => d.is_premium === true);
+
+                // Update counts
+                document.getElementById('allCount').textContent = allDancers.length;
+                document.getElementById('pendingCount').textContent = pendingDancers.length;
+                document.getElementById('premiumCount').textContent = premiumDancers.length;
+
+                // Render tables
+                renderAllDancers(allDancers);
+                renderPendingDancers(pendingDancers);
+                renderPremiumDancers(premiumDancers);
+            } catch (err) {
+                console.error('❌ Exception:', err);
+                showToast('데이터 로드 중 오류가 발생했습니다', 'error');
+            }
+        }
+
+        // Render all dancers
+        function renderAllDancers(dancers) {
+            const tbody = document.getElementById('allDancersTableBody');
+
+            if (dancers.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                            <i class="fas fa-inbox"></i><br>
+                            등록된 댄서가 없습니다
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = dancers.map(dancer => {
+                const isPending = dancer.status === 'pending';
+                const rowClass = isPending ? 'pending-row' : '';
+                
+                return `
+                    <tr class="${rowClass}">
+                        <td>
+                            <img src="${dancer.image_url || 'https://via.placeholder.com/60'}" 
+                                 alt="${dancer.name}" 
+                                 class="dancer-img"
+                                 onerror="this.src='https://via.placeholder.com/60'">
+                        </td>
+                        <td style="font-weight: 600;">${dancer.name}</td>
+                        <td>${dancer.genre || '-'}</td>
+                        <td>
+                            <span class="status-badge ${dancer.status || 'approved'}">
+                                ${dancer.status === 'pending' ? '⏳ 승인 대기' : '✅ 승인 완료'}
+                            </span>
+                        </td>
+                        <td>
+                            ${dancer.is_premium ? '<span class="premium-badge"><i class="fas fa-star"></i> Premium</span>' : '<span style="color: var(--text-secondary);">-</span>'}
+                        </td>
+                        <td style="color: var(--text-secondary); font-size: 13px;">
+                            ${dancer.created_at ? new Date(dancer.created_at).toLocaleDateString('ko-KR') : '-'}
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                ${isPending ? `
+                                    <button class="btn-approve" onclick="approveDancer('${dancer.id}', '${dancer.name}')">
+                                        <i class="fas fa-check"></i> 승인
+                                    </button>
+                                ` : `
+                                    <button class="btn-toggle-premium" onclick="togglePremium('${dancer.id}', '${dancer.name}', ${dancer.is_premium})">
+                                        <i class="fas fa-star"></i> ${dancer.is_premium ? '해제' : '지정'}
+                                    </button>
+                                `}
+                                <button class="btn-delete" onclick="deleteDancer('${dancer.id}', '${dancer.name}')">
+                                    <i class="fas fa-trash"></i> 삭제
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Render pending dancers
+        function renderPendingDancers(dancers) {
+            const tbody = document.getElementById('pendingDancersTableBody');
+
+            if (dancers.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                            <i class="fas fa-check-circle"></i><br>
+                            승인 대기 중인 댄서가 없습니다
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = dancers.map(dancer => `
+                <tr class="pending-row">
+                    <td>
+                        <img src="${dancer.image_url || 'https://via.placeholder.com/60'}" 
+                             alt="${dancer.name}" 
+                             class="dancer-img"
+                             onerror="this.src='https://via.placeholder.com/60'">
+                    </td>
+                    <td style="font-weight: 600;">${dancer.name}</td>
+                    <td>${dancer.genre || '-'}</td>
+                    <td style="color: var(--text-secondary); font-size: 13px;">
+                        ${dancer.created_at ? new Date(dancer.created_at).toLocaleDateString('ko-KR') : '-'}
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-approve" onclick="approveDancer('${dancer.id}', '${dancer.name}')">
+                                <i class="fas fa-check"></i> 승인
+                            </button>
+                            <button class="btn-delete" onclick="deleteDancer('${dancer.id}', '${dancer.name}')">
+                                <i class="fas fa-trash"></i> 삭제
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Render premium dancers
+        function renderPremiumDancers(dancers) {
+            const tbody = document.getElementById('premiumDancersTableBody');
+
+            if (dancers.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                            <i class="fas fa-star"></i><br>
+                            프리미엄 댄서가 없습니다
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = dancers.map(dancer => `
+                <tr>
+                    <td>
+                        <img src="${dancer.image_url || 'https://via.placeholder.com/60'}" 
+                             alt="${dancer.name}" 
+                             class="dancer-img"
+                             onerror="this.src='https://via.placeholder.com/60'">
+                    </td>
+                    <td style="font-weight: 600;">${dancer.name}</td>
+                    <td>${dancer.genre || '-'}</td>
+                    <td style="color: var(--text-secondary); font-size: 13px;">
+                        ${dancer.created_at ? new Date(dancer.created_at).toLocaleDateString('ko-KR') : '-'}
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-toggle-premium" onclick="togglePremium('${dancer.id}', '${dancer.name}', true)">
+                                <i class="fas fa-times"></i> 프리미엄 해제
+                            </button>
+                            <button class="btn-delete" onclick="deleteDancer('${dancer.id}', '${dancer.name}')">
+                                <i class="fas fa-trash"></i> 삭제
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Approve dancer
+        async function approveDancer(id, name) {
+            console.log('✅ Approving dancer:', id, name);
+
+            try {
+                const { error } = await window.supabase
+                    .from('dancers')
+                    .update({ status: 'approved' })
+                    .eq('id', id);
+
+                if (error) {
+                    console.error('❌ Update error:', error);
+                    showToast('승인 실패: ' + error.message, 'error');
+                    return;
+                }
+
+                console.log('✅ Dancer approved');
+                showToast(`${name} 댄서가 승인되었습니다!`, 'success');
+
+                // Reload list
+                setTimeout(() => loadDancers(), 500);
+            } catch (err) {
+                console.error('❌ Exception:', err);
+                showToast('승인 중 오류가 발생했습니다', 'error');
+            }
+        }
+
+        // Toggle premium status
+        async function togglePremium(id, name, currentStatus) {
+            const newStatus = !currentStatus;
+            const action = newStatus ? '프리미엄으로 지정' : '프리미엄 해제';
+            console.log('⭐ Toggling premium:', id, name, '->', newStatus);
+
+            try {
+                const { error } = await window.supabase
+                    .from('dancers')
+                    .update({ is_premium: newStatus })
+                    .eq('id', id);
+
+                if (error) {
+                    console.error('❌ Update error:', error);
+                    showToast(action + ' 실패: ' + error.message, 'error');
+                    return;
+                }
+
+                console.log('✅ Premium status toggled');
+                showToast(`${name} 댄서가 ${action}되었습니다!`, 'success');
+
+                // Reload list
+                setTimeout(() => loadDancers(), 500);
+            } catch (err) {
+                console.error('❌ Exception:', err);
+                showToast(action + ' 중 오류가 발생했습니다', 'error');
+            }
+        }
+
+        // Delete dancer
+        async function deleteDancer(id, name) {
+            if (!confirm(`정말로 "${name}" 댄서를 삭제하시겠습니까?\n\n이 작업은 되돌릴 수 없습니다.`)) {
+                return;
+            }
+
+            console.log('🗑️ Deleting dancer:', id, name);
+
+            try {
+                const { error } = await window.supabase
+                    .from('dancers')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) {
+                    console.error('❌ Delete error:', error);
+                    showToast('삭제 실패: ' + error.message, 'error');
+                    return;
+                }
+
+                console.log('✅ Dancer deleted');
+                showToast(`${name} 댄서가 삭제되었습니다`, 'success');
+
+                // Reload list
+                setTimeout(() => loadDancers(), 500);
+            } catch (err) {
+                console.error('❌ Exception:', err);
+                showToast('삭제 중 오류가 발생했습니다', 'error');
+            }
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
