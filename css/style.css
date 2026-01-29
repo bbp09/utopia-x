@@ -621,11 +621,13 @@ button {
 }
 
 .feature-icon {
-    font-size: 32px;
-    background: var(--primary-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-size: 40px;
+    /* Remove background-clip to allow inline color styles */
+    transition: transform 0.3s ease;
+}
+
+.feature-icon i {
+    display: inline-block;
 }
 
 .feature-text h4 {
