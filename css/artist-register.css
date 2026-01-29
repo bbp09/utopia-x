@@ -1,17 +1,17 @@
 /* Artist Register Page Styles */
 
 .artist-register-page {
-    background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
+    background: #FFFFFF;
     min-height: 100vh;
     padding-bottom: 60px;
 }
 
 /* Header */
 .register-header {
-    background: linear-gradient(135deg, #9d4edd, #e91e84);
+    background: linear-gradient(135deg, #E91E84 0%, #9D4EDD 50%, #6366F1 100%);
     padding: 40px 20px;
     text-align: center;
-    box-shadow: 0 4px 20px rgba(157, 78, 221, 0.3);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .register-header .logo img {
@@ -43,16 +43,17 @@
 
 /* Form Section */
 .form-section {
-    background: var(--bg-card, #1a1a2e);
+    background: #FFFFFF;
     border-radius: 20px;
     padding: 40px;
     margin-bottom: 30px;
-    border: 2px solid rgba(157, 78, 221, 0.2);
+    border: 1px solid #E5E7EB;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     transition: all 0.3s;
 }
 
 .form-section:hover {
-    border-color: rgba(157, 78, 221, 0.4);
+    border-color: #9D4EDD;
     box-shadow: 0 4px 20px rgba(157, 78, 221, 0.1);
 }
 
@@ -73,13 +74,13 @@
 .section-header h2 {
     font-size: 24px;
     font-weight: 700;
-    color: var(--text-primary, #ffffff);
+    color: #1A1A1A;
     margin: 0;
 }
 
 .section-description {
     font-size: 14px;
-    color: var(--text-secondary, #a0a0b8);
+    color: #6B7280;
     margin-top: 10px;
     margin-left: 43px;
 }
@@ -100,7 +101,7 @@
 .form-group label {
     font-size: 14px;
     font-weight: 600;
-    color: var(--text-secondary, #a0a0b8);
+    color: #6B7280;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -108,9 +109,9 @@
 
 .form-group input,
 .form-group select {
-    background: var(--bg-input, #16162a);
-    border: 2px solid rgba(157, 78, 221, 0.2);
-    color: var(--text-primary, #ffffff);
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    color: #1A1A1A;
     padding: 14px 18px;
     border-radius: 12px;
     font-size: 15px;
@@ -121,12 +122,12 @@
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #9d4edd;
-    box-shadow: 0 0 20px rgba(157, 78, 221, 0.3);
+    border-color: #9D4EDD;
+    box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.1);
 }
 
 .form-group input::placeholder {
-    color: rgba(160, 160, 184, 0.5);
+    color: #9CA3AF;
 }
 
 /* Tags Selection */
@@ -138,9 +139,9 @@
 }
 
 .tag-chip {
-    background: rgba(157, 78, 221, 0.1);
-    border: 2px solid rgba(157, 78, 221, 0.3);
-    color: var(--text-primary, #ffffff);
+    background: #FFFFFF;
+    border: 2px solid #E5E7EB;
+    color: #1A1A1A;
     padding: 12px 24px;
     border-radius: 25px;
     font-size: 15px;
@@ -151,21 +152,21 @@
 }
 
 .tag-chip:hover {
-    background: rgba(157, 78, 221, 0.2);
-    border-color: rgba(157, 78, 221, 0.5);
+    border-color: #9D4EDD;
+    background: rgba(157, 78, 221, 0.05);
     transform: translateY(-2px);
 }
 
 .tag-chip.selected {
-    background: linear-gradient(135deg, #9d4edd, #e91e84);
+    background: linear-gradient(135deg, #E91E84, #9D4EDD);
     border-color: transparent;
     color: white;
-    box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4);
+    box-shadow: 0 4px 15px rgba(157, 78, 221, 0.3);
 }
 
 .selection-count {
     font-size: 14px;
-    color: var(--text-secondary, #a0a0b8);
+    color: #6B7280;
     text-align: center;
     margin-top: 10px;
 }
@@ -178,8 +179,8 @@
 }
 
 .skill-checkbox {
-    background: rgba(157, 78, 221, 0.1);
-    border: 2px solid rgba(157, 78, 221, 0.2);
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
     border-radius: 12px;
     padding: 16px;
     cursor: pointer;
@@ -190,28 +191,28 @@
 }
 
 .skill-checkbox:hover {
-    background: rgba(157, 78, 221, 0.2);
-    border-color: rgba(157, 78, 221, 0.4);
+    border-color: #9D4EDD;
+    background: rgba(157, 78, 221, 0.05);
 }
 
 .skill-checkbox input[type="checkbox"] {
     width: 20px;
     height: 20px;
     cursor: pointer;
-    accent-color: #9d4edd;
+    accent-color: #9D4EDD;
 }
 
 .skill-checkbox span {
     font-size: 15px;
     font-weight: 500;
-    color: var(--text-primary, #ffffff);
+    color: #1A1A1A;
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
 .skill-checkbox input:checked + span {
-    color: #9d4edd;
+    color: #9D4EDD;
 }
 
 /* Image Upload */
@@ -220,9 +221,9 @@
 }
 
 .btn-upload {
-    background: rgba(157, 78, 221, 0.2);
-    border: 2px dashed rgba(157, 78, 221, 0.5);
-    color: var(--text-primary, #ffffff);
+    background: #FFFFFF;
+    border: 2px dashed #E5E7EB;
+    color: #6B7280;
     padding: 30px;
     border-radius: 16px;
     font-size: 16px;
@@ -237,8 +238,9 @@
 }
 
 .btn-upload:hover {
-    background: rgba(157, 78, 221, 0.3);
-    border-color: #9d4edd;
+    background: rgba(157, 78, 221, 0.05);
+    border-color: #9D4EDD;
+    color: #9D4EDD;
     transform: translateY(-2px);
 }
 
@@ -258,7 +260,8 @@
     aspect-ratio: 1;
     border-radius: 12px;
     overflow: hidden;
-    border: 2px solid rgba(157, 78, 221, 0.3);
+    border: 1px solid #E5E7EB;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .image-preview-item img {
@@ -293,7 +296,7 @@
     position: absolute;
     bottom: 8px;
     left: 8px;
-    background: linear-gradient(135deg, #9d4edd, #e91e84);
+    background: linear-gradient(135deg, #E91E84, #9D4EDD);
     color: white;
     padding: 4px 10px;
     border-radius: 12px;
@@ -324,7 +327,7 @@
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #9d4edd, #e91e84);
+    background: linear-gradient(135deg, #E91E84, #9D4EDD);
     color: white;
     box-shadow: 0 4px 15px rgba(157, 78, 221, 0.3);
 }
@@ -335,14 +338,14 @@
 }
 
 .btn-secondary {
-    background: rgba(157, 78, 221, 0.1);
-    border: 2px solid rgba(157, 78, 221, 0.3);
-    color: var(--text-primary, #ffffff);
+    background: #FFFFFF;
+    border: 2px solid #E5E7EB;
+    color: #6B7280;
 }
 
 .btn-secondary:hover {
-    background: rgba(157, 78, 221, 0.2);
-    border-color: rgba(157, 78, 221, 0.5);
+    border-color: #9D4EDD;
+    color: #9D4EDD;
 }
 
 /* Toast Notification */
@@ -350,12 +353,12 @@
     position: fixed;
     bottom: 30px;
     right: 30px;
-    background: var(--bg-card, #1a1a2e);
-    color: white;
+    background: #FFFFFF;
+    color: #1A1A1A;
     padding: 16px 24px;
     border-radius: 12px;
-    border: 2px solid #9d4edd;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    border: 1px solid #E5E7EB;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
     opacity: 0;
     transform: translateY(20px);
     transition: all 0.3s;

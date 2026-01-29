@@ -908,38 +908,59 @@ const EventModule = {
     
     // Bind CTA button events
     bindCTAEvents() {
-        // Casting CTA
-        const castingCTA = document.querySelector('[data-modal="casting"]');
-        if (castingCTA) {
-            castingCTA.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                if (!AuthModule.isLoggedIn()) {
-                    UIModule.showToast('로그인이 필요한 서비스입니다', 'info');
-                    UIModule.openModal('loginModal');
-                } else {
-                    UIModule.openModal('castingModal');
-                }
-            });
-            
-            console.log('✅ Casting CTA event bound');
-        }
+        console.log('🎯 Binding CTA events...');
         
-        // Artist CTA
-        const artistCTA = document.querySelector('[data-modal="artist"]');
-        if (artistCTA) {
-            artistCTA.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                if (!AuthModule.isLoggedIn()) {
-                    UIModule.showToast('로그인이 필요한 서비스입니다', 'info');
-                    UIModule.openModal('loginModal');
-                } else {
-                    UIModule.openModal('artistModal');
+        // Find all CTA cards
+        const ctaCards = document.querySelectorAll('.cta-card');
+        console.log('📦 Found', ctaCards.length, 'CTA cards');
+        
+        ctaCards.forEach((card) => {
+            const modalType = card.getAttribute('data-modal');
+            console.log('  - Card type:', modalType);
+            
+            if (!modalType) return;
+            
+            // Prevent event bubbling from inner button
+            const innerButton = card.querySelector('.cta-btn-large');
+            if (innerButton) {
+                innerButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.handleCTAClick(modalType);
+                });
+            }
+            
+            // Card click (only if not clicking inner button)
+            card.addEventListener('click', (e) => {
+                if (e.target === card || e.target.closest('.cta-card-content') === card.querySelector('.cta-card-content')) {
+                    this.handleCTAClick(modalType);
                 }
             });
-            
-            console.log('✅ Artist CTA event bound');
+        });
+        
+        console.log('✅ CTA events bound successfully');
+    },
+    
+    // Handle CTA click logic
+    handleCTAClick(modalType) {
+        console.log('🖱️ CTA clicked:', modalType);
+        
+        if (modalType === 'casting') {
+            // Casting CTA: Login check -> castingModal
+            if (!AuthModule.isLoggedIn()) {
+                UIModule.showToast('로그인이 필요한 서비스입니다', 'info');
+                UIModule.openModal('loginModal');
+            } else {
+                UIModule.openModal('castingModal');
+            }
+        } else if (modalType === 'artist') {
+            // Artist CTA: Login check -> Redirect to artist-register.html
+            if (!AuthModule.isLoggedIn()) {
+                UIModule.showToast('로그인이 필요한 서비스입니다', 'info');
+                UIModule.openModal('loginModal');
+            } else {
+                console.log('✅ Logged in - Redirecting to artist-register.html');
+                window.location.href = 'artist-register.html';
+            }
         }
     },
     
