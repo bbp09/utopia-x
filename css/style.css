@@ -2876,3 +2876,75 @@ input[type="range"]::-moz-range-thumb:hover {
     }
 }
 
+
+/* =====================================
+   CRITICAL FIX: Dancer Card Text Visibility
+   ===================================== */
+
+/* Card content area - dark background for text */
+.dancer-card-content {
+    background-color: #111111 !important;
+    padding: 1.5rem !important;
+    color: #ffffff !important;
+}
+
+/* Dancer name - white text */
+.dancer-name {
+    color: #ffffff !important;
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.5rem !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+/* Dancer genre - white text */
+.dancer-genre {
+    color: #ffffff !important;
+    font-size: 1rem !important;
+    margin-bottom: 1rem !important;
+    opacity: 0.9 !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+/* All text in card should be white */
+.dancer-card h3,
+.dancer-card p,
+.dancer-card span {
+    color: #ffffff !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+/* Button text should also be white */
+.btn-view-profile {
+    background: linear-gradient(135deg, #9d4edd, #c77dff) !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    width: 100% !important;
+    text-align: center !important;
+}
+
+.btn-view-profile:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 20px rgba(157, 78, 221, 0.4) !important;
+}
+
+/* Premium badge - ensure text is readable */
+.premium-badge {
+    background: linear-gradient(135deg, #9d4edd, #c77dff) !important;
+    color: #ffffff !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 20px !important;
+    font-weight: 700 !important;
+    font-size: 0.875rem !important;
+    position: absolute !important;
+    top: 1rem !important;
+    left: 1rem !important;
+    z-index: 10 !important;
+    box-shadow: 0 4px 15px rgba(157, 78, 221, 0.5) !important;
+}
+
