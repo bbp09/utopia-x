@@ -43,6 +43,8 @@
             --success: #10b981;
             --danger: #ef4444;
             --warning: #f59e0b;
+            --pending-bg: rgba(245, 158, 11, 0.15);
+            --pending-border: rgba(245, 158, 11, 0.5);
         }
 
         body {
@@ -193,14 +195,76 @@
             box-shadow: 0 10px 30px rgba(157, 78, 221, 0.4);
         }
 
-        /* List Section */
-        .list-section {
+        /* Tabs */
+        .tabs-container {
             background: var(--bg-card);
-            padding: 30px;
+            padding: 0;
             border-radius: 20px;
+            margin-bottom: 0;
             border: 2px solid rgba(157, 78, 221, 0.3);
+            overflow: hidden;
         }
 
+        .tabs {
+            display: flex;
+            background: rgba(157, 78, 221, 0.1);
+            border-bottom: 2px solid rgba(157, 78, 221, 0.3);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-right: 1px solid rgba(157, 78, 221, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .tab:last-child {
+            border-right: none;
+        }
+
+        .tab:hover {
+            background: rgba(157, 78, 221, 0.2);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            color: white;
+        }
+
+        .tab-badge {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .tab.active .tab-badge {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--neon-purple);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* List Section */
         .list-header {
             display: flex;
             justify-content: space-between;
@@ -265,12 +329,47 @@
             background: rgba(157, 78, 221, 0.1);
         }
 
+        .dancers-table tbody tr.pending-row {
+            background: var(--pending-bg);
+            border-left: 4px solid var(--warning);
+        }
+
+        .dancers-table tbody tr.pending-row:hover {
+            background: rgba(245, 158, 11, 0.25);
+        }
+
         .dancer-img {
             width: 60px;
             height: 60px;
             border-radius: 12px;
             object-fit: cover;
             border: 2px solid var(--neon-purple);
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-badge.approved {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .status-badge.pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
         .premium-badge {
@@ -283,13 +382,53 @@
             display: inline-block;
         }
 
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-approve {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-approve:hover {
+            background: #059669;
+            transform: scale(1.05);
+        }
+
+        .btn-toggle-premium {
+            background: var(--neon-purple);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-toggle-premium:hover {
+            background: var(--neon-pink);
+            transform: scale(1.05);
+        }
+
         .btn-delete {
             background: var(--danger);
             color: white;
             border: none;
             padding: 8px 16px;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
@@ -315,6 +454,7 @@
             transform: translateY(20px);
             transition: all 0.3s;
             z-index: 9999;
+            max-width: 400px;
         }
 
         .toast.show {
@@ -330,19 +470,8 @@
             border-color: var(--danger);
         }
 
-        /* Loading Spinner */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 0.6s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .toast.warning {
+            border-color: var(--warning);
         }
 
         /* Responsive */
@@ -357,6 +486,15 @@
                 grid-template-columns: 1fr;
             }
 
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                border-right: none;
+                border-bottom: 1px solid rgba(157, 78, 221, 0.2);
+            }
+
             .dancers-table {
                 font-size: 12px;
             }
@@ -364,6 +502,10 @@
             .dancers-table th,
             .dancers-table td {
                 padding: 10px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
             }
         }
     </style>
@@ -377,7 +519,7 @@
                     <i class="fas fa-shield-alt"></i>
                     UTOPIA X Admin
                 </h1>
-                <p>댄서 데이터베이스 관리 시스템</p>
+                <p>댄서 승인 및 관리 시스템</p>
             </div>
             <a href="index.html" class="btn-home">
                 <i class="fas fa-home"></i>
@@ -409,52 +551,147 @@
                         </small>
                     </div>
                 </div>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="isPremium">
-                    <label for="isPremium" style="font-weight: 600; color: var(--neon-purple);">
-                        <i class="fas fa-star"></i> 빠른섭외(Premium) 댄서로 등록
-                    </label>
+                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="needsReview">
+                        <label for="needsReview" style="font-weight: 600; color: var(--warning);">
+                            <i class="fas fa-clock"></i> 검토 필요 (승인 대기 상태로 등록)
+                        </label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="isPremium">
+                        <label for="isPremium" style="font-weight: 600; color: var(--neon-purple);">
+                            <i class="fas fa-star"></i> 프리미엄 댄서로 등록
+                        </label>
+                    </div>
                 </div>
-                <button type="submit" class="btn-primary" style="margin-top: 20px;">
+                <button type="submit" class="btn-primary">
                     <i class="fas fa-user-plus"></i>
                     댄서 등록
                 </button>
             </form>
         </div>
 
-        <!-- Dancers List Section -->
-        <div class="list-section">
-            <div class="list-header">
-                <h2>
+        <!-- Tabs Section -->
+        <div class="tabs-container">
+            <div class="tabs">
+                <div class="tab active" data-tab="all" onclick="switchTab('all')">
                     <i class="fas fa-users"></i>
-                    전체 댄서 목록
-                    <span id="dancerCount" style="color: var(--text-secondary); font-size: 18px;">(0명)</span>
-                </h2>
-                <button class="btn-secondary" onclick="loadDancers()">
-                    <i class="fas fa-sync-alt"></i>
-                    새로고침
-                </button>
+                    전체 댄서
+                    <span class="tab-badge" id="allCount">0</span>
+                </div>
+                <div class="tab" data-tab="pending" onclick="switchTab('pending')">
+                    <i class="fas fa-clock"></i>
+                    승인 대기
+                    <span class="tab-badge" id="pendingCount">0</span>
+                </div>
+                <div class="tab" data-tab="premium" onclick="switchTab('premium')">
+                    <i class="fas fa-star"></i>
+                    프리미엄 관리
+                    <span class="tab-badge" id="premiumCount">0</span>
+                </div>
             </div>
 
-            <table class="dancers-table">
-                <thead>
-                    <tr>
-                        <th>이미지</th>
-                        <th>이름</th>
-                        <th>장르</th>
-                        <th>상태</th>
-                        <th>등록일</th>
-                        <th>관리</th>
-                    </tr>
-                </thead>
-                <tbody id="dancersTableBody">
-                    <tr>
-                        <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-secondary);">
-                            <i class="fas fa-spinner fa-spin"></i> 데이터 로딩 중...
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <!-- Tab Content: All Dancers -->
+            <div class="tab-content active" id="tab-all">
+                <div class="list-header">
+                    <h2>
+                        <i class="fas fa-list"></i>
+                        전체 댄서 목록
+                    </h2>
+                    <button class="btn-secondary" onclick="loadDancers()">
+                        <i class="fas fa-sync-alt"></i>
+                        새로고침
+                    </button>
+                </div>
+
+                <table class="dancers-table">
+                    <thead>
+                        <tr>
+                            <th>이미지</th>
+                            <th>이름</th>
+                            <th>장르</th>
+                            <th>상태</th>
+                            <th>프리미엄</th>
+                            <th>등록일</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody id="allDancersTableBody">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                                <i class="fas fa-spinner fa-spin"></i> 데이터 로딩 중...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Tab Content: Pending -->
+            <div class="tab-content" id="tab-pending">
+                <div class="list-header">
+                    <h2>
+                        <i class="fas fa-clock"></i>
+                        승인 대기 댄서
+                    </h2>
+                    <button class="btn-secondary" onclick="loadDancers()">
+                        <i class="fas fa-sync-alt"></i>
+                        새로고침
+                    </button>
+                </div>
+
+                <table class="dancers-table">
+                    <thead>
+                        <tr>
+                            <th>이미지</th>
+                            <th>이름</th>
+                            <th>장르</th>
+                            <th>등록일</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pendingDancersTableBody">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                                <i class="fas fa-spinner fa-spin"></i> 데이터 로딩 중...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Tab Content: Premium -->
+            <div class="tab-content" id="tab-premium">
+                <div class="list-header">
+                    <h2>
+                        <i class="fas fa-star"></i>
+                        프리미엄 댄서 관리
+                    </h2>
+                    <button class="btn-secondary" onclick="loadDancers()">
+                        <i class="fas fa-sync-alt"></i>
+                        새로고침
+                    </button>
+                </div>
+
+                <table class="dancers-table">
+                    <thead>
+                        <tr>
+                            <th>이미지</th>
+                            <th>이름</th>
+                            <th>장르</th>
+                            <th>등록일</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody id="premiumDancersTableBody">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                                <i class="fas fa-spinner fa-spin"></i> 데이터 로딩 중...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -470,6 +707,23 @@
             loadDancers();
         });
 
+        // Tab switching
+        function switchTab(tabName) {
+            console.log('🔄 Switching to tab:', tabName);
+
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`.tab[data-tab="${tabName}"]`).classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+
         // Add dancer form submission
         document.getElementById('addDancerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -478,6 +732,7 @@
             const name = document.getElementById('dancerName').value.trim();
             const genre = document.getElementById('dancerGenre').value.trim();
             let imageUrl = document.getElementById('dancerImage').value.trim();
+            const needsReview = document.getElementById('needsReview').checked;
             const isPremium = document.getElementById('isPremium').checked;
 
             // Validation
@@ -493,6 +748,10 @@
                 console.log('🎲 Generated random image:', imageUrl);
             }
 
+            // Determine status
+            const status = needsReview ? 'pending' : 'approved';
+            console.log('📋 Status:', status, '| Premium:', isPremium);
+
             try {
                 const { data, error } = await window.supabase
                     .from('dancers')
@@ -501,6 +760,7 @@
                         genre: genre,
                         image_url: imageUrl,
                         is_premium: isPremium,
+                        status: status,
                         rating: 0,
                         bio: `${name} - ${genre} 댄서`
                     }])
@@ -513,7 +773,8 @@
                 }
 
                 console.log('✅ Dancer added:', data);
-                showToast(`${name} 댄서가 성공적으로 등록되었습니다!`, 'success');
+                const statusText = needsReview ? '승인 대기 상태로' : '승인된 상태로';
+                showToast(`${name} 댄서가 ${statusText} 등록되었습니다!`, 'success');
 
                 // Reset form
                 document.getElementById('addDancerForm').reset();
@@ -543,26 +804,142 @@
                 }
 
                 console.log('✅ Loaded dancers:', data.length);
-                renderDancers(data);
+
+                // Filter data
+                const allDancers = data;
+                const pendingDancers = data.filter(d => d.status === 'pending');
+                const premiumDancers = data.filter(d => d.is_premium === true);
+
+                // Update counts
+                document.getElementById('allCount').textContent = allDancers.length;
+                document.getElementById('pendingCount').textContent = pendingDancers.length;
+                document.getElementById('premiumCount').textContent = premiumDancers.length;
+
+                // Render tables
+                renderAllDancers(allDancers);
+                renderPendingDancers(pendingDancers);
+                renderPremiumDancers(premiumDancers);
             } catch (err) {
                 console.error('❌ Exception:', err);
                 showToast('데이터 로드 중 오류가 발생했습니다', 'error');
             }
         }
 
-        // Render dancers in table
-        function renderDancers(dancers) {
-            const tbody = document.getElementById('dancersTableBody');
-            const countSpan = document.getElementById('dancerCount');
-
-            countSpan.textContent = `(${dancers.length}명)`;
+        // Render all dancers
+        function renderAllDancers(dancers) {
+            const tbody = document.getElementById('allDancersTableBody');
 
             if (dancers.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                        <td colspan="7" style="text-align: center; padding: 40px; color: var(--text-secondary);">
                             <i class="fas fa-inbox"></i><br>
                             등록된 댄서가 없습니다
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = dancers.map(dancer => {
+                const isPending = dancer.status === 'pending';
+                const rowClass = isPending ? 'pending-row' : '';
+                
+                return `
+                    <tr class="${rowClass}">
+                        <td>
+                            <img src="${dancer.image_url || 'https://via.placeholder.com/60'}" 
+                                 alt="${dancer.name}" 
+                                 class="dancer-img"
+                                 onerror="this.src='https://via.placeholder.com/60'">
+                        </td>
+                        <td style="font-weight: 600;">${dancer.name}</td>
+                        <td>${dancer.genre || '-'}</td>
+                        <td>
+                            <span class="status-badge ${dancer.status || 'approved'}">
+                                ${dancer.status === 'pending' ? '⏳ 승인 대기' : '✅ 승인 완료'}
+                            </span>
+                        </td>
+                        <td>
+                            ${dancer.is_premium ? '<span class="premium-badge"><i class="fas fa-star"></i> Premium</span>' : '<span style="color: var(--text-secondary);">-</span>'}
+                        </td>
+                        <td style="color: var(--text-secondary); font-size: 13px;">
+                            ${dancer.created_at ? new Date(dancer.created_at).toLocaleDateString('ko-KR') : '-'}
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                ${isPending ? `
+                                    <button class="btn-approve" onclick="approveDancer('${dancer.id}', '${dancer.name}')">
+                                        <i class="fas fa-check"></i> 승인
+                                    </button>
+                                ` : `
+                                    <button class="btn-toggle-premium" onclick="togglePremium('${dancer.id}', '${dancer.name}', ${dancer.is_premium})">
+                                        <i class="fas fa-star"></i> ${dancer.is_premium ? '해제' : '지정'}
+                                    </button>
+                                `}
+                                <button class="btn-delete" onclick="deleteDancer('${dancer.id}', '${dancer.name}')">
+                                    <i class="fas fa-trash"></i> 삭제
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Render pending dancers
+        function renderPendingDancers(dancers) {
+            const tbody = document.getElementById('pendingDancersTableBody');
+
+            if (dancers.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                            <i class="fas fa-check-circle"></i><br>
+                            승인 대기 중인 댄서가 없습니다
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = dancers.map(dancer => `
+                <tr class="pending-row">
+                    <td>
+                        <img src="${dancer.image_url || 'https://via.placeholder.com/60'}" 
+                             alt="${dancer.name}" 
+                             class="dancer-img"
+                             onerror="this.src='https://via.placeholder.com/60'">
+                    </td>
+                    <td style="font-weight: 600;">${dancer.name}</td>
+                    <td>${dancer.genre || '-'}</td>
+                    <td style="color: var(--text-secondary); font-size: 13px;">
+                        ${dancer.created_at ? new Date(dancer.created_at).toLocaleDateString('ko-KR') : '-'}
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-approve" onclick="approveDancer('${dancer.id}', '${dancer.name}')">
+                                <i class="fas fa-check"></i> 승인
+                            </button>
+                            <button class="btn-delete" onclick="deleteDancer('${dancer.id}', '${dancer.name}')">
+                                <i class="fas fa-trash"></i> 삭제
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Render premium dancers
+        function renderPremiumDancers(dancers) {
+            const tbody = document.getElementById('premiumDancersTableBody');
+
+            if (dancers.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                            <i class="fas fa-star"></i><br>
+                            프리미엄 댄서가 없습니다
                         </td>
                     </tr>
                 `;
@@ -579,21 +956,77 @@
                     </td>
                     <td style="font-weight: 600;">${dancer.name}</td>
                     <td>${dancer.genre || '-'}</td>
-                    <td>
-                        ${dancer.is_premium ? '<span class="premium-badge"><i class="fas fa-star"></i> Premium</span>' : '<span style="color: var(--text-secondary);">일반</span>'}
-                    </td>
                     <td style="color: var(--text-secondary); font-size: 13px;">
                         ${dancer.created_at ? new Date(dancer.created_at).toLocaleDateString('ko-KR') : '-'}
                     </td>
                     <td>
-                        <button class="btn-delete" onclick="deleteDancer('${dancer.id}', '${dancer.name}')">
-                            <i class="fas fa-trash"></i> 삭제
-                        </button>
+                        <div class="action-buttons">
+                            <button class="btn-toggle-premium" onclick="togglePremium('${dancer.id}', '${dancer.name}', true)">
+                                <i class="fas fa-times"></i> 프리미엄 해제
+                            </button>
+                            <button class="btn-delete" onclick="deleteDancer('${dancer.id}', '${dancer.name}')">
+                                <i class="fas fa-trash"></i> 삭제
+                            </button>
+                        </div>
                     </td>
                 </tr>
             `).join('');
+        }
 
-            console.log('✅ Rendered', dancers.length, 'dancers in table');
+        // Approve dancer
+        async function approveDancer(id, name) {
+            console.log('✅ Approving dancer:', id, name);
+
+            try {
+                const { error } = await window.supabase
+                    .from('dancers')
+                    .update({ status: 'approved' })
+                    .eq('id', id);
+
+                if (error) {
+                    console.error('❌ Update error:', error);
+                    showToast('승인 실패: ' + error.message, 'error');
+                    return;
+                }
+
+                console.log('✅ Dancer approved');
+                showToast(`${name} 댄서가 승인되었습니다!`, 'success');
+
+                // Reload list
+                setTimeout(() => loadDancers(), 500);
+            } catch (err) {
+                console.error('❌ Exception:', err);
+                showToast('승인 중 오류가 발생했습니다', 'error');
+            }
+        }
+
+        // Toggle premium status
+        async function togglePremium(id, name, currentStatus) {
+            const newStatus = !currentStatus;
+            const action = newStatus ? '프리미엄으로 지정' : '프리미엄 해제';
+            console.log('⭐ Toggling premium:', id, name, '->', newStatus);
+
+            try {
+                const { error } = await window.supabase
+                    .from('dancers')
+                    .update({ is_premium: newStatus })
+                    .eq('id', id);
+
+                if (error) {
+                    console.error('❌ Update error:', error);
+                    showToast(action + ' 실패: ' + error.message, 'error');
+                    return;
+                }
+
+                console.log('✅ Premium status toggled');
+                showToast(`${name} 댄서가 ${action}되었습니다!`, 'success');
+
+                // Reload list
+                setTimeout(() => loadDancers(), 500);
+            } catch (err) {
+                console.error('❌ Exception:', err);
+                showToast(action + ' 중 오류가 발생했습니다', 'error');
+            }
         }
 
         // Delete dancer
