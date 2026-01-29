@@ -11,6 +11,23 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/auth.css">
     <link rel="stylesheet" href="css/chat.css">
+    
+    <!-- Supabase JS Library (Must load before any Supabase code) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Supabase Direct Initialization -->
+    <script>
+        const SUPABASE_URL = 'https://idfpmynjfkvtcsqcjgnm.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlkZnBteW5qZmt2dGNzcWNqZ25tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2NzQ2NTgsImV4cCI6MjA4NTI1MDY1OH0.KFmClnG-XuW818uUIMlPW0yQ7UswXvIWh-ipv6z5p4I';
+
+        // 도구(supabase)가 도착했는지 확인하고 연결
+        if (typeof supabase !== 'undefined') {
+            window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log("✅ Supabase Direct Init: Connected!");
+        } else {
+            console.error("❌ Still no Supabase library!");
+        }
+    </script>
 </head>
 <body>
     <!-- Navigation -->
@@ -1119,11 +1136,7 @@
         </div>
     </div>
 
-    <!-- Supabase Client Library -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <!-- Authentication System -->
-    <script src="js/supabase-config.js"></script>
     <script src="js/supabase-auth.js"></script>
     
     <!-- Main Scripts -->
