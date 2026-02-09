@@ -970,6 +970,7 @@ button {
     position: relative;
     width: 100%;
     padding: 20px 0;
+    min-height: 120px; /* 최소 높이 보장 */
 }
 
 .partners-track {
@@ -982,11 +983,12 @@ button {
 .partner-logo {
     flex-shrink: 0;
     padding: 20px 30px;
-    background: var(--bg-card);
+    background: rgba(255, 255, 255, 0.05); /* 반투명 배경 */
     border-radius: 15px;
-    border: 1px solid var(--border-color);
+    border: 2px solid rgba(157, 78, 221, 0.3); /* 보라색 테두리 */
     transition: all 0.3s ease;
     min-width: 180px;
+    min-height: 80px; /* 최소 높이 */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -995,6 +997,7 @@ button {
 .partner-logo:hover {
     transform: translateY(-5px);
     border-color: var(--primary-purple);
+    background: rgba(157, 78, 221, 0.1);
     box-shadow: 0 8px 20px rgba(157, 78, 221, 0.2);
 }
 
@@ -1002,6 +1005,7 @@ button {
     width: 100%;
     height: auto;
     display: block;
+    opacity: 0.9;
 }
 
 /* 무한 스크롤 애니메이션 */
