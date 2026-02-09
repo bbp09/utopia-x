@@ -967,7 +967,9 @@ button {
     margin: 0 auto !important;
 }
 
-#brandSlider {
+/* ID와 클래스 둘 다 적용 */
+#brandSlider,
+.brand-slider-track {
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
