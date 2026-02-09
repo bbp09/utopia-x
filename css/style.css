@@ -979,6 +979,17 @@ button {
     gap: 40px;
     animation: scroll-infinite 40s linear infinite;
     width: fit-content;
+    will-change: transform; /* 애니메이션 최적화 */
+}
+
+/* 무한 스크롤 애니메이션 - 정확히 50% 이동 */
+@keyframes scroll-infinite {
+    from {
+        transform: translate3d(0, 0, 0);
+    }
+    to {
+        transform: translate3d(-50%, 0, 0);
+    }
 }
 
 .partner-logo {
@@ -1008,16 +1019,6 @@ button {
     height: auto;
     display: block;
     opacity: 1; /* 완전 불투명 */
-}
-
-/* 무한 스크롤 애니메이션 */
-@keyframes scroll-infinite {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-50%);
-    }
 }
 
 /* 호버 시 애니메이션 일시정지 */
