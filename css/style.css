@@ -978,9 +978,7 @@ button {
 .partners-track {
     display: flex;
     gap: 40px;
-    /* 15개 로고 * (200px + 40px gap) = 3600px
-       30개 로고 = 7200px */
-    animation: scroll-infinite 40s linear infinite;
+    /* JavaScript로 애니메이션 제어 */
     will-change: transform;
 }
 
