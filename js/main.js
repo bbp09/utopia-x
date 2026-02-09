@@ -1161,10 +1161,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         // 3. Initialize event listeners
         EventModule.init();
         
-        // 4. Load premium dancers
-        console.log('🎭 Starting premium dancers load...');
-        await DancerModule.fetchPremiumDancers();
-        console.log('🎭 Premium dancers load completed');
+        // 4. Load premium dancers (TEMPORARILY DISABLED - Section removed)
+        // console.log('🎭 Starting premium dancers load...');
+        // await DancerModule.fetchPremiumDancers();
+        // console.log('🎭 Premium dancers load completed');
         
         // 5. Expose global functions for backward compatibility
         window.selectUserType = (type) => UIModule.selectUserType(type);
