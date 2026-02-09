@@ -961,41 +961,46 @@ button {
 
 .brand-slider-wrapper {
     overflow: hidden !important;
-    width: 100%;
-    position: relative;
-    display: block !important; /* 블록 레벨 요소 */
+    width: 100% !important;
+    position: relative !important;
+    display: block !important;
+    margin: 0 auto !important;
 }
 
-.brand-slider-track {
+#brandSlider {
     display: flex !important;
-    flex-direction: row !important; /* 가로 방향 강제 */
-    gap: 50px;
-    width: max-content; /* 내용에 딱 맞게 */
-    align-items: center;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 50px !important;
+    width: max-content !important;
+    align-items: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 .brand-logo {
-    flex-shrink: 0;
-    width: 180px;
-    height: 90px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(157, 78, 221, 0.4);
-    border-radius: 15px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #FFFFFF;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0 !important;
+    width: 180px !important;
+    height: 90px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 2px solid rgba(157, 78, 221, 0.4) !important;
+    border-radius: 15px !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    color: #FFFFFF !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+    margin: 0 !important;
 }
 
 .brand-logo:hover {
-    transform: translateY(-5px);
-    border-color: var(--primary-purple);
-    background: rgba(157, 78, 221, 0.12);
-    box-shadow: 0 8px 25px rgba(157, 78, 221, 0.3);
+    transform: translateY(-5px) !important;
+    border-color: var(--primary-purple) !important;
+    background: rgba(157, 78, 221, 0.12) !important;
+    box-shadow: 0 8px 25px rgba(157, 78, 221, 0.3) !important;
 }
 
 /* 기존 클라이언트 그리드 (사용 안 함) */
