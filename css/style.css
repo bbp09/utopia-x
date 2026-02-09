@@ -996,6 +996,15 @@ button {
     transition: all 0.3s ease !important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
     margin: 0 !important;
+    padding: 10px !important; /* 이미지를 위한 패딩 */
+}
+
+.brand-logo img {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important; /* 비율 유지하면서 꽉 채움 */
 }
 
 .brand-logo:hover {
