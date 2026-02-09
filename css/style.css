@@ -953,6 +953,7 @@ button {
     text-align: center;
     padding-top: 40px;
     border-top: 1px solid var(--border-color);
+    overflow: hidden;
 }
 
 .clients-title {
@@ -963,6 +964,62 @@ button {
     margin-bottom: 40px;
 }
 
+/* 무한 슬라이더 컨테이너 */
+.partners-slider {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    padding: 20px 0;
+}
+
+.partners-track {
+    display: flex;
+    gap: 40px;
+    animation: scroll-infinite 40s linear infinite;
+    width: fit-content;
+}
+
+.partner-logo {
+    flex-shrink: 0;
+    padding: 20px 30px;
+    background: var(--bg-card);
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    min-width: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.partner-logo:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary-purple);
+    box-shadow: 0 8px 20px rgba(157, 78, 221, 0.2);
+}
+
+.partner-logo img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* 무한 스크롤 애니메이션 */
+@keyframes scroll-infinite {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* 호버 시 애니메이션 일시정지 */
+.partners-slider:hover .partners-track {
+    animation-play-state: paused;
+}
+
+/* 기존 클라이언트 그리드 (사용 안 함) */
 .clients-grid {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
