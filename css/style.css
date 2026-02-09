@@ -949,81 +949,50 @@ button {
 }
 
 /* Clients Section */
+/* ========================================
+   협력 브랜드 슬라이더 - 완전히 새로 만듦
+======================================== */
 .clients-section {
     text-align: center;
-    padding: 60px 0; /* 패딩 증가 */
-    border-top: 1px solid var(--border-color);
+    padding: 60px 0;
     overflow: hidden;
-    background: linear-gradient(180deg, transparent 0%, rgba(157, 78, 221, 0.03) 100%); /* 약간의 배경 */
+    background: rgba(157, 78, 221, 0.03);
 }
 
-.clients-title {
-    font-size: 16px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 40px;
-}
-
-/* 무한 슬라이더 컨테이너 */
-.partners-slider {
+.brand-slider-wrapper {
     overflow: hidden;
-    position: relative;
     width: 100%;
-    padding: 30px 0; /* 패딩 증가 */
-    min-height: 150px; /* 최소 높이 증가 */
-    background: transparent; /* 디버깅용 */
+    position: relative;
 }
 
-.partners-track {
+.brand-slider-track {
     display: flex;
-    gap: 40px;
-    /* JavaScript로 애니메이션 제어 */
-    will-change: transform;
+    gap: 50px;
+    width: max-content; /* 내용에 딱 맞게 */
 }
 
-/* 무한 스크롤 애니메이션 - 정확히 50% 이동 */
-@keyframes scroll-infinite {
-    from {
-        transform: translate3d(0, 0, 0);
-    }
-    to {
-        transform: translate3d(-50%, 0, 0);
-    }
-}
-
-.partner-logo {
+.brand-logo {
     flex-shrink: 0;
-    padding: 25px 35px; /* 패딩 증가 */
-    background: rgba(157, 78, 221, 0.08); /* 배경 강화 */
-    border-radius: 15px;
-    border: 2px solid rgba(157, 78, 221, 0.5); /* 테두리 강화 */
-    transition: all 0.3s ease;
-    min-width: 200px; /* 너비 증가 */
-    min-height: 100px; /* 높이 증가 */
+    width: 180px;
+    height: 90px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 10px rgba(157, 78, 221, 0.1); /* 그림자 추가 */
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(157, 78, 221, 0.4);
+    border-radius: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #FFFFFF;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.partner-logo:hover {
-    transform: translateY(-8px); /* 더 많이 올라가게 */
+.brand-logo:hover {
+    transform: translateY(-5px);
     border-color: var(--primary-purple);
-    background: rgba(157, 78, 221, 0.15); /* 호버 시 배경 강화 */
-    box-shadow: 0 12px 30px rgba(157, 78, 221, 0.3); /* 그림자 강화 */
-}
-
-.partner-logo img {
-    width: 100%;
-    height: auto;
-    display: block;
-    opacity: 1; /* 완전 불투명 */
-}
-
-/* 호버 시 애니메이션 일시정지 */
-.partners-slider:hover .partners-track {
-    animation-play-state: paused;
+    background: rgba(157, 78, 221, 0.12);
+    box-shadow: 0 8px 25px rgba(157, 78, 221, 0.3);
 }
 
 /* 기존 클라이언트 그리드 (사용 안 함) */
