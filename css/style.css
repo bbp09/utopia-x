@@ -967,17 +967,18 @@ button {
     margin: 0 auto !important;
 }
 
-/* ID와 클래스 둘 다 적용 */
+/* ID와 클래스 둘 다 적용 - CSS Animation 사용 */
 #brandSlider,
 .brand-slider-track {
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
     gap: 50px !important;
-    width: max-content !important;
     align-items: center !important;
     margin: 0 !important;
     padding: 0 !important;
+    /* CSS animation 적용 - 포토카드 슬라이더와 동일한 방식 */
+    animation: brandScroll 40s linear infinite !important;
 }
 
 .brand-logo {
@@ -993,8 +994,7 @@ button {
     box-shadow: none !important;
     margin: 0 !important;
     padding: 15px !important;
-    /* transition 완전 제거 - 부드러운 애니메이션을 위해 */
-    pointer-events: none !important; /* 마우스 이벤트 완전 차단 */
+    pointer-events: none !important; /* 마우스 이벤트 차단 */
 }
 
 .brand-logo img {
@@ -1003,8 +1003,19 @@ button {
     width: auto !important;
     height: auto !important;
     object-fit: contain !important;
-    opacity: 0.9 !important; /* 약간 투명하게 */
-    pointer-events: none !important; /* 마우스 이벤트 완전 차단 */
+    opacity: 0.9 !important;
+    pointer-events: none !important;
+}
+
+/* 무한 스크롤 애니메이션 */
+/* 14개 로고 × (150px 로고 + 50px gap) = 2800px */
+@keyframes brandScroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-2800px);
+    }
 }
 
 /* 기존 클라이언트 그리드 (사용 안 함) */

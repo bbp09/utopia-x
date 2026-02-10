@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css?v=2030">
+    <link rel="stylesheet" href="css/style.css?v=2031">
     <link rel="stylesheet" href="css/auth.css">
     <link rel="stylesheet" href="css/chat.css">
     
@@ -351,9 +351,54 @@
                 </p>
             </div>
             
-            <!-- 협력 브랜드 무한 슬라이더 -->
+            <!-- 협력 브랜드 무한 슬라이더 (CSS Animation 방식) -->
             <div class="brand-slider-wrapper">
-                <div class="brand-slider-track" id="brandSlider">
+                <div class="brand-slider-track">
+                    <!-- 첫 번째 세트 -->
+                    <div class="brand-logo">
+                        <img src="/images/brands/samsung_black.png" alt="SAMSUNG">
+                    </div>
+                    <div class="brand-logo">
+                        <img src="/images/brands/seoul_arts.png" alt="서울예술대학">
+                    </div>
+                    <div class="brand-logo">
+                        <img src="/images/brands/family_center.png" alt="감동구가족센터">
+                    </div>
+                    <div class="brand-logo">
+                        <img src="/images/brands/gwanakgu.png" alt="관악구">
+                    </div>
+                    <div class="brand-logo">
+                        <img src="/images/brands/nowon_center.png" alt="노원문화재단">
+                    </div>
+                    <div class="brand-logo">
+                        <img src="/images/brands/siheung_youth.png" alt="시흥시청소년재단">
+                    </div>
+                    <div class="brand-logo">
+                        <img src="/images/brands/semyung_univ.png" alt="세명대학교">
+                    </div>
+                    <div class="brand-logo">
+                        <img src="/images/brands/mapo_cultural.png" alt="마포문화재단">
+                    </div>
+                    <div class="brand-logo">
+                        <img src="/images/brands/goyang_breaking.png" alt="고양브레이킹협회">
+                    </div>
+                    <div class="brand-logo">
+                        <img src="/images/brands/wallf.png" alt="Wallf">
+                    </div>
+                    <div class="brand-logo">
+                        <img src="/images/brands/emotion_castle.png" alt="Emotion Castle">
+                    </div>
+                    <div class="brand-logo">
+                        <img src="/images/brands/trendy_motion.png" alt="Trendy Motion">
+                    </div>
+                    <div class="brand-logo">
+                        <img src="/images/brands/suny_korea.png" alt="SUNY Korea">
+                    </div>
+                    <div class="brand-logo">
+                        <img src="/images/brands/artpie.png" alt="ARTPIE">
+                    </div>
+                    
+                    <!-- 두 번째 세트 (완벽한 무한 루프를 위한 복제) -->
                     <div class="brand-logo">
                         <img src="/images/brands/samsung_black.png" alt="SAMSUNG">
                     </div>
@@ -1630,7 +1675,7 @@
     <!-- Chat Module (Only load if needed) -->
     <script src="js/chat.js"></script>
     
-    <!-- Infinite Slider -->
-    <script src="js/brand-slider.js"></script>
+    <!-- Brand slider uses pure CSS animation - no JavaScript needed -->
+
 </body>
 </html>
