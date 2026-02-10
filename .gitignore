@@ -9,6 +9,10 @@ node_modules/
 dist/
 build/
 
+# Wrangler
+.wrangler/
+wrangler.toml.bak
+
 # IDE
 .vscode/
 .idea/
