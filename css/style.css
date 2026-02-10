@@ -982,22 +982,19 @@ button {
 
 .brand-logo {
     flex-shrink: 0 !important;
-    width: 150px !important; /* 정사각형에 가깝게 */
-    height: 150px !important; /* 정사각형 */
+    width: 150px !important;
+    height: 150px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     background: transparent !important;
     border: none !important;
     border-radius: 0 !important;
-    transition: all 0.3s ease !important;
     box-shadow: none !important;
     margin: 0 !important;
-    padding: 15px !important; /* 내부 여백 */
-}
-
-.brand-logo:hover {
-    transform: scale(1.05) !important; /* 호버 시 약간 확대 */
+    padding: 15px !important;
+    /* transition 완전 제거 - 부드러운 애니메이션을 위해 */
+    pointer-events: none !important; /* 마우스 이벤트 완전 차단 */
 }
 
 .brand-logo img {
@@ -1005,19 +1002,9 @@ button {
     max-height: 100% !important;
     width: auto !important;
     height: auto !important;
-    object-fit: contain !important; /* 원본 비율 유지 */
-    opacity: 0.85 !important;
-}
-
-.brand-logo:hover img {
-    opacity: 1 !important;
-}
-
-.brand-logo:hover {
-    transform: translateY(-5px) !important;
-    border-color: var(--primary-purple) !important;
-    background: rgba(157, 78, 221, 0.12) !important;
-    box-shadow: 0 8px 25px rgba(157, 78, 221, 0.3) !important;
+    object-fit: contain !important;
+    opacity: 0.9 !important; /* 약간 투명하게 */
+    pointer-events: none !important; /* 마우스 이벤트 완전 차단 */
 }
 
 /* 기존 클라이언트 그리드 (사용 안 함) */

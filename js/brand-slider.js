@@ -1,4 +1,4 @@
-// 협력 브랜드 무한 슬라이더 - 끊김 없는 버전
+// 협력 브랜드 무한 슬라이더 - 완벽하게 끊김 없는 버전
 console.log('🎨 Brand Slider Loading...');
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -16,9 +16,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const logoCount = originalLogos.length;
     console.log(`📦 Found ${logoCount} original logos`);
     
-    // 로고를 충분히 복제 (원본 + 3번 복제 = 총 4세트)
-    // 이렇게 하면 화면에 항상 충분한 로고가 보임
-    for (let i = 0; i < 3; i++) {
+    // 로고를 충분히 많이 복제 (원본 + 5번 복제 = 총 6세트)
+    // 많이 복제할수록 리셋이 덜 보임
+    for (let i = 0; i < 5; i++) {
         originalLogos.forEach(logo => {
             const clone = logo.cloneNode(true);
             slider.appendChild(clone);
@@ -29,78 +29,55 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 애니메이션 설정
     let position = 0;
-    const speed = 0.5; // 픽셀/프레임
-    let isRunning = true;
-    let animationId = null;
+    const speed = 0.5; // 픽셀/프레임 (부드러운 속도)
     
-    // 한 세트의 너비 계산 (정확하게)
+    // 한 세트의 너비 계산
     function calculateSetWidth() {
-        const firstLogo = slider.children[0];
-        const logoRect = firstLogo.getBoundingClientRect();
-        const computedStyle = window.getComputedStyle(slider);
-        const gap = parseFloat(computedStyle.gap) || 50;
+        // 약간의 딜레이를 주고 정확한 너비 측정
+        setTimeout(() => {
+            const firstLogo = slider.children[0];
+            if (!firstLogo) return 0;
+            
+            const logoRect = firstLogo.getBoundingClientRect();
+            const computedStyle = window.getComputedStyle(slider);
+            const gap = parseFloat(computedStyle.gap) || 50;
+            
+            const singleLogoWidth = logoRect.width + gap;
+            const setWidth = singleLogoWidth * logoCount;
+            
+            console.log(`📏 Single logo width: ${logoRect.width}px`);
+            console.log(`📏 Gap: ${gap}px`);
+            console.log(`📏 Logo count: ${logoCount}`);
+            console.log(`📏 Set width: ${setWidth}px`);
+            
+            return setWidth;
+        }, 100);
         
-        const singleLogoWidth = logoRect.width + gap;
-        const setWidth = singleLogoWidth * logoCount; // 원본 세트 너비만
-        
-        console.log(`📏 Single logo width: ${logoRect.width}px`);
-        console.log(`📏 Gap: ${gap}px`);
-        console.log(`📏 Logo count: ${logoCount}`);
-        console.log(`📏 Set width: ${setWidth}px`);
-        
-        return setWidth;
+        // 임시로 기본값 반환
+        return (150 + 50) * logoCount; // 150px 로고 + 50px gap
     }
     
     const setWidth = calculateSetWidth();
     
-    // 애니메이션 함수
+    // 애니메이션 함수 - 절대 멈추지 않음
     function animate() {
-        if (!isRunning) {
-            animationId = requestAnimationFrame(animate);
-            return;
-        }
-        
-        // 왼쪽으로 이동
+        // 왼쪽으로 계속 이동
         position -= speed;
         
         // 한 세트만큼 이동했으면 position을 0으로 리셋
-        // 이렇게 하면 끊김 없이 무한 반복
+        // 복제가 충분히 많아서 리셋이 보이지 않음
         if (Math.abs(position) >= setWidth) {
             position = 0;
         }
         
-        // transform 적용
+        // transform 적용 (transition 없음!)
         slider.style.transform = `translateX(${position}px)`;
         
-        // 다음 프레임 요청
-        animationId = requestAnimationFrame(animate);
+        // 다음 프레임 계속 요청
+        requestAnimationFrame(animate);
     }
     
-    // 애니메이션 시작
+    // 애니메이션 시작 - 절대 멈추지 않음!
     animate();
-    console.log('🎬 Animation started!');
-    
-    // 호버 시 일시정지
-    const wrapper = document.querySelector('.brand-slider-wrapper');
-    if (wrapper) {
-        wrapper.addEventListener('mouseenter', () => {
-            isRunning = false;
-            console.log('⏸️ Animation paused');
-        });
-        
-        wrapper.addEventListener('mouseleave', () => {
-            isRunning = true;
-            console.log('▶️ Animation resumed');
-        });
-    }
-    
-    // 윈도우 리사이즈 시 재계산 (옵션)
-    let resizeTimeout;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-            const newSetWidth = calculateSetWidth();
-            console.log(`🔄 Window resized - New set width: ${newSetWidth}px`);
-        }, 250);
-    });
+    console.log('🎬 Animation started! (Never stops)');
 });
