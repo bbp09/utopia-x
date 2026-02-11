@@ -19,13 +19,15 @@ const state = {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('📄 DOM ready, checking authentication...');
     
+    // === 프로토타입 모드: 로그인 체크 비활성화 ===
     // Check if user is logged in
-    state.userEmail = sessionStorage.getItem('userEmail');
-    state.userRole = sessionStorage.getItem('userRole');
+    state.userEmail = sessionStorage.getItem('userEmail') || 'prototype@utopia-x.com';
+    state.userRole = sessionStorage.getItem('userRole') || 'artist';
     
     console.log('👤 User email:', state.userEmail);
     console.log('🎭 User role:', state.userRole);
     
+    /* 프로토타입 모드: 로그인 체크 비활성화
     if (!state.userEmail) {
         console.error('❌ User not logged in');
         showToast('로그인이 필요합니다', 'error');
@@ -43,8 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 2000);
         return;
     }
+    */
     
-    console.log('✅ Auth check passed');
+    console.log('✅ Auth check passed (prototype mode)');
     
     // Get user ID from Supabase
     getUserId();

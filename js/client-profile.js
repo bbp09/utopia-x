@@ -24,8 +24,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Check authentication
 async function checkAuth() {
-    console.log('🔐 Checking authentication...');
+    console.log('🔐 Checking authentication (prototype mode)...');
     
+    /* 프로토타입 모드: 로그인 체크 비활성화
     if (typeof window.supabase === 'undefined') {
         console.error('❌ Supabase not available');
         alert('데이터베이스 연결에 실패했습니다');
@@ -50,6 +51,14 @@ async function checkAuth() {
         console.error('❌ Auth check failed:', error);
         window.location.href = 'index.html';
     }
+    */
+    
+    // 프로토타입용 가짜 사용자
+    currentUser = {
+        id: 'prototype-user-001',
+        email: 'prototype@utopia-x.com'
+    };
+    console.log('✅ Prototype user set:', currentUser);
 }
 
 // Load user data from Supabase

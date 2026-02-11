@@ -15,8 +15,9 @@ const MAX_TAGS = 5;
 // 🔐 Authentication Check
 // ===================================
 async function checkAuth() {
-    console.log('🔐 Checking authentication...');
+    console.log('🔐 Checking authentication (prototype mode)...');
     
+    /* 프로토타입 모드: 로그인 체크 비활성화
     if (!window.supabase) {
         console.error('❌ Supabase not initialized!');
         alert('시스템 오류가 발생했습니다.');
@@ -49,6 +50,15 @@ async function checkAuth() {
 
     currentUser = user;
     console.log('✅ Artist authenticated:', user.id);
+    return true;
+    */
+    
+    // 프로토타입용 가짜 사용자
+    currentUser = {
+        id: 'prototype-artist-001',
+        email: 'artist@utopia-x.com'
+    };
+    console.log('✅ Prototype artist set:', currentUser);
     return true;
 }
 
