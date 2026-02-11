@@ -66,8 +66,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ===== Get User ID from Supabase =====
 async function getUserId() {
-    console.log('🔍 Getting user ID from Supabase...');
+    console.log('🔍 Getting user ID (prototype mode)...');
     
+    // 프로토타입 모드: 가짜 User ID 설정
+    state.userId = 'prototype-artist-001';
+    console.log('✅ Prototype User ID:', state.userId);
+    
+    /* 프로토타입 모드: Supabase 호출 비활성화
     if (!window.supabase) {
         console.error('❌ Supabase client not available');
         return;
@@ -90,6 +95,7 @@ async function getUserId() {
     } catch (err) {
         console.error('❌ Exception getting user:', err);
     }
+    */
 }
 
 // ===== Tag Selection Logic =====
