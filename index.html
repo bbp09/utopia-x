@@ -538,6 +538,10 @@
                     <a href="admin.html" style="color: var(--text-secondary); text-decoration: none; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
                         <i class="fas fa-shield-alt"></i> Admin
                     </a>
+                    <span style="margin: 0 8px;">|</span>
+                    <a href="#" onclick="openPrototypePopup(); return false;" style="color: var(--text-secondary); text-decoration: none; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
+                        <i class="fas fa-file-image"></i> 사업계획서용 프로토타입
+                    </a>
                 </p>
             </div>
         </div>
@@ -1676,6 +1680,187 @@
     <script src="js/chat.js"></script>
     
     <!-- Brand slider uses pure CSS animation - no JavaScript needed -->
+    
+    <!-- Modal: 사업계획서용 프로토타입 (임시) -->
+    <div id="prototypeModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 900px; max-height: 90vh; overflow-y: auto;">
+            <button class="modal-close" onclick="closePrototypePopup()" aria-label="Close">&times;</button>
+            <div class="modal-header" style="text-align: center;">
+                <h2 style="color: var(--primary-purple); font-size: 28px; margin-bottom: 10px;">
+                    <i class="fas fa-user-circle"></i> 댄서 프로필 상세 등록
+                </h2>
+                <p style="color: var(--text-secondary); font-size: 14px;">
+                    사업계획서용 프로토타입 - 상세 정보 입력 화면
+                </p>
+            </div>
+            
+            <div style="padding: 30px;">
+                <!-- 기본 정보 -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 20px; color: var(--text-primary); margin-bottom: 15px; border-bottom: 2px solid var(--primary-purple); padding-bottom: 10px;">
+                        <i class="fas fa-info-circle"></i> 기본 정보
+                    </h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; color: var(--text-secondary); font-size: 14px;">이름 *</label>
+                            <input type="text" placeholder="홍길동" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-card); color: var(--text-primary);">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; color: var(--text-secondary); font-size: 14px;">예명/활동명</label>
+                            <input type="text" placeholder="HONG" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-card); color: var(--text-primary);">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; color: var(--text-secondary); font-size: 14px;">연락처 *</label>
+                            <input type="tel" placeholder="010-1234-5678" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-card); color: var(--text-primary);">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; color: var(--text-secondary); font-size: 14px;">이메일 *</label>
+                            <input type="email" placeholder="hong@example.com" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-card); color: var(--text-primary);">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 장르 -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 20px; color: var(--text-primary); margin-bottom: 15px; border-bottom: 2px solid var(--primary-purple); padding-bottom: 10px;">
+                        <i class="fas fa-music"></i> 전문 장르
+                    </h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        <button class="tag-btn" style="padding: 10px 20px; background: rgba(157, 78, 221, 0.1); border: 2px solid var(--primary-purple); border-radius: 25px; color: var(--primary-purple); cursor: pointer; transition: all 0.3s;">케이팝</button>
+                        <button class="tag-btn" style="padding: 10px 20px; background: rgba(157, 78, 221, 0.1); border: 2px solid var(--primary-purple); border-radius: 25px; color: var(--primary-purple); cursor: pointer; transition: all 0.3s;">힙합</button>
+                        <button class="tag-btn" style="padding: 10px 20px; background: rgba(157, 78, 221, 0.1); border: 2px solid var(--primary-purple); border-radius: 25px; color: var(--primary-purple); cursor: pointer; transition: all 0.3s;">비보잉</button>
+                        <button class="tag-btn" style="padding: 10px 20px; background: rgba(157, 78, 221, 0.1); border: 2px solid var(--primary-purple); border-radius: 25px; color: var(--primary-purple); cursor: pointer; transition: all 0.3s;">재즈</button>
+                        <button class="tag-btn" style="padding: 10px 20px; background: rgba(157, 78, 221, 0.1); border: 2px solid var(--primary-purple); border-radius: 25px; color: var(--primary-purple); cursor: pointer; transition: all 0.3s;">발레</button>
+                        <button class="tag-btn" style="padding: 10px 20px; background: rgba(157, 78, 221, 0.1); border: 2px solid var(--primary-purple); border-radius: 25px; color: var(--primary-purple); cursor: pointer; transition: all 0.3s;">현대무용</button>
+                        <button class="tag-btn" style="padding: 10px 20px; background: rgba(157, 78, 221, 0.1); border: 2px solid var(--primary-purple); border-radius: 25px; color: var(--primary-purple); cursor: pointer; transition: all 0.3s;">라틴댄스</button>
+                    </div>
+                </div>
+                
+                <!-- 신체 정보 -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 20px; color: var(--text-primary); margin-bottom: 15px; border-bottom: 2px solid var(--primary-purple); padding-bottom: 10px;">
+                        <i class="fas fa-ruler-vertical"></i> 신체 정보
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; color: var(--text-secondary); font-size: 14px;">키 (cm)</label>
+                            <input type="number" placeholder="170" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-card); color: var(--text-primary);">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; color: var(--text-secondary); font-size: 14px;">몸무게 (kg)</label>
+                            <input type="number" placeholder="60" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-card); color: var(--text-primary);">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; color: var(--text-secondary); font-size: 14px;">발 사이즈 (mm)</label>
+                            <input type="number" placeholder="260" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-card); color: var(--text-primary);">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; color: var(--text-secondary); font-size: 14px;">상의 사이즈</label>
+                            <select style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-card); color: var(--text-primary);">
+                                <option>XS</option>
+                                <option>S</option>
+                                <option>M</option>
+                                <option>L</option>
+                                <option>XL</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 포트폴리오 -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 20px; color: var(--text-primary); margin-bottom: 15px; border-bottom: 2px solid var(--primary-purple); padding-bottom: 10px;">
+                        <i class="fas fa-briefcase"></i> 포트폴리오
+                    </h3>
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; color: var(--text-secondary); font-size: 14px;">경력 사항</label>
+                        <textarea placeholder="주요 공연 및 활동 이력을 입력하세요&#10;예) 2023년 OO뮤직비디오 백댄서&#10;     2024년 XX콘서트 메인댄서" rows="4" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-card); color: var(--text-primary); resize: vertical;"></textarea>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: var(--text-secondary); font-size: 14px;">영상 링크</label>
+                        <input type="url" placeholder="https://youtube.com/..." style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-card); color: var(--text-primary);">
+                    </div>
+                </div>
+                
+                <!-- 프로필 이미지 -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 20px; color: var(--text-primary); margin-bottom: 15px; border-bottom: 2px solid var(--primary-purple); padding-bottom: 10px;">
+                        <i class="fas fa-images"></i> 프로필 이미지
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
+                        <div style="aspect-ratio: 1; background: var(--bg-card); border: 2px dashed var(--border-color); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s;">
+                            <i class="fas fa-camera" style="font-size: 32px; color: var(--primary-purple); margin-bottom: 10px;"></i>
+                            <span style="color: var(--text-secondary); font-size: 12px;">이미지 1</span>
+                        </div>
+                        <div style="aspect-ratio: 1; background: var(--bg-card); border: 2px dashed var(--border-color); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s;">
+                            <i class="fas fa-camera" style="font-size: 32px; color: var(--primary-purple); margin-bottom: 10px;"></i>
+                            <span style="color: var(--text-secondary); font-size: 12px;">이미지 2</span>
+                        </div>
+                        <div style="aspect-ratio: 1; background: var(--bg-card); border: 2px dashed var(--border-color); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s;">
+                            <i class="fas fa-camera" style="font-size: 32px; color: var(--primary-purple); margin-bottom: 10px;"></i>
+                            <span style="color: var(--text-secondary); font-size: 12px;">이미지 3</span>
+                        </div>
+                        <div style="aspect-ratio: 1; background: var(--bg-card); border: 2px dashed var(--border-color); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s;">
+                            <i class="fas fa-camera" style="font-size: 32px; color: var(--primary-purple); margin-bottom: 10px;"></i>
+                            <span style="color: var(--text-secondary); font-size: 12px;">이미지 4</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 특기 사항 -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 20px; color: var(--text-primary); margin-bottom: 15px; border-bottom: 2px solid var(--primary-purple); padding-bottom: 10px;">
+                        <i class="fas fa-star"></i> 특기 사항
+                    </h3>
+                    <textarea placeholder="추가로 강조하고 싶은 특기나 능력을 자유롭게 작성해주세요&#10;예) 보컬 가능, 악기 연주 가능, 안무 창작 가능 등" rows="5" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-card); color: var(--text-primary); resize: vertical;"></textarea>
+                </div>
+                
+                <!-- 하단 버튼 -->
+                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
+                    <button onclick="closePrototypePopup()" style="padding: 15px 40px; background: var(--bg-card); border: 2px solid var(--border-color); border-radius: 12px; color: var(--text-secondary); font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                        취소
+                    </button>
+                    <button style="padding: 15px 40px; background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue)); border: none; border-radius: 12px; color: white; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                        <i class="fas fa-check-circle"></i> 등록 완료
+                    </button>
+                </div>
+                
+                <!-- 안내 문구 -->
+                <p style="text-align: center; margin-top: 20px; color: var(--text-secondary); font-size: 12px;">
+                    <i class="fas fa-info-circle"></i> 이 화면은 사업계획서용 프로토타입입니다. 실제 데이터는 저장되지 않습니다.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 사업계획서용 프로토타입 팝업 열기/닫기
+        function openPrototypePopup() {
+            const modal = document.getElementById('prototypeModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                console.log('✅ Prototype popup opened');
+            }
+        }
+        
+        function closePrototypePopup() {
+            const modal = document.getElementById('prototypeModal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                console.log('✅ Prototype popup closed');
+            }
+        }
+        
+        // 팝업 외부 클릭 시 닫기
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('prototypeModal');
+            if (modal && e.target === modal) {
+                closePrototypePopup();
+            }
+        });
+    </script>
 
 </body>
 </html>
