@@ -1701,10 +1701,15 @@
     <script>
         // 로그인 모달 열기
         function showLoginModal() {
-            console.log('로그인 모달 열기');
+            console.log('🔵 showLoginModal 함수 호출됨');
             const modal = document.getElementById('loginModal');
+            console.log('🔵 loginModal 요소:', modal);
             if (modal) {
                 modal.classList.add('show');
+                console.log('✅ show 클래스 추가됨');
+                console.log('🔵 modal.classList:', modal.classList.toString());
+            } else {
+                console.error('❌ loginModal 요소를 찾을 수 없습니다!');
             }
         }
         

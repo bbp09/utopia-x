@@ -326,8 +326,9 @@ button {
     color: var(--primary-purple);
     font-size: 14px;
     font-weight: 600;
-    cursor: pointer;
+    cursor: pointer !important;
     transition: var(--transition-base);
+    pointer-events: auto !important;
 }
 
 .btn-login:hover {
