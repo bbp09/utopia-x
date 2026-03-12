@@ -1699,34 +1699,54 @@
     
     <!-- User Auth & Profile Dropdown Script -->
     <script>
-        // 로그인 모달 열기
-        function showLoginModal() {
+        // 로그인 모달 열기 - window 객체에 바인딩
+        window.showLoginModal = function() {
             console.log('🔵 showLoginModal 함수 호출됨');
             const modal = document.getElementById('loginModal');
             console.log('🔵 loginModal 요소:', modal);
+            
             if (modal) {
+                // computed style 확인
+                const computedStyle = window.getComputedStyle(modal);
+                console.log('🔵 현재 display:', computedStyle.display);
+                console.log('🔵 현재 opacity:', computedStyle.opacity);
+                console.log('🔵 현재 visibility:', computedStyle.visibility);
+                console.log('🔵 현재 z-index:', computedStyle.zIndex);
+                
                 modal.classList.add('show');
+                document.body.style.overflow = 'hidden'; // 스크롤 방지
+                
                 console.log('✅ show 클래스 추가됨');
                 console.log('🔵 modal.classList:', modal.classList.toString());
+                
+                // 추가된 후 다시 확인
+                setTimeout(() => {
+                    const newComputedStyle = window.getComputedStyle(modal);
+                    console.log('🟢 변경 후 display:', newComputedStyle.display);
+                    console.log('🟢 변경 후 opacity:', newComputedStyle.opacity);
+                    console.log('🟢 변경 후 visibility:', newComputedStyle.visibility);
+                }, 100);
             } else {
                 console.error('❌ loginModal 요소를 찾을 수 없습니다!');
             }
-        }
+        };
         
-        // 회원가입 모달 열기
-        function openSignupModal() {
+        // 회원가입 모달 열기 - window 객체에 바인딩
+        window.openSignupModal = function() {
             console.log('회원가입 모달 열기');
             // 로그인 모달 닫기
             const loginModal = document.getElementById('loginModal');
             if (loginModal) {
                 loginModal.classList.remove('show');
+                document.body.style.overflow = ''; // 스크롤 복원
             }
             // 회원가입 모달 열기
             const signupModal = document.getElementById('signupModal');
             if (signupModal) {
                 signupModal.classList.add('show');
+                document.body.style.overflow = 'hidden'; // 스크롤 방지
             }
-        }
+        };
         
         // 프로필 드롭다운 토글
         function toggleProfileMenu() {

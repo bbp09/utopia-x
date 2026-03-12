@@ -1750,17 +1750,18 @@ input[type="range"]::-moz-range-thumb:hover {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.7);
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     z-index: 10000;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .modal.show {
-    display: flex !important;
     opacity: 1 !important;
+    visibility: visible !important;
 }
 
 .modal-content {
