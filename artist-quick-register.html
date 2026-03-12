@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTOPIA X - 아티스트 1분 등록</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        /* 퀵 폼 전용 스타일 */
+        .quick-form-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, rgba(157, 78, 221, 0.05), rgba(99, 102, 241, 0.05));
+            padding: 40px 20px;
+        }
+        
+        .quick-form-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .form-header h1 {
+            font-size: 32px;
+            color: var(--primary-purple);
+            margin-bottom: 10px;
+        }
+        
+        .form-header p {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-purple);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .form-label .required {
+            color: #ff4757;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-purple);
+            box-shadow: 0 0 0 4px rgba(157, 78, 221, 0.1);
+        }
+        
+        .gender-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .gender-btn {
+            padding: 16px;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .gender-btn:hover {
+            border-color: var(--primary-purple);
+            background: rgba(157, 78, 221, 0.05);
+        }
+        
+        .gender-btn.selected {
+            background: var(--primary-purple);
+            border-color: var(--primary-purple);
+            color: white;
+        }
+        
+        .image-upload-box {
+            width: 100%;
+            aspect-ratio: 1;
+            max-width: 300px;
+            margin: 0 auto;
+            background: var(--bg-primary);
+            border: 3px dashed var(--border-color);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .image-upload-box:hover {
+            border-color: var(--primary-purple);
+            background: rgba(157, 78, 221, 0.05);
+        }
+        
+        .image-upload-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        .upload-placeholder {
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        
+        .upload-placeholder i {
+            font-size: 48px;
+            color: var(--primary-purple);
+            margin-bottom: 15px;
+        }
+        
+        .social-inputs {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .social-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-purple);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 30px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(157, 78, 221, 0.3);
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .back-link a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .back-link a:hover {
+            color: var(--primary-purple);
+        }
+    </style>
+</head>
+<body>
+    <div class="quick-form-container">
+        <div class="quick-form-wrapper">
+            <div class="form-header">
+                <h1><i class="fas fa-bolt"></i> 1분 빠른 등록</h1>
+                <p>아티스트 계정을 빠르게 만들고 매칭을 시작하세요</p>
+            </div>
+            
+            <form id="quickRegisterForm">
+                <!-- 계정 정보 -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-key"></i> 계정 정보
+                    </h3>
+                    <div class="form-group">
+                        <label class="form-label">아이디 <span class="required">*</span></label>
+                        <input type="text" class="form-input" id="username" placeholder="영문, 숫자 조합 6자 이상" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">비밀번호 <span class="required">*</span></label>
+                        <input type="password" class="form-input" id="password" placeholder="8자 이상" required>
+                    </div>
+                </div>
+                
+                <!-- 기본 정보 -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-user"></i> 기본 정보
+                    </h3>
+                    <div class="form-group">
+                        <label class="form-label">본명 <span class="required">*</span></label>
+                        <input type="text" class="form-input" id="realName" placeholder="홍길동" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">활동명 (댄서 네임) <span class="required">*</span></label>
+                        <input type="text" class="form-input" id="stageName" placeholder="HONG" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">연락처 <span class="required">*</span></label>
+                        <input type="tel" class="form-input" id="phone" placeholder="01012345678" pattern="[0-9]{10,11}" required>
+                    </div>
+                </div>
+                
+                <!-- 외형 데이터 -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-search"></i> 검색 필터링 정보
+                    </h3>
+                    <div class="form-group">
+                        <label class="form-label">성별 <span class="required">*</span></label>
+                        <div class="gender-buttons">
+                            <button type="button" class="gender-btn" data-gender="male">
+                                <i class="fas fa-mars"></i> 남
+                            </button>
+                            <button type="button" class="gender-btn" data-gender="female">
+                                <i class="fas fa-venus"></i> 여
+                            </button>
+                        </div>
+                        <input type="hidden" id="gender" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">출생연도 <span class="required">*</span></label>
+                        <input type="number" class="form-input" id="birthYear" placeholder="1995" min="1950" max="2010" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">키 (cm) <span class="required">*</span></label>
+                        <input type="number" class="form-input" id="height" placeholder="170" min="140" max="220" required>
+                    </div>
+                </div>
+                
+                <!-- 직무 역량 -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-music"></i> 직무 핵심 역량
+                    </h3>
+                    <div class="form-group">
+                        <label class="form-label">메인 장르 <span class="required">*</span></label>
+                        <select class="form-input" id="mainGenre" required>
+                            <option value="">선택하세요</option>
+                            <option value="코레오">코레오</option>
+                            <option value="힙합">힙합</option>
+                            <option value="왁킹">왁킹</option>
+                            <option value="팝핑">팝핑</option>
+                            <option value="K-POP">K-POP</option>
+                            <option value="하우스">하우스</option>
+                            <option value="락킹">락킹</option>
+                            <option value="비보잉">비보잉</option>
+                            <option value="크럼프">크럼프</option>
+                            <option value="기타">기타</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">주 활동 지역 <span class="required">*</span></label>
+                        <select class="form-input" id="region" required>
+                            <option value="">선택하세요</option>
+                            <option value="서울">서울</option>
+                            <option value="경기">경기</option>
+                            <option value="인천">인천</option>
+                            <option value="부산">부산</option>
+                            <option value="대구">대구</option>
+                            <option value="광주">광주</option>
+                            <option value="대전">대전</option>
+                            <option value="울산">울산</option>
+                            <option value="세종">세종</option>
+                            <option value="강원">강원</option>
+                            <option value="충북">충북</option>
+                            <option value="충남">충남</option>
+                            <option value="전북">전북</option>
+                            <option value="전남">전남</option>
+                            <option value="경북">경북</option>
+                            <option value="경남">경남</option>
+                            <option value="제주">제주</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- 포트폴리오 -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-camera"></i> 퀵 레퍼런스
+                    </h3>
+                    <div class="form-group">
+                        <label class="form-label">대표 프로필 사진 <span class="required">*</span></label>
+                        <div class="image-upload-box" id="imageUploadBox">
+                            <div class="upload-placeholder">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>클릭하여 사진 업로드</p>
+                                <small>1장만 가능</small>
+                            </div>
+                            <img id="profilePreview" style="display: none;">
+                        </div>
+                        <input type="file" id="profileImage" accept="image/*" style="display: none;" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">소셜 미디어 링크 <span style="color: var(--text-secondary); font-weight: normal;">(최소 1개 필수)</span></label>
+                        <div class="social-inputs">
+                            <div class="social-input-group">
+                                <div class="social-icon"><i class="fab fa-instagram"></i></div>
+                                <input type="url" class="form-input" id="instagram" placeholder="https://instagram.com/username">
+                            </div>
+                            <div class="social-input-group">
+                                <div class="social-icon"><i class="fab fa-tiktok"></i></div>
+                                <input type="url" class="form-input" id="tiktok" placeholder="https://tiktok.com/@username">
+                            </div>
+                            <div class="social-input-group">
+                                <div class="social-icon"><i class="fab fa-youtube"></i></div>
+                                <input type="url" class="form-input" id="youtube" placeholder="https://youtube.com/@username">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-check-circle"></i> 1분 등록 완료하기
+                </button>
+            </form>
+            
+            <div class="back-link">
+                <a href="index.html"><i class="fas fa-arrow-left"></i> 메인으로 돌아가기</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 성별 선택
+        document.querySelectorAll('.gender-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                document.getElementById('gender').value = this.dataset.gender;
+            });
+        });
+        
+        // 이미지 업로드
+        const imageUploadBox = document.getElementById('imageUploadBox');
+        const profileImage = document.getElementById('profileImage');
+        const profilePreview = document.getElementById('profilePreview');
+        
+        imageUploadBox.addEventListener('click', () => {
+            profileImage.click();
+        });
+        
+        profileImage.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profilePreview.src = e.target.result;
+                    profilePreview.style.display = 'block';
+                    imageUploadBox.querySelector('.upload-placeholder').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // 폼 제출
+        document.getElementById('quickRegisterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 소셜 미디어 최소 1개 체크
+            const instagram = document.getElementById('instagram').value;
+            const tiktok = document.getElementById('tiktok').value;
+            const youtube = document.getElementById('youtube').value;
+            
+            if (!instagram && !tiktok && !youtube) {
+                alert('소셜 미디어 링크를 최소 1개 이상 입력해주세요.');
+                return;
+            }
+            
+            // 프로필 사진 체크
+            if (!profileImage.files[0]) {
+                alert('프로필 사진을 업로드해주세요.');
+                return;
+            }
+            
+            // 데이터 수집
+            const formData = {
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value,
+                realName: document.getElementById('realName').value,
+                stageName: document.getElementById('stageName').value,
+                phone: document.getElementById('phone').value,
+                gender: document.getElementById('gender').value,
+                birthYear: document.getElementById('birthYear').value,
+                height: document.getElementById('height').value,
+                mainGenre: document.getElementById('mainGenre').value,
+                region: document.getElementById('region').value,
+                profileImage: profileImage.files[0].name,
+                instagram: instagram,
+                tiktok: tiktok,
+                youtube: youtube
+            };
+            
+            // 프로토타입: localStorage에 저장
+            localStorage.setItem('artistProfile', JSON.stringify(formData));
+            
+            // 프로필 이미지를 localStorage에 저장 (Base64)
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                localStorage.setItem('artistProfileImage', e.target.result);
+                
+                // 성공 메시지와 함께 2단계로 이동
+                alert('가입이 완료되었습니다!\n\n추가 프로필을 입력하고 매칭 확률을 높이세요!');
+                window.location.href = 'artist-profile-complete.html';
+            };
+            reader.readAsDataURL(profileImage.files[0]);
+        });
+    </script>
+</body>
+</html>
