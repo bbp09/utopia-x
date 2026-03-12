@@ -1827,12 +1827,23 @@
         
         // 로그인 폼 제출 핸들러
         document.addEventListener('DOMContentLoaded', function() {
+            // 로그인 버튼 클릭 이벤트 추가 (이중 보험)
+            const loginBtn = document.getElementById('loginBtn');
+            if (loginBtn) {
+                loginBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('🔵 로그인 버튼 클릭됨 (addEventListener)');
+                    showLoginModal();
+                });
+            }
+            
             // 모달 닫기 버튼 이벤트
             document.querySelectorAll('.modal-close').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const modal = this.closest('.modal');
                     if (modal) {
                         modal.classList.remove('show');
+                        document.body.style.overflow = ''; // 스크롤 복원
                     }
                 });
             });
@@ -1842,6 +1853,7 @@
                 modal.addEventListener('click', function(e) {
                     if (e.target === this) {
                         this.classList.remove('show');
+                        document.body.style.overflow = ''; // 스크롤 복원
                     }
                 });
             });
