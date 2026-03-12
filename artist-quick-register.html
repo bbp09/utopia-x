@@ -302,7 +302,7 @@
                 </div>
                 <div class="form-group">
                     <label>메인 장르 <span class="required">*</span></label>
-                    <select class="form-input" name="genre" required>
+                    <select class="form-input" name="genre" id="genreSelect" required onchange="toggleGenreOtherField()">
                         <option value="">선택해주세요</option>
                         <option value="kpop">K-POP</option>
                         <option value="hiphop">힙합</option>
@@ -314,8 +314,14 @@
                         <option value="contemporary">현대무용</option>
                         <option value="jazz">재즈</option>
                         <option value="ballet">발레</option>
+                        <option value="choreography">코레오그래피</option>
                         <option value="other">기타</option>
                     </select>
+                </div>
+                <!-- 기타 선택 시 표시되는 텍스트 입력 -->
+                <div class="form-group" id="genreOtherField" style="display: none;">
+                    <label>기타 장르 입력 <span class="required">*</span></label>
+                    <input type="text" class="form-input" name="genreOther" id="genreOtherInput" placeholder="직접 입력해주세요 (예: 살사, 탭댄스 등)">
                 </div>
                 <div class="form-group">
                     <label>주 활동 지역 <span class="required">*</span></label>
@@ -382,6 +388,22 @@
     </div>
     
     <script>
+        // 장르 '기타' 선택 시 텍스트 입력 필드 표시/숨김
+        function toggleGenreOtherField() {
+            const genreSelect = document.getElementById('genreSelect');
+            const genreOtherField = document.getElementById('genreOtherField');
+            const genreOtherInput = document.getElementById('genreOtherInput');
+            
+            if (genreSelect.value === 'other') {
+                genreOtherField.style.display = 'block';
+                genreOtherInput.setAttribute('required', 'required');
+            } else {
+                genreOtherField.style.display = 'none';
+                genreOtherInput.removeAttribute('required');
+                genreOtherInput.value = '';
+            }
+        }
+        
         // 출생연도 옵션 생성 (1950 ~ 2010)
         const birthYearSelect = document.querySelector('select[name="birthYear"]');
         const currentYear = new Date().getFullYear();
@@ -417,6 +439,16 @@
         // 폼 제출
         document.getElementById('quickRegisterForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            // 장르 '기타' 선택 시 텍스트 입력 체크
+            const genreSelect = document.getElementById('genreSelect');
+            const genreOtherInput = document.getElementById('genreOtherInput');
+            
+            if (genreSelect.value === 'other' && !genreOtherInput.value.trim()) {
+                alert('기타 장르를 입력해주세요!');
+                genreOtherInput.focus();
+                return;
+            }
             
             // SNS 링크 1개 이상 입력 체크
             const instagram = document.querySelector('input[name="instagram"]').value;
