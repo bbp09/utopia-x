@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTOPIA X - 프로필 완성하기 (2단계)</title>
+    
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        .profile-complete-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(157, 78, 221, 0.05));
+            padding: 40px 20px;
+        }
+        
+        .profile-header {
+            max-width: 800px;
+            margin: 0 auto 30px;
+            text-align: center;
+        }
+        
+        .profile-header h1 {
+            font-size: 32px;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+        
+        .profile-header .welcome-box {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .profile-image-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-purple);
+        }
+        
+        .welcome-text {
+            flex: 1;
+            text-align: left;
+        }
+        
+        .welcome-text h2 {
+            font-size: 20px;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+        
+        .welcome-text p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin: 0;
+        }
+        
+        .profile-complete-form {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+            width: 50%;
+            transition: width 0.5s;
+        }
+        
+        .form-section {
+            margin-bottom: 35px;
+        }
+        
+        .form-section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-purple);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(157, 78, 221, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-purple);
+            box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.1);
+        }
+        
+        textarea.form-input {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .three-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .tag-selection {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .tag-btn {
+            padding: 10px 18px;
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .tag-btn:hover {
+            border-color: var(--primary-purple);
+            transform: translateY(-2px);
+        }
+        
+        .tag-btn.active {
+            background: var(--primary-purple);
+            border-color: var(--primary-purple);
+            color: white;
+        }
+        
+        .image-upload-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        
+        .image-upload-slot {
+            aspect-ratio: 1;
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--bg-primary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .image-upload-slot:hover {
+            border-color: var(--primary-purple);
+            background: rgba(157, 78, 221, 0.05);
+        }
+        
+        .image-upload-slot i {
+            font-size: 32px;
+            color: var(--primary-purple);
+            margin-bottom: 8px;
+        }
+        
+        .image-upload-slot span {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .image-upload-slot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+        }
+        
+        .btn-skip {
+            flex: 1;
+            padding: 16px;
+            background: transparent;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-skip:hover {
+            border-color: var(--primary-purple);
+            color: var(--primary-purple);
+        }
+        
+        .btn-submit {
+            flex: 2;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(157, 78, 221, 0.4);
+        }
+        
+        .info-notice {
+            background: rgba(157, 78, 221, 0.1);
+            border-left: 4px solid var(--primary-purple);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        
+        .info-notice p {
+            color: var(--text-primary);
+            font-size: 14px;
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .two-column,
+            .three-column {
+                grid-template-columns: 1fr;
+            }
+            
+            .image-upload-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .profile-header .welcome-box {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .welcome-text {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-complete-container">
+        <div class="profile-header">
+            <h1><i class="fas fa-star"></i> 프로필 완성하기</h1>
+            
+            <div class="welcome-box">
+                <img id="profileImageDisplay" class="profile-image-circle" src="" alt="프로필 사진">
+                <div class="welcome-text">
+                    <h2>환영합니다, <span id="stageNameDisplay"></span>님!</h2>
+                    <p>추가 정보를 입력하면 <strong>매칭 확률이 최대 3배</strong> 높아집니다. 지금 바로 완성해보세요!</p>
+                </div>
+            </div>
+        </div>
+        
+        <form class="profile-complete-form" id="profileCompleteForm">
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            
+            <div class="info-notice">
+                <p><i class="fas fa-lightbulb"></i> <strong>TIP:</strong> 자세한 정보를 입력할수록 AI가 더 정확하게 프로젝트를 추천해드립니다!</p>
+            </div>
+            
+            <!-- 추가 장르 -->
+            <div class="form-section">
+                <div class="form-section-title">
+                    <i class="fas fa-music"></i> 추가 가능 장르 (다중 선택)
+                </div>
+                <div class="tag-selection">
+                    <button type="button" class="tag-btn" data-genre="kpop">K-POP</button>
+                    <button type="button" class="tag-btn" data-genre="hiphop">힙합</button>
+                    <button type="button" class="tag-btn" data-genre="waacking">왁킹</button>
+                    <button type="button" class="tag-btn" data-genre="popping">팝핑</button>
+                    <button type="button" class="tag-btn" data-genre="locking">락킹</button>
+                    <button type="button" class="tag-btn" data-genre="breaking">비보잉</button>
+                    <button type="button" class="tag-btn" data-genre="house">하우스</button>
+                    <button type="button" class="tag-btn" data-genre="contemporary">현대무용</button>
+                    <button type="button" class="tag-btn" data-genre="jazz">재즈</button>
+                    <button type="button" class="tag-btn" data-genre="ballet">발레</button>
+                    <button type="button" class="tag-btn" data-genre="latin">라틴</button>
+                    <button type="button" class="tag-btn" data-genre="krump">크럼프</button>
+                </div>
+                <input type="hidden" name="additionalGenres" id="additionalGenres">
+            </div>
+            
+            <!-- 신체 정보 -->
+            <div class="form-section">
+                <div class="form-section-title">
+                    <i class="fas fa-ruler-vertical"></i> 추가 신체 정보
+                </div>
+                <div class="three-column">
+                    <div class="form-group">
+                        <label>몸무게 (kg)</label>
+                        <input type="number" class="form-input" name="weight" placeholder="65" min="30" max="200">
+                    </div>
+                    <div class="form-group">
+                        <label>발 사이즈 (mm)</label>
+                        <input type="number" class="form-input" name="shoeSize" placeholder="260" min="200" max="350">
+                    </div>
+                    <div class="form-group">
+                        <label>상의 사이즈</label>
+                        <select class="form-input" name="topSize">
+                            <option value="">선택</option>
+                            <option value="XS">XS</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 경력 -->
+            <div class="form-section">
+                <div class="form-section-title">
+                    <i class="fas fa-briefcase"></i> 경력 및 이력
+                </div>
+                <div class="form-group">
+                    <label>주요 경력 (대표작, 공연, 수상 경력 등)</label>
+                    <textarea class="form-input" name="career" placeholder="예: 
+- 2023 K-POP World Festival 우승
+- BLACKPINK 백댄서 (2022~2023)
+- MBC 음악중심 상주 댄서
+- 서울 국제 댄스 페스티벌 출연"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>영상 포트폴리오 (YouTube/Vimeo URL)</label>
+                    <input type="url" class="form-input" name="portfolioVideo" placeholder="https://youtube.com/...">
+                </div>
+            </div>
+            
+            <!-- 추가 프로필 이미지 -->
+            <div class="form-section">
+                <div class="form-section-title">
+                    <i class="fas fa-images"></i> 추가 프로필 이미지 (최대 4장)
+                </div>
+                <div class="image-upload-grid">
+                    <input type="file" id="additionalImage1" accept="image/*" style="display: none;">
+                    <div class="image-upload-slot" onclick="document.getElementById('additionalImage1').click()">
+                        <i class="fas fa-plus"></i>
+                        <span>사진 1</span>
+                    </div>
+                    
+                    <input type="file" id="additionalImage2" accept="image/*" style="display: none;">
+                    <div class="image-upload-slot" onclick="document.getElementById('additionalImage2').click()">
+                        <i class="fas fa-plus"></i>
+                        <span>사진 2</span>
+                    </div>
+                    
+                    <input type="file" id="additionalImage3" accept="image/*" style="display: none;">
+                    <div class="image-upload-slot" onclick="document.getElementById('additionalImage3').click()">
+                        <i class="fas fa-plus"></i>
+                        <span>사진 3</span>
+                    </div>
+                    
+                    <input type="file" id="additionalImage4" accept="image/*" style="display: none;">
+                    <div class="image-upload-slot" onclick="document.getElementById('additionalImage4').click()">
+                        <i class="fas fa-plus"></i>
+                        <span>사진 4</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 특기사항 -->
+            <div class="form-section">
+                <div class="form-section-title">
+                    <i class="fas fa-star"></i> 특기 및 기타 사항
+                </div>
+                <div class="form-group">
+                    <label>특기 (예: 아크로바틱, 악기 연주, 보컬 등)</label>
+                    <textarea class="form-input" name="specialSkills" placeholder="댄스 외 추가로 보유한 특기나 재능을 적어주세요."></textarea>
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button type="button" class="btn-skip" id="skipBtn">
+                    <i class="fas fa-forward"></i> 나중에 입력하기
+                </button>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-check-circle"></i> 프로필 완성하기
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        // 1단계에서 저장한 데이터 불러오기
+        const step1Data = JSON.parse(localStorage.getItem('artistQuickProfile') || '{}');
+        
+        // 프로필 이미지 & 활동명 표시
+        if (step1Data.profileImage) {
+            document.getElementById('profileImageDisplay').src = step1Data.profileImage;
+        }
+        if (step1Data.stageName) {
+            document.getElementById('stageNameDisplay').textContent = step1Data.stageName;
+        }
+        
+        // 장르 태그 선택 (다중 선택)
+        const selectedGenres = [];
+        document.querySelectorAll('.tag-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const genre = this.dataset.genre;
+                
+                if (this.classList.contains('active')) {
+                    selectedGenres.push(genre);
+                } else {
+                    const index = selectedGenres.indexOf(genre);
+                    if (index > -1) selectedGenres.splice(index, 1);
+                }
+                
+                document.getElementById('additionalGenres').value = selectedGenres.join(',');
+            });
+        });
+        
+        // 추가 이미지 미리보기
+        for (let i = 1; i <= 4; i++) {
+            const input = document.getElementById(`additionalImage${i}`);
+            const slot = input.nextElementSibling;
+            
+            input.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        slot.innerHTML = '';
+                        slot.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+        
+        // "나중에 입력하기" 버튼
+        document.getElementById('skipBtn').addEventListener('click', function() {
+            if (confirm('나중에 언제든 프로필을 수정할 수 있습니다. 메인 페이지로 이동할까요?')) {
+                window.location.href = 'index.html';
+            }
+        });
+        
+        // 폼 제출
+        document.getElementById('profileCompleteForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const step2Data = Object.fromEntries(formData);
+            
+            // 추가 이미지 처리
+            const additionalImages = [];
+            for (let i = 1; i <= 4; i++) {
+                const input = document.getElementById(`additionalImage${i}`);
+                if (input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        additionalImages.push(e.target.result);
+                        
+                        // 마지막 이미지까지 처리되면 저장
+                        if (additionalImages.length === input.files.length) {
+                            step2Data.additionalImages = additionalImages;
+                            saveCompleteProfile(step2Data);
+                        }
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+            
+            // 추가 이미지가 없으면 바로 저장
+            if (document.querySelectorAll('input[type="file"]:valid').length === 0) {
+                saveCompleteProfile(step2Data);
+            }
+        });
+        
+        function saveCompleteProfile(step2Data) {
+            // 1단계 + 2단계 데이터 합치기
+            const completeProfile = { ...step1Data, ...step2Data };
+            
+            // localStorage에 저장
+            localStorage.setItem('artistCompleteProfile', JSON.stringify(completeProfile));
+            
+            // 성공 메시지
+            alert('🎉 프로필이 완성되었습니다! 이제 AI가 맞춤 프로젝트를 추천해드립니다.');
+            
+            // 메인 페이지로 이동 (추후 대시보드로 변경 가능)
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

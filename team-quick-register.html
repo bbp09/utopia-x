@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UTOPIA X - 아티스트 퀵 등록 (1분 컷)</title>
+    <title>UTOPIA X - 댄스팀 퀵 등록 (1분 컷)</title>
     
     <!-- Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
@@ -34,7 +34,7 @@
         
         .quick-register-header .badge {
             display: inline-block;
-            background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
             color: white;
             padding: 8px 20px;
             border-radius: 20px;
@@ -59,10 +59,10 @@
         .form-section-title {
             font-size: 18px;
             font-weight: 700;
-            color: var(--primary-purple);
+            color: #FF6B6B;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid rgba(157, 78, 221, 0.2);
+            border-bottom: 2px solid rgba(255, 107, 107, 0.2);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -98,41 +98,8 @@
         
         .form-input:focus {
             outline: none;
-            border-color: var(--primary-purple);
-            box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.1);
-        }
-        
-        .gender-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-        
-        .gender-btn {
-            padding: 16px;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            background: var(--bg-card);
-            color: var(--text-primary);
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .gender-btn:hover {
-            border-color: var(--primary-purple);
-            transform: translateY(-2px);
-        }
-        
-        .gender-btn.active {
-            background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
-            border-color: var(--primary-purple);
-            color: white;
+            border-color: #FF6B6B;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
         }
         
         .image-upload-box {
@@ -146,13 +113,13 @@
         }
         
         .image-upload-box:hover {
-            border-color: var(--primary-purple);
-            background: rgba(157, 78, 221, 0.05);
+            border-color: #FF6B6B;
+            background: rgba(255, 107, 107, 0.05);
         }
         
         .image-upload-box i {
             font-size: 48px;
-            color: var(--primary-purple);
+            color: #FF6B6B;
             margin-bottom: 15px;
         }
         
@@ -189,7 +156,7 @@
         .submit-btn {
             width: 100%;
             padding: 18px;
-            background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
             border: none;
             border-radius: 12px;
             color: white;
@@ -202,7 +169,7 @@
         
         .submit-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(157, 78, 221, 0.4);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
         }
         
         .back-link {
@@ -217,7 +184,22 @@
         }
         
         .back-link a:hover {
-            color: var(--primary-purple);
+            color: #FF6B6B;
+        }
+        
+        .info-box {
+            background: rgba(255, 107, 107, 0.1);
+            border-left: 4px solid #FF6B6B;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        
+        .info-box p {
+            color: var(--text-primary);
+            font-size: 14px;
+            margin: 0;
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -225,13 +207,17 @@
     <div class="quick-register-container">
         <div class="quick-register-header">
             <div class="badge"><i class="fas fa-bolt"></i> 1분 컷 빠른 등록</div>
-            <h1><i class="fas fa-user-circle"></i> 아티스트 등록</h1>
+            <h1><i class="fas fa-users"></i> 댄스팀 등록</h1>
             <p style="color: var(--text-secondary); font-size: 15px;">
-                기본 정보만 입력하고 시작하세요! 나중에 언제든 추가할 수 있습니다.
+                팀 기본 정보만 입력하고 프로젝트를 받아보세요! 나중에 언제든 추가할 수 있습니다.
             </p>
         </div>
         
         <form class="quick-register-form" id="quickRegisterForm">
+            <div class="info-box">
+                <p><i class="fas fa-info-circle"></i> <strong>댄스팀 전용 등록입니다.</strong> 개인 댄서는 '아티스트 등록'을 이용해주세요.</p>
+            </div>
+            
             <!-- 계정 정보 -->
             <div class="form-section">
                 <div class="form-section-title">
@@ -247,55 +233,53 @@
                 </div>
             </div>
             
-            <!-- 기본 식별 정보 -->
+            <!-- 팀 기본 정보 -->
             <div class="form-section">
                 <div class="form-section-title">
-                    <i class="fas fa-id-card"></i> 기본 정보
+                    <i class="fas fa-users"></i> 팀 기본 정보
                 </div>
                 <div class="form-group">
-                    <label>본명 <span class="required">*</span></label>
-                    <input type="text" class="form-input" name="realName" placeholder="홍길동" required>
+                    <label>팀 이름 <span class="required">*</span></label>
+                    <input type="text" class="form-input" name="teamName" placeholder="예: URBAN CREW" required>
                 </div>
                 <div class="form-group">
-                    <label>활동명 (댄서 네임) <span class="required">*</span></label>
-                    <input type="text" class="form-input" name="stageName" placeholder="HONG" required>
+                    <label>대표자 이름 <span class="required">*</span></label>
+                    <input type="text" class="form-input" name="leaderName" placeholder="홍길동" required>
                 </div>
                 <div class="form-group">
                     <label>연락처 <span class="required">*</span></label>
                     <input type="tel" class="form-input" name="phone" placeholder="010-1234-5678" required pattern="[0-9-]+">
                 </div>
+                <div class="form-group">
+                    <label>이메일 <span class="required">*</span></label>
+                    <input type="email" class="form-input" name="email" placeholder="team@example.com" required>
+                </div>
             </div>
             
-            <!-- 외형 데이터 -->
+            <!-- 팀 구성 정보 -->
             <div class="form-section">
                 <div class="form-section-title">
-                    <i class="fas fa-user"></i> 외형 정보
+                    <i class="fas fa-user-friends"></i> 팀 구성
                 </div>
                 <div class="form-group">
-                    <label>성별 <span class="required">*</span></label>
-                    <div class="gender-buttons">
-                        <button type="button" class="gender-btn" data-gender="male">
-                            <i class="fas fa-mars"></i> 남
-                        </button>
-                        <button type="button" class="gender-btn" data-gender="female">
-                            <i class="fas fa-venus"></i> 여
-                        </button>
-                    </div>
-                    <input type="hidden" name="gender" required>
-                </div>
-                <div class="form-group">
-                    <label>출생연도 <span class="required">*</span></label>
-                    <select class="form-input" name="birthYear" required>
+                    <label>팀 멤버 수 <span class="required">*</span></label>
+                    <select class="form-input" name="memberCount" required>
                         <option value="">선택해주세요</option>
+                        <option value="2-5">2-5명</option>
+                        <option value="6-10">6-10명</option>
+                        <option value="11-20">11-20명</option>
+                        <option value="21+">21명 이상</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>키 (cm) <span class="required">*</span></label>
-                    <input type="number" class="form-input" name="height" placeholder="170" required min="140" max="220">
+                    <label>결성 연도 <span class="required">*</span></label>
+                    <select class="form-input" name="establishedYear" required>
+                        <option value="">선택해주세요</option>
+                    </select>
                 </div>
             </div>
             
-            <!-- 직무 핵심 역량 -->
+            <!-- 전문 분야 -->
             <div class="form-section">
                 <div class="form-section-title">
                     <i class="fas fa-music"></i> 전문 분야
@@ -313,7 +297,8 @@
                         <option value="house">하우스</option>
                         <option value="contemporary">현대무용</option>
                         <option value="jazz">재즈</option>
-                        <option value="ballet">발레</option>
+                        <option value="krump">크럼프</option>
+                        <option value="dancehall">댄스홀</option>
                         <option value="other">기타</option>
                     </select>
                 </div>
@@ -335,17 +320,17 @@
                 </div>
             </div>
             
-            <!-- 퀵 레퍼런스 -->
+            <!-- 팀 프로필 & SNS -->
             <div class="form-section">
                 <div class="form-section-title">
-                    <i class="fas fa-camera"></i> 프로필 사진 & SNS
+                    <i class="fas fa-camera"></i> 팀 프로필 사진 & SNS
                 </div>
                 <div class="form-group">
-                    <label>대표 프로필 사진 <span class="required">*</span></label>
+                    <label>팀 대표 프로필 사진 <span class="required">*</span></label>
                     <input type="file" id="profileImageInput" accept="image/*" style="display: none;" required>
                     <div class="image-upload-box" onclick="document.getElementById('profileImageInput').click()">
                         <i class="fas fa-camera"></i>
-                        <p style="color: var(--text-primary); font-weight: 600; margin-bottom: 5px;">프로필 사진 업로드</p>
+                        <p style="color: var(--text-primary); font-weight: 600; margin-bottom: 5px;">팀 사진 업로드</p>
                         <p style="color: var(--text-secondary); font-size: 13px;">클릭하여 사진 선택 (최대 1장)</p>
                     </div>
                     <div id="imagePreview" style="margin-top: 15px; display: none;">
@@ -372,7 +357,7 @@
             </div>
             
             <button type="submit" class="submit-btn">
-                <i class="fas fa-check-circle"></i> 등록 완료하기
+                <i class="fas fa-check-circle"></i> 팀 등록 완료하기
             </button>
         </form>
         
@@ -382,24 +367,15 @@
     </div>
     
     <script>
-        // 출생연도 옵션 생성 (1950 ~ 2010)
-        const birthYearSelect = document.querySelector('select[name="birthYear"]');
+        // 결성 연도 옵션 생성 (1980 ~ 현재)
+        const establishedYearSelect = document.querySelector('select[name="establishedYear"]');
         const currentYear = new Date().getFullYear();
-        for (let year = currentYear - 14; year >= 1950; year--) {
+        for (let year = currentYear; year >= 1980; year--) {
             const option = document.createElement('option');
             option.value = year;
             option.textContent = year + '년';
-            birthYearSelect.appendChild(option);
+            establishedYearSelect.appendChild(option);
         }
-        
-        // 성별 선택
-        document.querySelectorAll('.gender-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                document.querySelector('input[name="gender"]').value = this.dataset.gender;
-            });
-        });
         
         // 이미지 미리보기
         document.getElementById('profileImageInput').addEventListener('change', function(e) {
@@ -428,15 +404,9 @@
                 return;
             }
             
-            // 성별 선택 체크
-            if (!document.querySelector('input[name="gender"]').value) {
-                alert('성별을 선택해주세요!');
-                return;
-            }
-            
             // 프로필 사진 체크
             if (!document.getElementById('profileImageInput').files[0]) {
-                alert('프로필 사진을 업로드해주세요!');
+                alert('팀 프로필 사진을 업로드해주세요!');
                 return;
             }
             
@@ -451,13 +421,13 @@
                 data.profileImage = e.target.result;
                 
                 // localStorage에 저장
-                localStorage.setItem('artistQuickProfile', JSON.stringify(data));
+                localStorage.setItem('teamQuickProfile', JSON.stringify(data));
                 
                 // 성공 메시지
-                alert('가입이 완료되었습니다! 추가 프로필을 입력하고 매칭 확률을 높이세요!');
+                alert('팀 등록이 완료되었습니다! 이제 AI가 추천하는 프로젝트를 받아보세요!');
                 
-                // 2단계 프로필 페이지로 이동
-                window.location.href = 'artist-profile-complete.html';
+                // 메인 페이지로 이동 (추후 대시보드로 변경 가능)
+                window.location.href = 'index.html';
             };
             reader.readAsDataURL(file);
         });
